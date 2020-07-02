@@ -1,0 +1,156 @@
+{
+  "id": "1918188",
+  "name": "Erp_PC",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "15267568",
+      "name": "收起",
+      "font_class": "shouqi",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "15267571",
+      "name": "展开",
+      "font_class": "zhankai",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "15628548",
+      "name": "安全管理2-line",
+      "font_class": "anquanguanli2-line",
+      "unicode": "e6a7",
+      "unicode_decimal": 59047
+    },
+    {
+      "icon_id": "15628592",
+      "name": "账号权限",
+      "font_class": "zhanghaoquanxian",
+      "unicode": "e6b4",
+      "unicode_decimal": 59060
+    },
+    {
+      "icon_id": "15628594",
+      "name": "物业管理备份 3",
+      "font_class": "wuyeguanlibeifen3",
+      "unicode": "e6b3",
+      "unicode_decimal": 59059
+    },
+    {
+      "icon_id": "743506",
+      "name": "门店管理",
+      "font_class": "mendian",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    },
+    {
+      "icon_id": "1660554",
+      "name": "客户报备",
+      "font_class": "kehubaobei",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "1691472",
+      "name": "跟进管理",
+      "font_class": "genjinguanli",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "1964037",
+      "name": "区域管理",
+      "font_class": "ccgl-yundandayinquyu-3",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "4642418",
+      "name": "权限设置-",
+      "font_class": "quanxianshezhi",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "5505173",
+      "name": "权限设置",
+      "font_class": "xitongquanxianshezhi",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "6703150",
+      "name": "权限管理",
+      "font_class": "quanxianguanli",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "8462110",
+      "name": "权限设置",
+      "font_class": "quanxianshezhi1",
+      "unicode": "e773",
+      "unicode_decimal": 59251
+    },
+    {
+      "icon_id": "8883372",
+      "name": "权限设置",
+      "font_class": "quanxianshezhi2",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
+      "icon_id": "9795867",
+      "name": "楼盘管理",
+      "font_class": "loupanguanli",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "10519500",
+      "name": "组织架构",
+      "font_class": "zuzhi",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
+    },
+    {
+      "icon_id": "10863326",
+      "name": "日志管理",
+      "font_class": "rizhiguanli",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "11207045",
+      "name": "角色设置",
+      "font_class": "jiaoseshezhi",
+      "unicode": "e692",
+      "unicode_decimal": 59026
+    },
+    {
+      "icon_id": "11625667",
+      "name": "员工管理",
+      "font_class": "menu-pass-Emp",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
+      "icon_id": "13633172",
+      "name": "权限管理",
+      "font_class": "quanxian",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "15450072",
+      "name": "经纪人_带看管理",
+      "font_class": "jingjiren_daikanguanli",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    }
+  ]
+}
