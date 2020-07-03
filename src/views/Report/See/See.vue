@@ -4,50 +4,50 @@
                 width="60%"
                 :visible="isShow"
         >
-           <div class="See_int">
+            <div class="See_int">
                 <div class="int">
                     <label>姓名</label>
                     <el-input
                             :disabled="true">
                     </el-input>
                 </div>
-               <div class="int">
-                   <label>电话</label>
-                   <el-input
-                           :disabled="true">
-                   </el-input>
-               </div>
-               <div class="int">
-                   <label>时间</label>
-                   <el-input
-                           :disabled="true">
-                   </el-input>
-               </div>
-               <div class="int">
-                   <label>带看楼盘</label>
-                   <el-input
-                           :disabled="true">
-                   </el-input>
-               </div>
-               <div class="int">
-                   <label>维护人</label>
-                   <el-input
-                           :disabled="true">
-                   </el-input>
-               </div>
-               <div class="int">
-                   <label>意向楼盘</label>
-                   <el-input
-                           :disabled="true">
-                   </el-input>
-               </div>
-               <div class="int">
-                   <label>备注</label>
-                   <el-input
-                           :disabled="true">
-                   </el-input>
-               </div>
-           </div>
+                <div class="int">
+                    <label>电话</label>
+                    <el-input
+                            :disabled="true">
+                    </el-input>
+                </div>
+                <div class="int">
+                    <label>时间</label>
+                    <el-input
+                            :disabled="true">
+                    </el-input>
+                </div>
+                <div class="int">
+                    <label>带看楼盘</label>
+                    <el-input
+                            :disabled="true">
+                    </el-input>
+                </div>
+                <div class="int">
+                    <label>维护人</label>
+                    <el-input
+                            :disabled="true">
+                    </el-input>
+                </div>
+                <div class="int">
+                    <label>意向楼盘</label>
+                    <el-input
+                            :disabled="true">
+                    </el-input>
+                </div>
+                <div class="int">
+                    <label>备注</label>
+                    <el-input
+                            :disabled="true">
+                    </el-input>
+                </div>
+            </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="cancel">取 消</el-button>
                 <el-button type="primary" @click="confirm">确 定</el-button>
