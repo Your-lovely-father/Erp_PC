@@ -2,7 +2,7 @@
     <div class="area">
         <!--    卡片视图区域    -->
         <el-card>
-        <!--    表单区域        -->
+            <!--    表单区域        -->
             <div class="form_box">
                 <div class="form">
                     <div class="int_box">
@@ -59,7 +59,8 @@
                             <el-button
                                     type="primary"
                                     size="mini"
-                                    @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+                                    @click="handleEdit(scope.$index, scope.row)">修改
+                            </el-button>
                             <el-popconfirm
                                     confirmButtonText='确定'
                                     cancelButtonText='取消'
@@ -72,12 +73,25 @@
                                         size="mini"
                                         type="danger"
                                         class="left_btn"
-                                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                                        @click="handleDelete(scope.$index, scope.row)">删除
+                                </el-button>
                             </el-popconfirm>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
+            <!--     分页区域       -->
+<!--            <div class="page">-->
+<!--                <el-pagination-->
+<!--                        @size-change="handleSizeChange"-->
+<!--                        @current-change="handleCurrentChange"-->
+<!--                        :current-page="currentPage4"-->
+<!--                        :page-sizes="[100, 200, 300, 400]"-->
+<!--                        :page-size="100"-->
+<!--                        layout="total, sizes, prev, pager, next, jumper"-->
+<!--                        :total="400">-->
+<!--                </el-pagination>-->
+<!--            </div>-->
             <myModify :isShowsUpd.sync="isShowsUpd"/>
         </el-card>
     </div>
@@ -85,13 +99,14 @@
 
 <script>
     import myModify from '../../views/Area/Modify/Modify'
+
     export default {
-        components:{
+        components: {
             myModify
         },
         name: "Area",
-        data(){
-            return{
+        data() {
+            return {
                 areaOptions: [{
                     value: 'province',
                     label: '辽宁省',
@@ -108,18 +123,19 @@
                 date: '',
                 time: '',
                 tableData: [{
-                    address:'辽宁省/沈阳市/铁西区',
-                    date:'2019-5-30 12:20',
+                    address: '辽宁省/沈阳市/铁西区',
+                    date: '2019-5-30 12:20',
                 },
                 ],
                 search: '',
-                isShowsUpd:false//修改
+                isShowsUpd: false,//修改
+                currentPage4: 4,
             }
         },
         methods: {
             handleEdit(index, row) {
                 console.log(index, row);
-                this.isShowsUpd=true
+                this.isShowsUpd = true
             },
             handleDelete(index, row) {
                 console.log(index, row);
@@ -137,42 +153,58 @@
     .el-card {
         height: 100%;
     }
-    .form_box{
+
+    .form_box {
         width: 100%;
     }
-    .form{
+
+    .form {
         width: 100%;
         display: flex;
         justify-content: space-between;
     }
-    label{
+
+    label {
         padding: 15px;
         display: block;
     }
-    .report_int{
+
+    .report_int {
         width: 533px;
     }
-    .int_box_right{
+
+    .int_box_right {
         margin-left: 20px;
     }
+
     .sub_btn {
         padding: 20px 0;
         text-align: right;
     }
-    .tab>>>.el-table--enable-row-transition .el-table__body td{
+
+    .tab >>> .el-table--enable-row-transition .el-table__body td {
         text-align: center;
     }
-    .tab>>>.el-table th>.cell {
+
+    .tab >>> .el-table th > .cell {
         text-align: center;
     }
-    .el-input--mini{
+
+    .el-input--mini {
         width: 300px;
     }
-    .el-input--mini .el-input__inner{
+
+    .el-input--mini .el-input__inner {
         width: 300px;
     }
-    .left_btn{
+
+    .left_btn {
         margin-left: 10px;
+    }
+    .page {
+        width: 100%;
+        text-align: center;
+        padding: 30px 0;
     }
 
 

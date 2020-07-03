@@ -49,6 +49,18 @@
                     </el-table-column>
                 </el-table>
             </div>
+            <!--     分页区域       -->
+            <!--            <div class="page">-->
+            <!--                <el-pagination-->
+            <!--                        @size-change="handleSizeChange"-->
+            <!--                        @current-change="handleCurrentChange"-->
+            <!--                        :current-page="currentPage4"-->
+            <!--                        :page-sizes="[100, 200, 300, 400]"-->
+            <!--                        :page-size="100"-->
+            <!--                        layout="total, sizes, prev, pager, next, jumper"-->
+            <!--                        :total="400">-->
+            <!--                </el-pagination>-->
+            <!--            </div>-->
             <mySee :isShow.sync="isShow"/>
             <myModify :isShowsUpd.sync="isShowsUpd"/>
         </el-card>
@@ -73,7 +85,8 @@
                 ],
                 search: '',
                 isShow:false,
-                isShowsUpd:false
+                isShowsUpd:false,
+                currentPage4: 4,
             }
         },
         methods: {
@@ -93,7 +106,7 @@
 
 <style scoped>
     .left_btn{
-        margin-left: 15px;
+        margin-left: 10px;
     }
     .log {
         width: 100%;
@@ -117,6 +130,11 @@
     }
     .el-input--mini .el-input__inner{
         width: 300px;
+    }
+    .page {
+        width: 100%;
+        text-align: center;
+        padding: 30px 0;
     }
 
 

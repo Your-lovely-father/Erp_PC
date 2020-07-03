@@ -60,6 +60,18 @@
                     </el-table-column>
                 </el-table>
             </div>
+            <!--     分页区域       -->
+            <!--            <div class="page">-->
+            <!--                <el-pagination-->
+            <!--                        @size-change="handleSizeChange"-->
+            <!--                        @current-change="handleCurrentChange"-->
+            <!--                        :current-page="currentPage4"-->
+            <!--                        :page-sizes="[100, 200, 300, 400]"-->
+            <!--                        :page-size="100"-->
+            <!--                        layout="total, sizes, prev, pager, next, jumper"-->
+            <!--                        :total="400">-->
+            <!--                </el-pagination>-->
+            <!--            </div>-->
             <mySee :isShow.sync="isShow"/>
         </el-card>
     </div>
@@ -83,7 +95,8 @@
                 },
                 ],
                 search: '',
-                isShow:false
+                isShow:false,
+                currentPage4: 4,
             }
         },
         methods: {
@@ -119,6 +132,9 @@
     .tab>>>.el-table th>.cell {
         text-align: center;
     }
-
-
+    .page {
+        width: 100%;
+        text-align: center;
+        padding: 30px 0;
+    }
 </style>
