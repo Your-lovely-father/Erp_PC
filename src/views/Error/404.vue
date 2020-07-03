@@ -1,6 +1,6 @@
 <template>
   <div class="no-funcion">
-      404 page ......
+      404 page ....
   </div>
 </template>
 <script>
