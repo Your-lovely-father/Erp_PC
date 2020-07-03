@@ -30,6 +30,7 @@
                             <el-button
                                     size="mini"
                                     @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                            <el-button type="primary"  size="mini" @click="upd">修改</el-button>
                             <el-popconfirm
                                     confirmButtonText='确定'
                                     cancelButtonText='取消'
@@ -49,15 +50,18 @@
                 </el-table>
             </div>
             <mySee :isShow.sync="isShow"/>
+            <myModify :isShowsUpd.sync="isShowsUpd"/>
         </el-card>
     </div>
 </template>
 
 <script>
     import mySee from '../../views/Look/See/See'
+    import myModify from '../../views/Look/Modify/Modify'
     export default {
         components:{
-            mySee
+            mySee,
+            myModify
         },
         name: "Log",
         data() {
@@ -68,7 +72,8 @@
                 },
                 ],
                 search: '',
-                isShow:false
+                isShow:false,
+                isShowsUpd:false
             }
         },
         methods: {
@@ -78,6 +83,9 @@
             },
             handleDelete(index, row) {
                 console.log(index, row);
+            },
+            upd(){
+                this.isShowsUpd=true
             }
         },
     }

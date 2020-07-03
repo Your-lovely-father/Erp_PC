@@ -71,6 +71,7 @@
                         </template>
                         <template slot-scope="scope">
                             <el-button
+                                    type="primary"
                                     size="mini"
                                     @click="handleEdit(scope.$index, scope.row)">修改</el-button>
                             <el-popconfirm
@@ -145,7 +146,7 @@
 
 <style scoped>
     .left_btn{
-        margin-left: 15px;
+        margin-left: 10px;
     }
     .area {
         width: 100%;
