@@ -44,7 +44,7 @@
                     <div class="int_box">
                         <label>带看楼盘</label>
                         <el-input
-                                placeholder="请输带看楼盘"
+                                placeholder="请输入带看楼盘"
                                 v-model="look"
                                 clearable
                                 class="report_int">
@@ -53,7 +53,7 @@
                     <div class="int_box">
                         <label>维护人</label>
                         <el-input
-                                placeholder="请输维护人"
+                                placeholder="请输入维护人"
                                 v-model="maintenance"
                                 clearable
                                 class="report_int">
@@ -62,7 +62,7 @@
                     <div class="int_box">
                         <label>意向楼盘</label>
                         <el-input
-                                placeholder="请输意向楼盘"
+                                placeholder="请输入意向楼盘"
                                 v-model="intention"
                                 clearable
                                 class="report_int">
