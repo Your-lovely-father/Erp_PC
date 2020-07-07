@@ -60,15 +60,15 @@
                                 class="report_int">
                         </el-input>
                     </div>
-                    <div class="int_box">
-                        <label>账号</label>
-                        <el-input
-                                placeholder="请输入账号"
-                                v-model="account"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
+<!--                    <div class="int_box">-->
+<!--                        <label>账号</label>-->
+<!--                        <el-input-->
+<!--                                placeholder="请输入账号"-->
+<!--                                v-model="account"-->
+<!--                                clearable-->
+<!--                                class="report_int">-->
+<!--                        </el-input>-->
+<!--                    </div>-->
                     <div class="int_box">
                         <label>密码</label>
                         <el-input
@@ -287,7 +287,7 @@
                 gender: '',
                 idNumber: '',
                 password:'',
-                account:'',
+                // account:'',
                 role:'',
                 stores:'',
                 state: false,
