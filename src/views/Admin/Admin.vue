@@ -21,6 +21,7 @@
                                     clearable
                                     class="report_int"
                             >
+                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
                             </el-input>
                         </div>
                         <div class="int_box_right left">
@@ -112,17 +113,17 @@
                         </div>
                     </div>
                     <!--     分页区域    -->
-<!--                    <div class="page">-->
-<!--                        <el-pagination>-->
-<!--                            @size-change="handleSizeChange"-->
-<!--                            @current-change="handleCurrentChange"-->
-<!--                            :current-page="currentPage4"-->
-<!--                            :page-sizes="[100, 200, 300, 400]"-->
-<!--                            :page-size="100"-->
-<!--                            layout="total, sizes, prev, pager, next, jumper"-->
-<!--                            :total="400">-->
-<!--                        </el-pagination>-->
-<!--                    </div>-->
+                    <!--                    <div class="page">-->
+                    <!--                        <el-pagination>-->
+                    <!--                            @size-change="handleSizeChange"-->
+                    <!--                            @current-change="handleCurrentChange"-->
+                    <!--                            :current-page="currentPage4"-->
+                    <!--                            :page-sizes="[100, 200, 300, 400]"-->
+                    <!--                            :page-size="100"-->
+                    <!--                            layout="total, sizes, prev, pager, next, jumper"-->
+                    <!--                            :total="400">-->
+                    <!--                        </el-pagination>-->
+                    <!--                    </div>-->
                 </div>
             </div>
         </el-card>
@@ -136,6 +137,7 @@
     import mySee from '../../views/Admin/See/See'
     import myAdd from '../../views/Admin/Add/Add'
     import myModify from '../../views/Admin/Modify/Modify'
+
     export default {
         components: {
             mySee,
@@ -145,8 +147,8 @@
         name: "Admin",
         data() {
             return {
-                isShow:false,//查看
-                isShowAdd:false,//添加
+                isShow: false,//查看
+                isShowAdd: false,//添加
                 isShowsUpd: false,//修改
                 data: [{
                     label: '超级管理员',
@@ -207,12 +209,12 @@
             handleNodeClick(data) {
                 console.log(data);
             },
-            add(){
-                this.isShowAdd=true
+            add() {
+                this.isShowAdd = true
             },
             handleEdit(index, row) {
                 console.log(index, row);
-                this.isShow=true
+                this.isShow = true
             },
             upd(index, row) {
                 console.log(index, row);
@@ -257,12 +259,14 @@
         width: 369px;
     }
 
-    label:nth-child(1){
+    label:nth-child(1) {
         padding-right: 20px;
     }
-    .label2{
+
+    .label2 {
         padding: 0 20px;
     }
+
     label:nth-child(2) {
         padding: 0 20px;
     }

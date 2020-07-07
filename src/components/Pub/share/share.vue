@@ -101,6 +101,6 @@
         margin-right: 20px;
     }
     .el-input{
-        width: 247px;
+        width: 269px;
     }
 </style>
