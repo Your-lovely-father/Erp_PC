@@ -2,10 +2,12 @@
     <div class="log">
         <!--    卡片视图区域    -->
         <el-card>
-            <!--   表格区域         -->
+            <!--     搜索区域       -->
+            <myShare/>
+            <!--   表格区域   -->
             <div class="tab">
                 <el-table
-                        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                        :data="tableData"
                         style="width: 100%">
                     <el-table-column
                             label="操作人"
@@ -28,16 +30,7 @@
                             prop="stores">
                     </el-table-column>
                     <el-table-column
-                            align="right">
-                        <template slot="header" slot-scope="scope">
-                            <el-input
-                                    v-model="search"
-                                    size="mini"
-                                    placeholder="输入关键字搜索"
-                                    prefix-icon="el-icon-search"
-                                  >
-                            </el-input>
-                        </template>
+                            align="right"  label="操作">
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
@@ -79,9 +72,11 @@
 
 <script>
     import mySee from '../../views/Log/See/See'
+    import  myShare from '../../components/Pub/share/share'
     export default {
         components:{
-            mySee
+            mySee,
+            myShare
         },
         name: "Log",
         data() {
@@ -137,4 +132,5 @@
         text-align: center;
         padding: 30px 0;
     }
+
 </style>

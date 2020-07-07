@@ -2,13 +2,13 @@
     <div class="See">
         <el-dialog
                 width="60%"
-                :visible="isShowsUpd"
+                :visible="isShowAdd"
         >
 
             <div class="int_box">
-                <label>角色名称</label>
+                <label>角色</label>
                 <el-input
-                        placeholder="请输角色名称"
+                        placeholder="请输角色"
                         v-model="name"
                         clearable
                         class="report_int"
@@ -30,21 +30,21 @@
                 </el-tree>
             </div>
             <div class="int_box">
-                    <label>时间</label>
-                    <el-date-picker
-                            v-model="date"
-                            type="date"
-                            placeholder="选择日期"
-                            class="report_int"
-                    >
-                    </el-date-picker>
-                    -
-                    <el-time-picker
-                            v-model="time"
-                            placeholder="选择时间"
-                            class="report_int"
-                    >
-                    </el-time-picker>
+                <label>时间</label>
+                <el-date-picker
+                        v-model="date"
+                        type="date"
+                        placeholder="选择日期"
+                        class="report_int"
+                >
+                </el-date-picker>
+                -
+                <el-time-picker
+                        v-model="time"
+                        placeholder="选择时间"
+                        class="report_int"
+                >
+                </el-time-picker>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="cancel">取 消</el-button>
@@ -58,7 +58,7 @@
     export default {
         name: "See",
         props: {
-            isShowsUpd: {
+            isShowAdd: {
                 type: Boolean,
                 default: false
             }
@@ -68,7 +68,7 @@
                 type: [],
                 date: '',
                 time: '',
-                name:'',
+                name: '',
                 data: [{
                     id: 1,
                     label: '权限设置',
@@ -99,14 +99,14 @@
                     children: 'children',
                     label: 'label'
                 }
-            }
+            };
         },
         methods: {
             cancel() {
-                this.$emit("update:isShowsUpd", false);
+                this.$emit("update:isShowAdd", false);
             },
             confirm() {
-                this.$emit("update:isShowsUpd", false);
+                this.$emit("update:isShowAdd", false);
             }
         }
     }

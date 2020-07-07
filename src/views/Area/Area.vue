@@ -31,10 +31,12 @@
                     <el-button type="primary">提交信息</el-button>
                 </div>
             </div>
+            <!--    搜索区域        -->
+            <myShare/>
             <!--   表格区域         -->
             <div class="tab">
                 <el-table
-                        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                        :data="tableData"
                         style="width: 100%">
                     <el-table-column
                             label='区域'
@@ -45,16 +47,9 @@
                             prop="date">
                     </el-table-column>
                     <el-table-column
-                            align="right">
-                        <template slot="header" slot-scope="scope">
-                            <el-input
-                                    v-model="search"
-                                    size="mini"
-                                    placeholder="输入关键字搜索"
-                                    prefix-icon="el-icon-search"
-                            >
-                            </el-input>
-                        </template>
+                            align="right"
+                            label="操作"
+                    >
                         <template slot-scope="scope">
                             <el-button
                                     type="primary"
@@ -99,10 +94,11 @@
 
 <script>
     import myModify from '../../views/Area/Modify/Modify'
-
+    import myShare from '../../components/Pub/share/areaShare'
     export default {
         components: {
-            myModify
+            myModify,
+            myShare
         },
         name: "Area",
         data() {
@@ -119,6 +115,7 @@
                         }],
                     }],
                 }],
+
                 type: [],
                 date: '',
                 time: '',
@@ -127,7 +124,6 @@
                     date: '2019-5-30 12:20',
                 },
                 ],
-                search: '',
                 isShowsUpd: false,//修改
                 currentPage4: 4,
             }

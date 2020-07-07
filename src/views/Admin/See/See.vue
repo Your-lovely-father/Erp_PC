@@ -7,9 +7,9 @@
             <div class="See_int">
                 <div class="form">
                     <div class="int_box">
-                        <label>角色名称</label>
+                        <label>角色</label>
                         <el-input
-                                placeholder="请输角色名称"
+                                placeholder="请输角色"
                                 v-model="name"
                                 clearable
                                 class="report_int"

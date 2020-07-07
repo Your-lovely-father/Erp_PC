@@ -2,10 +2,56 @@
     <div class="log">
         <!--    卡片视图区域    -->
         <el-card>
+            <!--   表单区域    -->
+            <div class="form">
+                <div class="form-box">
+                    <div class="int_box">
+                        <label>跟进记录</label>
+                        <el-input
+                                placeholder="请输入跟进记录"
+                                clearable
+                                v-model="tracking"
+                                class="report_int">
+                        </el-input>
+                    </div>
+                    <div class="int_box">
+                        <label>时间</label>
+                        <el-date-picker
+                                v-model="date"
+                                type="date"
+                                placeholder="选择日期"
+                                class="report_int"
+                        >
+                        </el-date-picker>
+                        -
+                        <el-time-picker
+                                v-model="time"
+                                placeholder="选择时间"
+                                class="report_int"
+                        >
+                        </el-time-picker>
+                    </div>
+                    <div class="int_box">
+                        <label>维护人</label>
+                        <el-input
+                                placeholder="请输入维护人"
+                                clearable
+                                v-model="maintenance"
+                                class="report_int">
+                        </el-input>
+                    </div>
+
+                </div>
+                <div class="sub_btn">
+                    <el-button type="primary">提交信息</el-button>
+                </div>
+            </div>
+            <!--     搜索区域       -->
+            <myShare/>
             <!--   表格区域         -->
             <div class="tab">
                 <el-table
-                        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                        :data="tableData"
                         style="width: 100%">
                     <el-table-column
                             label="时间"
@@ -16,16 +62,7 @@
                             prop="tracking">
                     </el-table-column>
                     <el-table-column
-                            align="right">
-                        <template slot="header" slot-scope="scope">
-                            <el-input
-                                    v-model="search"
-                                    size="mini"
-                                    placeholder="输入关键字搜索"
-                                    prefix-icon="el-icon-search"
-                            >
-                            </el-input>
-                        </template>
+                            align="right"  label="操作">
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
@@ -70,10 +107,12 @@
 <script>
     import mySee from '../../views/Tracking/See/See'
     import myModify from '../../views/Tracking/Modify/Modify'
+    import myShare from '../../components/Pub/share/share'
     export default {
         components:{
             mySee,
-            myModify
+            myModify,
+            myShare
         },
         name: "Log",
         data() {
@@ -87,6 +126,11 @@
                 isShow:false,
                 isShowsUpd:false,
                 currentPage4: 4,
+                tracking:'',
+                type:[],
+                date:'',
+                time:'',
+                maintenance:'',
             }
         },
         methods: {
@@ -135,6 +179,27 @@
         width: 100%;
         text-align: center;
         padding: 30px 0;
+    }
+
+    .report_int{
+        width: 390px;
+    }
+    label {
+        display: block;
+        padding: 15px 0;
+    }
+    .form{
+        width: 100%;
+    }
+    .form-box{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .sub_btn{
+        width: 100%;
+        margin: 20px 0;
+        text-align: right;
     }
 
 </style>

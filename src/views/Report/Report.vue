@@ -116,15 +116,131 @@
             <div class="tab">
                 <!--     搜索区域       -->
                 <div class="search">
-                    <el-input
-                            placeholder="请输入内容"
-                            v-model="search"
-                            clearable
-                            class="int_search"
-                    >
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                    <el-button type="primary" class="btn_search" size="small">搜索</el-button>
+                    <div class="box_form">
+                        <div class="form">
+                            <div class="int_box">
+                                <label>姓名</label>
+                                <el-input
+                                        placeholder="请输入姓名"
+                                        v-model="searchName"
+                                        clearable
+                                        class="report_int"
+                                        prefix-icon="el-icon-search"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int_box">
+                                <label>电话</label>
+                                <el-input
+                                        placeholder="请输入电话"
+                                        v-model="searchPhone"
+                                        clearable
+                                        class="report_int"
+                                        prefix-icon="el-icon-search"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int_box">
+                                <label>报备时间</label>
+                                <el-date-picker
+                                        v-model="searchDate"
+                                        type="date"
+                                        placeholder="选择日期"
+                                        class="date"
+                                        prefix-icon="el-icon-search"
+                                >
+                                </el-date-picker>
+                                -
+                                <el-time-picker
+                                        v-model="searchTime"
+                                        placeholder="选择时间"
+                                        class="date"
+                                        prefix-icon="el-icon-search"
+                                >
+                                </el-time-picker>
+                            </div>
+                            <div class="int_box">
+                                <label>带看楼盘</label>
+                                <el-input
+                                        placeholder="请输入带看楼盘"
+                                        v-model="searchLook"
+                                        clearable
+                                        class="report_int"
+                                        prefix-icon="el-icon-search"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int_box">
+                                <label>维护人</label>
+                                <el-input
+                                        placeholder="请输入维护人"
+                                        v-model="searchMaintenance"
+                                        clearable
+                                        class="report_int"
+                                        prefix-icon="el-icon-search"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int_box">
+                                <label>意向楼盘</label>
+                                <el-input
+                                        placeholder="请输入意向楼盘"
+                                        v-model="searchIntention"
+                                        clearable
+                                        class="report_int"
+                                        prefix-icon="el-icon-search"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int_box">
+                                <label>区域</label>
+                                <el-cascader :options="searchAreaOptions" clearable class="report_int"
+                                ></el-cascader>
+                            </div>
+                            <div class="int_box">
+                                <label>门店</label>
+                                <el-select v-model="searchStores" placeholder="请选择" class="report_int"
+                                >
+                                    <el-option
+                                            v-for="item in searchStoresOptions"
+                                            :key="item.searchStores"
+                                            :label="item.label"
+                                            :value="item.searchStores"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div class="int_box">
+                                <label>备注</label>
+                                <el-input
+                                        placeholder="请输入备注"
+                                        v-model="searchNote"
+                                        clearable
+                                        class="report_int"
+                                        prefix-icon="el-icon-search"
+
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int_box">
+                                <label>客户类别</label>
+                                <el-select v-model="searchCustomer" placeholder="请选择" class="report_int"
+                                >
+                                    <el-option
+                                            v-for="item in searchCustomerOoptions"
+                                            :key="item.searchCustomer"
+                                            :label="item.label"
+                                            :value="item.searchCustomer"
+
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div>
+                        </div>
+                        <div class="sub_btn">
+                            <el-button type="primary">搜索</el-button>
+                        </div>
+                    </div>
                 </div>
                 <el-table
                         :data="tableData"
@@ -235,6 +351,7 @@
         },
         data() {
             return {
+                //添加字段
                 name: '',
                 phone: '',
                 type: [],
@@ -279,7 +396,51 @@
                     }
                 ],
                 customer: '',
-                search: '',
+                //搜索字段
+                searchName: '',
+                searchPhone: '',
+                type: [],
+                searchDate: '',
+                searchTime: '',
+                searchLook: '',
+                searchMaintenance: '',
+                searchIntention: '',
+                searchAreaOptions: [{
+                    value: 'province',
+                    label: '辽宁省',
+                    children: [{
+                        value: ' city',
+                        label: '沈阳市',
+                        children: [{
+                            value: 'area',
+                            label: '铁西区'
+                        }],
+                    }],
+                }],
+                searchStoresOptions: [{
+                    searchStores: '选项1',
+                    label: 'A门店'
+                }, {
+                    searchStores: '选项2',
+                    label: 'B门店'
+                }],
+                searchStores: '',
+                searchNote: '',
+                searchCustomerOoptions: [
+                    {
+                        customer: '选项1',
+                        label: '客户类别A'
+                    },
+                    {
+                        customer: '选项2',
+                        label: '客户类别B'
+                    },
+                    {
+                        customer: '选项3',
+                        label: '客户类别C'
+                    }
+                ],
+                searchCustomer: '',
                 tableData: [
                     {
                         name: '王志远',
