@@ -2,7 +2,6 @@
     <div class="report">
         <!--    卡片视图区域    -->
         <el-card>
-            <myAddress/>
             <!--     表单区域       -->
             <div class="box_form">
                 <div class="form">
@@ -34,23 +33,18 @@
                                 class="report_int">
                         </el-input>
                     </div>
-                    <!--                    <div class="int_box">-->
-                    <!--                        <label>职位</label>-->
-                    <!--                        <el-input-->
-                    <!--                                placeholder="请输入职位"-->
-                    <!--                                v-model="position"-->
-                    <!--                                clearable-->
-                    <!--                                class="report_int">-->
-                    <!--                        </el-input>-->
-                    <!--                    </div>-->
                     <div class="int_box">
                         <label>性别</label>
-                        <el-input
-                                placeholder="请输入性别"
-                                v-model="gender"
-                                clearable
-                                class="report_int">
-                        </el-input>
+                        <el-select v-model="gender" placeholder="请输入性别" class="report_int"
+                                   @change="genderValue($event)"
+                        >
+                            <el-option
+                                    v-for="item in genderOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </div>
                     <div class="int_box">
                         <label>身份证号</label>
@@ -61,15 +55,6 @@
                                 class="report_int">
                         </el-input>
                     </div>
-                    <!--                    <div class="int_box">-->
-                    <!--                        <label>账号</label>-->
-                    <!--                        <el-input-->
-                    <!--                                placeholder="请输入账号"-->
-                    <!--                                v-model="account"-->
-                    <!--                                clearable-->
-                    <!--                                class="report_int">-->
-                    <!--                        </el-input>-->
-                    <!--                    </div>-->
                     <div class="int_box">
                         <label>密码</label>
                         <el-input
@@ -89,18 +74,28 @@
                         </el-input>
                     </div>
                     <div class="int_box">
-                        <label>门店</label>
-                        <!--                        <el-input-->
-                        <!--                                placeholder="请输入门店"-->
-                        <!--                                v-model="stores"-->
-                        <!--                                clearable-->
-                        <!--                                class="report_int">-->
-                        <!--                        </el-input>-->
-                        <el-cascader :options="storesOptions" clearable class="report_int"
+                        <label>区域</label>
+                        <el-cascader :options="areaOptions" clearable class="report_int"
                                      @change="handleChange"
                                      ref="cascaderAddr"
                         ></el-cascader>
                     </div>
+                    <div class="int_box">
+                        <label>门店</label>
+                        <el-select v-model="stores" placeholder="请输入门店" class="report_int"
+                                   @change="obtain($event)"
+                        >
+                            <el-option
+                                    v-for="item in storesOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                    ref="id"
+                            >
+                            </el-option>
+                        </el-select>
+                    </div>
+
                     <div class="state">
                         <div class="int_box">
                             <label>状态</label>
@@ -150,17 +145,17 @@
                 >
                     <el-table-column
                             fixed
-                            prop="name"
+                            prop="user_name"
                             label="姓名"
                             width="200">
                     </el-table-column>
                     <el-table-column
-                            prop="phone"
+                            prop="user_phone"
                             label="电话"
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="abbreviations"
+                            prop="user_image"
                             label="头像"
                             width="180"
 
@@ -170,38 +165,27 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="age"
+                            prop="user_age"
                             label="年龄"
                             width="180">
                     </el-table-column>
-                    <!--                    <el-table-column-->
-                    <!--                            prop="position"-->
-                    <!--                            label="职位"-->
-                    <!--                            width="180">-->
-                    <!--                    </el-table-column>-->
                     <el-table-column
-                            prop="gender"
+                            prop="user_sex"
                             label="性别"
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="idNumber"
+                            prop="user_id_card"
                             label="身份证号"
                             width="180">
                     </el-table-column>
-
                     <!--                    <el-table-column-->
-                    <!--                            prop="account"-->
-                    <!--                            label="账户"-->
+                    <!--                            prop="password"-->
+                    <!--                            label="密码"-->
                     <!--                            width="180">-->
                     <!--                    </el-table-column>-->
                     <el-table-column
-                            prop="password"
-                            label="密码"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="state"
+                            prop="user_status"
                             label="状态"
                             width="180">
                         <template slot-scope="scope">
@@ -213,12 +197,12 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="role"
+                            prop="user_role"
                             label="角色管理"
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="stores"
+                            prop="storefront_id"
                             label="门店"
                             width="180">
                     </el-table-column>
@@ -258,17 +242,17 @@
             <mySee :isShow.sync="isShow"/>
             <myModify :isShowsUpd.sync="isShowsUpd"/>
             <!--     分页区域       -->
-            <!--            <div class="page">-->
-            <!--                <el-pagination-->
-            <!--                        @size-change="handleSizeChange"-->
-            <!--                        @current-change="handleCurrentChange"-->
-            <!--                        :current-page="currentPage4"-->
-            <!--                        :page-sizes="[100, 200, 300, 400]"-->
-            <!--                        :page-size="100"-->
-            <!--                        layout="total, sizes, prev, pager, next, jumper"-->
-            <!--                        :total="400">-->
-            <!--                </el-pagination>-->
-            <!--            </div>-->
+            <div class="page">
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage4"
+                        :page-sizes="[5, 10, 20, 40]"
+                        :page-size="pagesize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="tableData.length">
+                </el-pagination>
+            </div>
         </el-card>
     </div>
 </template>
@@ -276,15 +260,14 @@
 <script>
     import mySee from '../../views/Employees/See/See'
     import myModify from '../../views/Employees/Modify/Modify'
-    import  myAddress from '../../components/Pub/address/address'
     import Api from '../../api/Employees/Employees'
     import Axios from '../../api/pub/pub'
+
     export default {
         name: "Report",
         components: {
             mySee,
             myModify,
-            myAddress
         },
         data() {
             return {
@@ -297,35 +280,32 @@
                 password: '',
                 // account:'',
                 role: '',
-                stores: '',
                 state: false,
                 open: false,
                 headDialogImageUrl: '',
                 headDialogVisible: false,
-                tableData: [
-                    {
-                        name: '大卫',
-                        phone: '1888888888',
-                        headDialogImageUrl: require('../../assets/images/logo-ip.png'),
-                        age: '18',
-                        // position: '经理',
-                        gender: '男',
-                        idNumber: '211422199804165619',
-                        // account:'95241616',
-                        password: '123456',
-                        role: '超级管理员',
-                        stores: 'A门店',
-                        state: false,
-                        open: false,
-                    }
-                ],
                 currentPage4: 4,
                 isShow: false,//查看
                 isShowsUpd: false,//修改
+                areaOptions: [],
                 storesOptions: [],
-                provinceValue:'',
-                cityValue:'',
-                areaValue:''
+                stores: '',
+                storesId: '',
+                provinceValue: '',
+                cityValue: '',
+                areaValue: '',
+                genderOptions: [{
+                    value: '10',
+                    label: '男'
+                }, {
+                    value: '20',
+                    label: '女'
+                }],
+                gender: '',
+                currentPage: 1, //初始页
+                pagesize: 10,    // 每页的数据
+                tableData: [],
+
 
             }
         },
@@ -338,9 +318,11 @@
                 this.isShowsUpd = true
             },
             handleSizeChange(val) {
+                this.pagesize = size;
                 console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
+                this.currentPage = currentPage;
                 console.log(`当前页: ${val}`);
             },
             headHandleRemove(file, fileList) {
@@ -350,7 +332,7 @@
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
             },
-            add() {
+            add() {//添加
                 const user_name = this.name;//员工姓名
                 const user_phone = this.phone;//员工电话
                 const user_age = this.age;//员工年龄
@@ -358,71 +340,86 @@
                 const user_id_card = this.idNumber;//员工身份证号
                 // const user_image = this.headDialogImageUrl;//员工头像
                 const user_password = this.password;//员工密码
-                var user_status
+                var user_status;
                 if (this.state === true) { //状态
-                    user_status = 1
+                    user_status = '1'
                 } else {
-                    user_status = 2
+                    user_status = '2'
                 }
                 const user_role = this.role;//员工角色id
                 const province_id = this.provinceValue;//省级id
                 const city_id = this.cityValue;//市级id
                 const area_id = this.areaValue;//区域id
-                const storefront_id = this.stores;//门店id
-                var mobile_terminal_status
+                const storefront_id = this.storesId;//门店id
+                var mobile_terminal_status;
                 if (this.open === true) {//是否开启手机端(1开通2锁定)
                     mobile_terminal_status = 1
                 } else {
                     mobile_terminal_status = 2
                 }
                 Api.postAdd(user_name, user_phone, user_age, user_sex, user_id_card, user_password, user_status, user_role,
-                    province_id, city_id, area_id, storefront_id, mobile_terminal_status,).then((res) => {
-                    console.log(res)
+                    province_id, city_id, area_id, storefront_id, mobile_terminal_status).then((res) => {
+                    if (res.code === "200001") {
+                        this.$message.success(res.msg);
+                    } else {
+                        this.$message.error(res.msg);
+                    }
+
                 })
             },
             getSelect() {
                 Axios.getSelect().then((res) => {
                     const data = res.data[0].son;
-                    data.map((item)=>{
+                    data.map((item) => {
                         item.label = item.AREA_NAME;
                         item.value = item.AREA_ID;
-                        item.children =  item.son;
-                        if(item.son){
-                            item.son.map(el=>{
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
                                 el.label = el.AREA_NAME;
                                 el.value = el.AREA_ID;
-                                el.children =  el.son;
-                                if(el.son){
-                                    el.son.map(key=>{
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
                                         key.label = key.AREA_NAME;
                                         key.value = key.AREA_ID;
-                                        key.children =  key.son;
+                                        key.children = key.son;
 
                                     })
                                 }
                             })
                         }
                     });
-                    window.sessionStorage.setItem('linkage',JSON.stringify(data))
-                    var linkage  =window.sessionStorage.getItem('linkage')
-                    this.storesOptions = JSON.parse(linkage)
+                    window.sessionStorage.setItem('linkage', JSON.stringify(data))
+                    var linkage = window.sessionStorage.getItem('linkage')
+                    this.areaOptions = JSON.parse(linkage)
                 })
             },
-            handleChange(){
+            handleChange() {
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
-                this.provinceValue=pathvalue[0];
-                this.cityValue=pathvalue[1];
-                this.areaValue=pathvalue[2];
-                // console.log(this.provinceValue)
-                // console.log(  this.cityValue)
-                // console.log( this.areaValue)
-                Axios.postStores().then(res=>{
-                    console.log(res)
+                this.provinceValue = pathvalue[0];
+                this.cityValue = pathvalue[1];
+                this.areaValue = pathvalue[2];
+                Axios.postStores().then(res => {
+                    let cityData = JSON.stringify(res.data);
+                    this.storesOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                })
+            },
+            obtain(e) {
+                this.storesId = e
+            },
+            genderValue(e) {
+                this.age = e
+            },
+            getSelectList() {//员工列表
+                Api.getSlectList(this.currentPage, this.pagesize).then((res) => {
+                    this.tableData = res.data
                 })
             }
         },
         mounted() {
-            this.getSelect()
+            this.getSelect();
+            this.getSelectList()
         }
     }
 </script>
