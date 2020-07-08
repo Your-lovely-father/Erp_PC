@@ -2,49 +2,15 @@
     <div class="area">
         <!--    卡片视图区域    -->
         <el-card>
-            <!--    表单区域        -->
-            <div class="form_box">
-                <div class="form">
-                    <div class="int_box">
-                        <label>门店名称</label>
-                        <el-input
-                                placeholder="请输入门店名称"
-                                v-model="stores"
-                                clearable
-                                class="report_int"
-                        >
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>负责区域</label>
-                        <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
-                    </div>
-                    <div class="int_box_right">
-                        <label>时间</label>
-                        <el-date-picker
-                                v-model="date"
-                                type="date"
-                                placeholder="选择日期"
-                                class="report_int"
-                        >
-                        </el-date-picker>
-                        -
-                        <el-time-picker
-                                v-model="time"
-                                placeholder="选择时间"
-                                class="report_int"
-                        >
-                        </el-time-picker>
-                    </div>
-                </div>
-                <div class="sub_btn">
-                    <el-button type="primary">提交信息</el-button>
-                </div>
-            </div>
             <!--    搜索区域        -->
             <myShare/>
             <!--   表格区域         -->
             <div class="tab">
+                <div class="add">
+                    <el-row>
+                        <el-button type="primary" @click="add()">添加</el-button>
+                    </el-row>
+                </div>
                 <el-table
                         :data="tableData"
                         style="width: 100%">
@@ -98,37 +64,25 @@
             <!--                </el-pagination>-->
             <!--            </div>-->
             <myModify :isShowsUpd.sync="isShowsUpd"/>
+            <myAdd :isShowAdd.sync="isShowAdd"/>
         </el-card>
     </div>
 </template>
 
 <script>
     import myModify from '../../views/Stores/Modify/Modify'
-    import myShare from '../../components/Pub/share/areaShare'
+    import myShare from '../../components/Pub/address/address'
+    import myAdd from '../../views/Area/Add/Add'
     export default {
         components:{
             myModify,
-            myShare
+            myShare,
+            myAdd
         },
         name: "Area",
         data(){
             return{
-                stores:'',
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-                type: [],
-                date: '',
-                time: '',
+                isShowAdd:false,
                 tableData: [{
                     stores:'沈阳',
                     address:'辽宁省/沈阳市/铁西区',
@@ -146,7 +100,10 @@
             },
             handleDelete(index, row) {
                 console.log(index, row);
-            }
+            },
+            add() {
+                this.isShowAdd = true
+            },
         },
     }
 </script>
@@ -163,33 +120,15 @@
     .el-card {
         height: 100%;
     }
-    .form_box{
-        width: 100%;
-    }
-    .form{
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
     label{
         padding: 15px;
         display: block;
-    }
-    .report_int{
-        width: 380px;
-    }
-    .sub_btn {
-        padding: 20px 0;
-        text-align: right;
     }
     .tab>>>.el-table--enable-row-transition .el-table__body td{
         text-align: center;
     }
     .tab>>>.el-table th>.cell {
         text-align: center;
-    }
-    .el-input--mini{
-        width: 300px;
     }
     .el-input--mini .el-input__inner{
         width: 300px;
@@ -199,16 +138,11 @@
         text-align: center;
         padding: 30px 0;
     }
-    .search{
-        width: 100%;
-        display: flex;
-        margin: 20px 0;
-    }
     .search_box>span{
         padding-right: 20px;
     }
-    .search_btn{
-        margin-left: 20px;
+    .add{
+        padding: 30px 0;
     }
 
 </style>

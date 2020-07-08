@@ -120,6 +120,7 @@
     }
     .tab{
         width: 100%;
+        padding-top: 30px;
     }
     .tab>>>.el-table--enable-row-transition .el-table__body td{
         text-align: center;

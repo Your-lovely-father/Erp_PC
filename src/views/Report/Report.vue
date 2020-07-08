@@ -2,119 +2,8 @@
     <div class="report">
         <!--    卡片视图区域    -->
         <el-card>
-            <!--     表单区域       -->
-            <div class="box_form">
-                <div class="form">
-                    <div class="int_box">
-                        <label>姓名</label>
-                        <el-input
-                                placeholder="请输入姓名"
-                                v-model="name"
-                                clearable
-                                class="report_int"
-                        >
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>电话</label>
-                        <el-input
-                                placeholder="请输入电话"
-                                v-model="phone"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>报备时间</label>
-                        <el-date-picker
-                                v-model="date"
-                                type="date"
-                                placeholder="选择日期"
-                                class="date"
-                        >
-                        </el-date-picker>
-                        -
-                        <el-time-picker
-                                v-model="time"
-                                placeholder="选择时间"
-                                class="date"
-                        >
-                        </el-time-picker>
-                    </div>
-                    <div class="int_box">
-                        <label>带看楼盘</label>
-                        <el-input
-                                placeholder="请输入带看楼盘"
-                                v-model="look"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>维护人</label>
-                        <el-input
-                                placeholder="请输入维护人"
-                                v-model="maintenance"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>意向楼盘</label>
-                        <el-input
-                                placeholder="请输入意向楼盘"
-                                v-model="intention"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>区域</label>
-                        <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
-                    </div>
-                    <div class="int_box">
-                        <label>门店</label>
-                        <el-select v-model="stores" placeholder="请选择" class="report_int"
-                        >
-                            <el-option
-                                    v-for="item in storesOptions"
-                                    :key="item.stores"
-                                    :label="item.label"
-                                    :value="item.stores"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="int_box">
-                        <label>备注</label>
-                        <el-input
-                                placeholder="请输入备注"
-                                v-model="note"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>客户类别</label>
-                        <el-select v-model="customer" placeholder="请选择" class="report_int"
-                        >
-                            <el-option
-                                    v-for="item in customerOoptions"
-                                    :key="item.customer"
-                                    :label="item.label"
-                                    :value="item.customer"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="sub_btn">
-                    <el-button type="primary">提交信息</el-button>
-                </div>
-            </div>
             <!--     表格区域       -->
             <div class="tab">
-                <!--     搜索区域       -->
                 <div class="search">
                     <div class="box_form">
                         <div class="form">
@@ -237,11 +126,18 @@
                                 </el-select>
                             </div>
                         </div>
-                        <div class="sub_btn">
-                            <el-button type="primary">搜索</el-button>
-                        </div>
                     </div>
                 </div>
+               <div class="tab_btn">
+                   <div class="add">
+                       <el-row>
+                           <el-button type="primary" @click="add()">添加</el-button>
+                       </el-row>
+                   </div>
+                   <div class="sub_btn">
+                       <el-button type="primary">搜索</el-button>
+                   </div>
+               </div>
                 <el-table
                         :data="tableData"
                         border
@@ -322,6 +218,7 @@
                 </el-table>
             </div>
             <mySee :isShow.sync="isShow"/>
+            <myAdd :isShowAdd.sync="isShowAdd"/>
             <myModify :isShowsUpd.sync="isShowsUpd"/>
             <!--     分页区域       -->
             <!--            <div class="page">-->
@@ -342,60 +239,17 @@
 <script>
     import mySee from '../../views/Report/See/See'
     import myModify from '../../views/Report/Modify/Modify'
+    import myAdd from '../../views/Report/Add/Add'
 
     export default {
         name: "Report",
         components: {
             mySee,
-            myModify
+            myModify,
+            myAdd
         },
         data() {
             return {
-                //添加字段
-                name: '',
-                phone: '',
-                type: [],
-                date: '',
-                time: '',
-                look: '',
-                maintenance: '',
-                intention: '',
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-                storesOptions: [{
-                    stores: '选项1',
-                    label: 'A门店'
-                }, {
-                    stores: '选项2',
-                    label: 'B门店'
-                }],
-                stores: '',
-                note: '',
-                customerOoptions: [
-                    {
-                        customer: '选项1',
-                        label: '客户类别A'
-                    },
-                    {
-                        customer: '选项2',
-                        label: '客户类别B'
-                    },
-                    {
-                        customer: '选项3',
-                        label: '客户类别C'
-                    }
-                ],
-                customer: '',
                 //搜索字段
                 searchName: '',
                 searchPhone: '',
@@ -441,6 +295,7 @@
                     }
                 ],
                 searchCustomer: '',
+                isShowAdd: false,
                 tableData: [
                     {
                         name: '王志远',
@@ -456,8 +311,8 @@
                     }
                 ],
                 currentPage4: 4,
-                isShow: false ,//查看
-                isShowsUpd:false//修改
+                isShow: false,//查看
+                isShowsUpd: false//修改
             }
         },
         methods: {
@@ -466,13 +321,16 @@
                 this.isShow = true
             },
             upd() {
-                this.isShowsUpd=true
+                this.isShowsUpd = true
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+            },
+            add() {
+                this.isShowAdd = true
             },
         },
     }
@@ -494,19 +352,9 @@
 
     .search {
         width: 100%;
-        padding: 20px 0;
         display: flex;
         justify-content: flex-end;
     }
-
-    .int_search {
-        width: 300px;
-    }
-
-    .btn_search {
-        margin-left: 20px;
-    }
-
     .box_form {
         width: 100%;
     }
@@ -531,12 +379,6 @@
     .date {
         width: 135px;
     }
-
-    .sub_btn {
-        padding: 20px 0;
-        text-align: right;
-    }
-
     .tab {
         width: 100%;
     }
@@ -550,5 +392,13 @@
         text-align: center;
         padding: 30px 0;
     }
+    .tab_btn{
+        width: 100%;
+        display: flex;
+        margin: 30px 0;
 
+    }
+    .sub_btn{
+        margin-left: 20px;
+    }
 </style>

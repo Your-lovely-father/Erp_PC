@@ -21,8 +21,14 @@ export default {
         })
     },
     //员工列表
-    getSlectList(page, offset) {
-        return Axios.get('erp/get_user_list?page=' + page + '&offset=' + offset)
+    getSlectList(pageInfo) {
+        console.log(pageInfo.pagenum)
+        console.log(pageInfo.pagesize)
+        return Axios.post('erp/get_user_list',{page:pageInfo.pagenum,offset:pageInfo.pagesize})
+    },
+    //员工删除
+    postDel(id){
+        return Axios.post('/erp/user_del',{id:id})
     }
 
 }

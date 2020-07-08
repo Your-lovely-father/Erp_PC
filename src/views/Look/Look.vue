@@ -2,54 +2,15 @@
     <div class="log">
         <!--    卡片视图区域    -->
         <el-card>
-            <!--   表单区域    -->
-            <div class="form">
-               <div class="form-box">
-                   <div class="int_box">
-                       <label>带看记录</label>
-                       <el-input
-                               placeholder="请输入带看记录"
-                               clearable
-                               v-model="look"
-                               class="report_int">
-                       </el-input>
-                   </div>
-                   <div class="int_box">
-                       <label>时间</label>
-                       <el-date-picker
-                               v-model="date"
-                               type="date"
-                               placeholder="选择日期"
-                               class="report_int"
-                       >
-                       </el-date-picker>
-                       -
-                       <el-time-picker
-                               v-model="time"
-                               placeholder="选择时间"
-                               class="report_int"
-                       >
-                       </el-time-picker>
-                   </div>
-                   <div class="int_box">
-                       <label>维护人</label>
-                       <el-input
-                               placeholder="请输入维护人"
-                               clearable
-                               v-model="maintenance"
-                               class="report_int">
-                       </el-input>
-                   </div>
-
-               </div>
-                <div class="sub_btn">
-                    <el-button type="primary">提交信息</el-button>
-                </div>
-            </div>
             <!--    搜索区域        -->
             <myShare/>
             <!--   表格区域         -->
             <div class="tab">
+                <div class="add">
+                    <el-row>
+                        <el-button type="primary" @click="add()">添加</el-button>
+                    </el-row>
+                </div>
                 <el-table
                         :data="tableData"
                         style="width: 100%">
@@ -100,6 +61,8 @@
             <!--            </div>-->
             <mySee :isShow.sync="isShow"/>
             <myModify :isShowsUpd.sync="isShowsUpd"/>
+            <myAdd :isShowAdd.sync="isShowAdd"/>
+
         </el-card>
     </div>
 </template>
@@ -108,15 +71,18 @@
     import mySee from '../../views/Look/See/See'
     import myModify from '../../views/Look/Modify/Modify'
     import myShare from '../../components/Pub/share/share'
+    import myAdd from '../../views/Look/Add/Add'
     export default {
         components:{
             mySee,
             myModify,
-            myShare
+            myShare,
+            myAdd
         },
         name: "Log",
         data() {
             return {
+                isShowAdd:false,
                 tableData: [{
                     date:'2019-5-30 12:20',
                     look:'删除了门店',
@@ -125,11 +91,6 @@
                 isShow:false,
                 isShowsUpd:false,
                 currentPage4: 4,
-                look:'',
-                type:[],
-                date:'',
-                time:'',
-                maintenance:'',
             }
         },
         methods: {
@@ -142,6 +103,9 @@
             },
             upd(){
                 this.isShowsUpd=true
+            },
+            add(){
+                this.isShowAdd=true
             }
         },
     }
@@ -168,36 +132,12 @@
     .tab>>>.el-table th>.cell {
         text-align: center;
     }
-    .el-input--mini{
-        width: 300px;
-    }
-    .el-input--mini .el-input__inner{
-        width: 300px;
-    }
     .page {
         width: 100%;
         text-align: center;
         padding: 30px 0;
     }
-
-    .report_int{
-        width: 390px;
-    }
-    label {
-        display: block;
-        padding: 15px 0;
-    }
-    .form{
-        width: 100%;
-    }
-    .form-box{
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
-    .sub_btn{
-        width: 100%;
-        margin: 20px 0;
-        text-align: right;
+    .add{
+        padding: 30px 0;
     }
 </style>

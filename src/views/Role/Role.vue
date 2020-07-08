@@ -2,43 +2,13 @@
     <div class="area">
         <!--    卡片视图区域    -->
         <el-card>
-            <!--    表单区域        -->
-            <div class="form_box">
-                <div class="form">
-                    <div class="int_box">
-                        <label>角色名称</label>
-                        <el-input
-                                placeholder="请输角色名称"
-                                v-model="name"
-                                clearable
-                                class="report_int"
-                        >
-                        </el-input>
-                    </div>
-                    <div class="int_box_right">
-                        <label>时间</label>
-                        <el-date-picker
-                                v-model="date"
-                                type="date"
-                                placeholder="选择日期"
-                                class="report_int"
-                        >
-                        </el-date-picker>
-                        -
-                        <el-time-picker
-                                v-model="time"
-                                placeholder="选择时间"
-                                class="report_int"
-                        >
-                        </el-time-picker>
-                    </div>
-                </div>
-                <div class="sub_btn">
-                    <el-button type="primary">提交信息</el-button>
-                </div>
-            </div>
             <!--   表格区域         -->
             <div class="tab">
+                <div class="add">
+                    <el-row>
+                        <el-button type="primary" @click="add()">添加</el-button>
+                    </el-row>
+                </div>
                 <el-table
                         :data="tableData"
                         style="width: 100%">
@@ -106,7 +76,9 @@
             <!--                </el-pagination>-->
             <!--            </div>-->
             <mySee :isShow.sync="isShow"/>
+            <myAdd :isShowAdd.sync="isShowAdd"/>
             <myModify :isShowsUpd.sync="isShowsUpd"/>
+
         </el-card>
     </div>
 </template>
@@ -114,18 +86,17 @@
 <script>
     import mySee from '../../views/Role/See/See'
     import myModify from '../../views/Role/Modify/Modify'
+    import myAdd from '../../views/Role/Add/Add'
 
     export default {
         components: {
             mySee,
-            myModify
+            myModify,
+            myAdd
         },
         data() {
             return {
-                name:'',
-                type: [],
-                date: '',
-                time: '',
+                isShowAdd:false,
                 tableData: [{
                     name: '超级管理员',
                     date: '2019-5-30 12:20',
@@ -156,7 +127,10 @@
             },
             handleDelete(index, row) {
                 console.log(index, row);
-            }
+            },
+            add() {
+                this.isShowAdd = true
+            },
         },
     }
 </script>
@@ -166,39 +140,10 @@
         width: 100%;
         height: 100%;
     }
-
-    .el-card {
-        height: 100%;
-    }
-
-    .form_box {
-        width: 100%;
-    }
-
-    .form {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
-
     label {
         padding: 15px;
         display: block;
     }
-
-    .report_int {
-        width: 533px;
-    }
-
-    .int_box_right {
-        margin-left: 20px;
-    }
-
-    .sub_btn {
-        padding: 20px 0;
-        text-align: right;
-    }
-
     .tab >>> .el-table--enable-row-transition .el-table__body td {
         text-align: center;
     }
@@ -206,11 +151,6 @@
     .tab >>> .el-table th > .cell {
         text-align: center;
     }
-
-    .el-input--mini {
-        width: 300px;
-    }
-
     .el-input--mini .el-input__inner {
         width: 300px;
     }

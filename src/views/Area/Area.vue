@@ -2,39 +2,15 @@
     <div class="area">
         <!--    卡片视图区域    -->
         <el-card>
-            <!--    表单区域        -->
-            <div class="form_box">
-                <div class="form">
-                    <div class="int_box">
-                        <label>区域</label>
-                        <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
-                    </div>
-                    <div class="int_box_right">
-                        <label>时间</label>
-                        <el-date-picker
-                                v-model="date"
-                                type="date"
-                                placeholder="选择日期"
-                                class="report_int"
-                        >
-                        </el-date-picker>
-                        -
-                        <el-time-picker
-                                v-model="time"
-                                placeholder="选择时间"
-                                class="report_int"
-                        >
-                        </el-time-picker>
-                    </div>
-                </div>
-                <div class="sub_btn">
-                    <el-button type="primary">提交信息</el-button>
-                </div>
-            </div>
             <!--    搜索区域        -->
             <myShare/>
             <!--   表格区域         -->
             <div class="tab">
+                <div class="add">
+                    <el-row>
+                        <el-button type="primary" @click="add()">添加</el-button>
+                    </el-row>
+                </div>
                 <el-table
                         :data="tableData"
                         style="width: 100%">
@@ -88,42 +64,30 @@
 <!--                </el-pagination>-->
 <!--            </div>-->
             <myModify :isShowsUpd.sync="isShowsUpd"/>
+            <myAdd :isShowAdd.sync="isShowAdd"/>
         </el-card>
     </div>
 </template>
 
 <script>
     import myModify from '../../views/Area/Modify/Modify'
-    import myShare from '../../components/Pub/share/areaShare'
+    import myShare from '../../components/Pub/address/address'
+    import myAdd from '../../views/Area/Add/Add'
     export default {
         components: {
             myModify,
-            myShare
+            myShare,
+            myAdd
         },
         name: "Area",
         data() {
             return {
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-
-                type: [],
-                date: '',
-                time: '',
                 tableData: [{
                     address: '辽宁省/沈阳市/铁西区',
                     date: '2019-5-30 12:20',
                 },
                 ],
+                isShowAdd:false,
                 isShowsUpd: false,//修改
                 currentPage4: 4,
             }
@@ -135,7 +99,10 @@
             },
             handleDelete(index, row) {
                 console.log(index, row);
-            }
+            },
+            add() {
+                this.isShowAdd = true
+            },
         },
     }
 </script>
@@ -145,39 +112,6 @@
         width: 100%;
         height: 100%;
     }
-
-    .el-card {
-        height: 100%;
-    }
-
-    .form_box {
-        width: 100%;
-    }
-
-    .form {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    label {
-        padding: 15px;
-        display: block;
-    }
-
-    .report_int {
-        width: 533px;
-    }
-
-    .int_box_right {
-        margin-left: 20px;
-    }
-
-    .sub_btn {
-        padding: 20px 0;
-        text-align: right;
-    }
-
     .tab >>> .el-table--enable-row-transition .el-table__body td {
         text-align: center;
     }
@@ -185,15 +119,6 @@
     .tab >>> .el-table th > .cell {
         text-align: center;
     }
-
-    .el-input--mini {
-        width: 300px;
-    }
-
-    .el-input--mini .el-input__inner {
-        width: 300px;
-    }
-
     .left_btn {
         margin-left: 10px;
     }
@@ -202,6 +127,8 @@
         text-align: center;
         padding: 30px 0;
     }
-
+    .add{
+        padding: 30px 0;
+    }
 
 </style>

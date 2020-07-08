@@ -2,141 +2,13 @@
     <div class="report">
         <!--    卡片视图区域    -->
         <el-card>
-            <!--     表单区域       -->
-            <div class="box_form">
-                <div class="form">
-                    <div class="int_box">
-                        <label>姓名</label>
-                        <el-input
-                                placeholder="请输入姓名"
-                                v-model="name"
-                                clearable
-                                class="report_int"
-                        >
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>电话</label>
-                        <el-input
-                                placeholder="请输入电话"
-                                v-model="phone"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>年龄</label>
-                        <el-input
-                                placeholder="请输入年龄"
-                                v-model="age"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>性别</label>
-                        <el-select v-model="gender" placeholder="请输入性别" class="report_int"
-                                   @change="genderValue($event)"
-                        >
-                            <el-option
-                                    v-for="item in genderOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="int_box">
-                        <label>身份证号</label>
-                        <el-input
-                                placeholder="请输入身份证号"
-                                v-model="idNumber"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>密码</label>
-                        <el-input
-                                placeholder="请输入密码"
-                                v-model="password"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>角色管理</label>
-                        <el-input
-                                placeholder="请输入角色管理"
-                                v-model="role"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>区域</label>
-                        <el-cascader :options="areaOptions" clearable class="report_int"
-                                     @change="handleChange"
-                                     ref="cascaderAddr"
-                        ></el-cascader>
-                    </div>
-                    <div class="int_box">
-                        <label>门店</label>
-                        <el-select v-model="stores" placeholder="请输入门店" class="report_int"
-                                   @change="obtain($event)"
-                        >
-                            <el-option
-                                    v-for="item in storesOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                    ref="id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-
-                    <div class="state">
-                        <div class="int_box">
-                            <label>状态</label>
-                            <el-switch
-                                    v-model="state"
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949">
-                            </el-switch>
-                        </div>
-                        <div class="int_box">
-                            <label>开通手机端</label>
-                            <el-switch
-                                    v-model="open"
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949"
-                            >
-                            </el-switch>
-                        </div>
-                    </div>
-                </div>
-                <div class="upload">
-                    <div class="int_box">
-                        <label>头像</label>
-                        <el-upload
-                                action="/erp/user_add"
-                                list-type="picture-card"
-                                :on-preview="headHandlePictureCardPreview"
-                                :on-remove="headHandleRemove">
-                            <i class="el-icon-plus"></i>
-                        </el-upload>
-                        <el-dialog :visible.sync="headDialogVisible">
-                            <img width="100%" :src="headDialogImageUrl" alt="">
-                        </el-dialog>
-                    </div>
-                </div>
-                <div class="sub_btn">
-                    <el-button type="primary" @click="add">提交信息</el-button>
-                </div>
-            </div>
             <!--     表格区域       -->
             <div class="tab">
+                <div class="add">
+                    <el-row>
+                        <el-button type="primary" @click="add()">添加</el-button>
+                    </el-row>
+                </div>
                 <el-table
                         :data="tableData"
                         border
@@ -173,46 +45,39 @@
                             prop="user_sex"
                             label="性别"
                             width="180">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.user_sex === 20 ? '男' : '女'}}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="user_id_card"
                             label="身份证号"
                             width="180">
                     </el-table-column>
-                    <!--                    <el-table-column-->
-                    <!--                            prop="password"-->
-                    <!--                            label="密码"-->
-                    <!--                            width="180">-->
-                    <!--                    </el-table-column>-->
                     <el-table-column
                             prop="user_status"
                             label="状态"
                             width="180">
                         <template slot-scope="scope">
                             <el-switch
-                                    v-model="scope.row.state"
+                                    v-model="scope.row.user_status === 1 ? true : false "
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
                             />
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="user_role"
-                            label="角色管理"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="storefront_id"
+                            prop="storefront_name"
                             label="门店"
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="open"
+                            prop="mobile_terminal_status"
                             label="开通手机端"
                             width="180">
                         <template slot-scope="scope">
                             <el-switch
-                                    v-model="scope.row.open"
+                                    v-model="scope.row.mobile_terminal_status === 1 ? true : false "
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
                             />
@@ -225,32 +90,24 @@
                         <template slot-scope="scope">
                             <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
                             <el-button type="text" size="small" @click="upd()">编辑</el-button>
-                            <el-popconfirm
-                                    confirmButtonText='确定'
-                                    cancelButtonText='取消'
-                                    icon="el-icon-info"
-                                    iconColor="red"
-                                    title="确定要删除吗？"
-                            >
-                                <el-button type="text" size="small" slot="reference" class="el-popconfirm">删除
-                                </el-button>
-                            </el-popconfirm>
+                            <el-button type="text" size="small" @click="del(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
             <mySee :isShow.sync="isShow"/>
             <myModify :isShowsUpd.sync="isShowsUpd"/>
+            <myAdd :isShowAdd.sync="isShowAdd"/>
             <!--     分页区域       -->
             <div class="page">
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage4"
-                        :page-sizes="[5, 10, 20, 40]"
-                        :page-size="pagesize"
+                        :current-page="queryInfo.pagenum"
+                        :page-sizes="[5, 10, 20, 30]"
+                        :page-size="queryInfo.pagesize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="tableData.length">
+                        :total="totalPage">
                 </el-pagination>
             </div>
         </el-card>
@@ -260,51 +117,28 @@
 <script>
     import mySee from '../../views/Employees/See/See'
     import myModify from '../../views/Employees/Modify/Modify'
+    import myAdd from '../../views/Employees/Add/Add'
     import Api from '../../api/Employees/Employees'
-    import Axios from '../../api/pub/pub'
 
     export default {
         name: "Report",
         components: {
             mySee,
             myModify,
+            myAdd
         },
         data() {
             return {
-                name: '',
-                phone: '',
-                age: '',
-                // position: '',
-                gender: '',
-                idNumber: '',
-                password: '',
-                // account:'',
-                role: '',
-                state: false,
-                open: false,
-                headDialogImageUrl: '',
-                headDialogVisible: false,
-                currentPage4: 4,
+                isShowAdd: false,//添加
                 isShow: false,//查看
                 isShowsUpd: false,//修改
-                areaOptions: [],
-                storesOptions: [],
-                stores: '',
-                storesId: '',
-                provinceValue: '',
-                cityValue: '',
-                areaValue: '',
-                genderOptions: [{
-                    value: '10',
-                    label: '男'
-                }, {
-                    value: '20',
-                    label: '女'
-                }],
-                gender: '',
-                currentPage: 1, //初始页
-                pagesize: 10,    // 每页的数据
-                tableData: [],
+                tableData: [],//员工列表
+                queryInfo: { //分页
+                    query: '',
+                    pagenum: 1, //当前第几页
+                    pagesize: 5 //当前显示几条
+                },
+                totalPage: 0 //总条数
 
 
             }
@@ -314,111 +148,53 @@
                 console.log(row);
                 this.isShow = true
             },
-            upd() {
+            add() {//添加弹框
+                this.isShowAdd = true
+            },
+            upd() { //修改弹框
                 this.isShowsUpd = true
             },
-            handleSizeChange(val) {
-                this.pagesize = size;
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                this.currentPage = currentPage;
-                console.log(`当前页: ${val}`);
-            },
-            headHandleRemove(file, fileList) {
-                console.log(file, fileList);
-            },
-            headHandlePictureCardPreview(file) {
-                this.headDialogImageUrl = file.url;
-                this.headDialogVisible = true;
-            },
-            add() {//添加
-                const user_name = this.name;//员工姓名
-                const user_phone = this.phone;//员工电话
-                const user_age = this.age;//员工年龄
-                const user_sex = this.gender;//员工性别(10男20女)
-                const user_id_card = this.idNumber;//员工身份证号
-                // const user_image = this.headDialogImageUrl;//员工头像
-                const user_password = this.password;//员工密码
-                var user_status;
-                if (this.state === true) { //状态
-                    user_status = '1'
-                } else {
-                    user_status = '2'
-                }
-                const user_role = this.role;//员工角色id
-                const province_id = this.provinceValue;//省级id
-                const city_id = this.cityValue;//市级id
-                const area_id = this.areaValue;//区域id
-                const storefront_id = this.storesId;//门店id
-                var mobile_terminal_status;
-                if (this.open === true) {//是否开启手机端(1开通2锁定)
-                    mobile_terminal_status = 1
-                } else {
-                    mobile_terminal_status = 2
-                }
-                Api.postAdd(user_name, user_phone, user_age, user_sex, user_id_card, user_password, user_status, user_role,
-                    province_id, city_id, area_id, storefront_id, mobile_terminal_status).then((res) => {
-                    if (res.code === "200001") {
-                        this.$message.success(res.msg);
-                    } else {
-                        this.$message.error(res.msg);
-                    }
-
-                })
-            },
-            getSelect() {
-                Axios.getSelect().then((res) => {
-                    const data = res.data[0].son;
-                    data.map((item) => {
-                        item.label = item.AREA_NAME;
-                        item.value = item.AREA_ID;
-                        item.children = item.son;
-                        if (item.son) {
-                            item.son.map(el => {
-                                el.label = el.AREA_NAME;
-                                el.value = el.AREA_ID;
-                                el.children = el.son;
-                                if (el.son) {
-                                    el.son.map(key => {
-                                        key.label = key.AREA_NAME;
-                                        key.value = key.AREA_ID;
-                                        key.children = key.son;
-
-                                    })
-                                }
-                            })
+            del(id) { //删除操作
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.postDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            // this.getSelectList()
+                        } else {
+                            this.$message.error(res.msg);
                         }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
                     });
-                    window.sessionStorage.setItem('linkage', JSON.stringify(data))
-                    var linkage = window.sessionStorage.getItem('linkage')
-                    this.areaOptions = JSON.parse(linkage)
+                });
+            },
+            getSelectList() {//员工列表查询
+                Api.getSlectList(this.queryInfo).then((res) => {
+                    if (res.code !== 200) {
+                        return this.$message.error('获取员工列表失败')
+                    }
+                    this.tableData = res.data.user_data;
+                    this.totalPage = res.data.count
+
                 })
             },
-            handleChange() {
-                var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
-                this.provinceValue = pathvalue[0];
-                this.cityValue = pathvalue[1];
-                this.areaValue = pathvalue[2];
-                Axios.postStores().then(res => {
-                    let cityData = JSON.stringify(res.data);
-                    this.storesOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
-                })
+            handleSizeChange(newSize) { //当前显示多少条操作
+                this.queryInfo.pagesize = newSize;
+                this.getSelectList()
             },
-            obtain(e) {
-                this.storesId = e
+            handleCurrentChange(newPage) { //当前页数操作
+                this.queryInfo.pagenum = newPage;
+                this.getSelectList()
             },
-            genderValue(e) {
-                this.age = e
-            },
-            getSelectList() {//员工列表
-                Api.getSlectList(this.currentPage, this.pagesize).then((res) => {
-                    this.tableData = res.data
-                })
-            }
         },
         mounted() {
-            this.getSelect();
             this.getSelectList()
         }
     }
@@ -487,5 +263,9 @@
         display: flex;
         width: 800px;
         justify-content: space-between;
+    }
+
+    .add {
+        padding: 30px 0;
     }
 </style>
