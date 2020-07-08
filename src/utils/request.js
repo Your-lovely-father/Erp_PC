@@ -23,10 +23,10 @@ const err = (error) => {
 
 // 请求拦截中，我们可以对请求头作处理，比如所有的请求都加一个token等
 axios.interceptors.request.use(config => {
-    // const token = 'token'
-    // if (token) {
-    //   config.headers['Access-Token'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
-    // }
+    const token = '68ee09fb8367f32401063cc9cadf3ba31594107367';
+    if (token) {
+      config.headers['Access-Token'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+    }
     return config
 }, err)
 

@@ -19,59 +19,6 @@ const router = new VueRouter({
             name: 'Login',
             component: () => import('../views/Login/Login'),
         },
-        // //客户报表
-        // {
-        //     path: '/report',
-        //     name: 'Report',
-        //     component: () => import('../views/Report/Report'),
-        // },
-        // //楼盘管理
-        // {
-        //     path: '/building',
-        //     name: 'Building',
-        //     component: () => import('../views/Building/Building'),
-        // },
-        // //区域管理
-        // {
-        //     path: '/area',
-        //     name: 'Area',
-        //     component: () => import('../views/Area/Area'),
-        // },
-        // //门店管理
-        // {
-        //     path: '/stores',
-        //     name: 'Stores',
-        //     component: () => import('../views/Stores/Stores'),
-        // },
-        // //日志管理
-        // {
-        //     path: '/log',
-        //     name: 'Log',
-        //     component: () => import('../views/Log/Log'),
-        // },
-        // //带看管理
-        // {
-        //     path: '/look',
-        //     name: 'Look',
-        //     component: () => import('../views/Look/Look'),
-        // },
-        // //跟进管理
-        // {
-        //     path: '/tracking',
-        //     name: 'Tracking',
-        //     component: () => import('../views/Tracking/Tracking'),
-        // },
-        // //员工管理
-        // {
-        //     path: '/employees',
-        //     name: 'Employees',
-        //     component: () => import('../views/Employees/Employees'),
-        // },
-        //主体
-        // {
-        //
-        // },
-
         {
             path: '/body',
             name: 'Body',
