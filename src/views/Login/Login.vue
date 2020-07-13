@@ -1,10 +1,12 @@
 <template>
     <div class="login">
+        <!--    logo区域    -->
+        <div class="avatar_box">
+            <img src="../../assets/images/logo.png" alt="">
+        </div>
         <div class="login_box">
-            <!--    头像区        -->
-            <div class="avatar_box">
-                <img src="../../assets/images/logo-ip.png" alt="">
-            </div>
+            <!--   title区域         -->
+            <p class="title_h1">欢迎登陆 <span class="title_h3">可立刻新房源报备系统</span> </p>
             <!--    表单区        -->
             <el-form  :model="loginForm" class="login_form" :rules="rules" ref="loginFormRef">
             <!--    用户区   -->
@@ -16,8 +18,8 @@
                     <el-input v-model="loginForm.pass" prefix-icon="el-icon-s-release" type="password"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
-                    <el-button type="primary" @click="login(200)">登录</el-button>
-                    <el-button type="info" @click="reset">重置</el-button>
+                    <el-button type="primary" @click="login(200)" class="color_login">登录</el-button>
+                    <el-button type="info" @click="reset" class="reset">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -71,7 +73,9 @@
     .login {
         width: 100%;
         height: 100%;
-        background-color: #2b4b6b;
+        background: url("../../assets/images/login_back.png") right no-repeat;
+        background-size: 50% 100%;
+        position: relative;
     }
 
     .login_box {
@@ -82,39 +86,44 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-130%, -50%);
+        box-shadow:0px 0px 10px #eee;
+        border: 1px #eee solid;
     }
-
-    .avatar_box {
-        width: 130px;
-        height: 130px;
-        border: 1px solid #eee;
-        border-radius: 50%;
-        padding: 10px;
-        box-shadow: 0 0 10px #ddd;
+    .avatar_box{
         position: absolute;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #fff;
+        top: 50px;
+        left: 100px;
     }
-
-    .avatar_box > img {
-        width: 100%;
-        height: 130px;
-        border-radius: 50%;
-        background-color: #eee;
-    }
-
     .btns {
         display: flex;
         justify-content: flex-end;
     }
 
     .login_form {
-        position: absolute;
-        bottom: 0;
+        margin-top: 30px;
         width: 100%;
         padding: 0 20px;
         box-sizing: border-box;
+    }
+    .title_h1{
+        text-align: center;
+        width: 100%;
+        font-size: 25px;
+        font-weight: bold;
+        margin-top: 35px;
+    }
+    .title_h3{
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .color_login{
+        background: #ffbd14;
+        outline: none;
+        border: none;
+    }
+    .reset{
+        outline: none;
+        border: none;
     }
 </style>

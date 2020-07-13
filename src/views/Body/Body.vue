@@ -23,12 +23,12 @@
                         :router="true"
                 >
                     <!--        主菜单           -->
-                    <el-menu-item :index="'/'+ item.path"  v-for="item in list" :key="item.id">
+                    <el-menu-item :index="'/'+ item.path" v-for="item in list" :key="item.id">
                         <i :class="icon[item.id]" id="icon"></i>
-                        <span  class="text">{{item.name}}</span>
+                        <span class="text">{{item.name}}</span>
                     </el-menu-item>
 
-                    <el-submenu :index="'/'+ item.path"  v-for="item in navList" :key="item.id">
+                    <el-submenu :index="'/'+ item.path" v-for="item in navList" :key="item.id">
                         <!--     一级菜单模板区-->
                         <template slot="title">
                             <i :class="icon[item.id]" id="icon"></i>
@@ -61,9 +61,30 @@
                             </div>
                         </div>
                         <div class="header-right">
-                            <el-row>
-                                <el-button type="info" @click="exit">退出</el-button>
-                            </el-row>
+                            <el-dropdown>
+                                <ul class="exit">
+                                    <li>
+                                        <p class="p_img">
+                                            <img src="http://gss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/267f9e2f07082838685c484ab999a9014c08f11f.jpg"
+                                                 alt="">
+                                        </p>
+                                        <p class="name_title">
+                                            王志远
+                                        </p>
+                                        <p class="icon_top_bottom">
+                                            <span class="el-icon-caret-top" v-if="isShowIcon"></span>
+                                            <span class="el-icon-caret-bottom" v-else></span>
+                                        </p>
+                                        <ol class="exit_btn">
+                                            <li>
+                                                <el-dropdown-menu slot="dropdown">
+                                                    <el-dropdown-item @click="exit()">退出</el-dropdown-item>
+                                                </el-dropdown-menu>
+                                            </li>
+                                        </ol>
+                                    </li>
+                                </ul>
+                            </el-dropdown>
                         </div>
                     </div>
                 </el-header>
@@ -88,8 +109,9 @@
                 //侧边栏展开收齐按钮
                 flag: true,
                 //侧边栏数据
-                crumbs:'客户报表',
-                list:[
+                isShowIcon: false,//退出图标切换
+                crumbs: '客户报表',
+                list: [
                     {
                         id: '0',
                         name: '客户报备',
@@ -113,7 +135,7 @@
                     {
                         id: '5',
                         name: '日志管理',
-                        path: 'log'
+                        path: 'Log'
                     },
                     {
                         id: '6',
@@ -187,12 +209,18 @@
                 this.isLogoText = !this.isLogoText;
                 this.flag = !this.flag
             },
+            mouseOver() {
+                this.isShowIcon = !this.isShowIcon;
+            },
+            mouseLeave(){
+                this.isShowIcon = !this.isShowIcon;
+            }
         },
         // 监听,当路由发生变化的时候执行
         watch: {
             $route: {
-                handler: function(val, oldVal){
-                    this.crumbs=val.meta.title
+                handler: function (val, oldVal) {
+                    this.crumbs = val.meta.title
                 },
                 // 深度观察监听
                 deep: true
@@ -223,7 +251,8 @@
     .el-menu {
         border-right: none;
     }
-    .el-submenu__icon-arrow{
+
+    .el-submenu__icon-arrow {
         display: none;
     }
 
@@ -295,4 +324,30 @@
         margin-left: 15px;
     }
 
+    .exit {
+        height: 60px;
+    }
+
+    .exit > li {
+        display: flex;
+        height: 60px;
+        align-items: center;
+    }
+
+    .p_img {
+        width: 40px;
+    }
+
+    .p_img > img {
+        width: 100%;
+        border-radius: 3px;
+    }
+
+    .name_title {
+        margin-left: 10px;
+    }
+
+    .icon_top_bottom {
+        margin-left: 5px;
+    }
 </style>

@@ -103,7 +103,8 @@
                             <el-switch
                                     v-model="user_status"
                                     active-color="#13ce66"
-                                    inactive-color="#ff4949">
+                                    inactive-color="#ff4949"
+                            >
                             </el-switch>
                         </div>
                         <div class="int_box">
@@ -169,9 +170,9 @@
                 city_id: '',//市
                 area_id: '',//区
                 user_status: false,//员工状态
-                user_statusValue:'',//状态值
+                user_statusValue: false,//状态值
                 mobile_terminal_status: false,//是否开通手机端
-                mobile_terminal_statusValue:'',//手机端值
+                mobile_terminal_statusValue: '',//手机端值
                 headDialogVisible: false,//图片显示隐藏
                 headDialogImageUrl: '',//图片
                 areaOptions: [],//区域三级联动数据
@@ -189,22 +190,28 @@
             cancel() {
                 this.$emit("update:isShowAdd", false);
             },
+            flagSwitch(e) {//状态
+                this.mobile_terminal_status = e
+            },
+            flagSwitch(e){//是否开启手机端
+                this.mobile_terminal_statusValue = e
+            },
             confirm() {//添加
-                if (this.user_status === true) { //状态
+                if (this.user_status === true) {
                     this.user_statusValue = 1
                 } else {
                     this.user_statusValue = 2
                 }
-                if (this.mobile_terminal_status === true) {//是否开启手机端(1开通2锁定)
+                if (this.mobile_terminal_status === true) {
                     this.mobile_terminal_statusValue = 1
                 } else {
                     this.mobile_terminal_statusValue = 2
                 }
                 Api.postAdd(
-                    this.user_name, this.user_phone, this.user_age,this.gender, this.user_id_card,
+                    this.user_name, this.user_phone, this.user_age, this.gender, this.user_id_card,
                     this.user_password, this.user_role, this.storefront_id,
-                    this.province_id,this.city_id,this.area_id,
-                    this.user_statusValue,this.mobile_terminal_statusValue,
+                    this.province_id, this.city_id, this.area_id,
+                    this.user_statusValue, this.mobile_terminal_statusValue,
                 ).then((res) => {
                     if (res.code === "200001") {
                         this.$message.success(res.msg);

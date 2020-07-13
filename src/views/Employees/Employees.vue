@@ -63,6 +63,7 @@
                                     v-model="scope.row.user_status === 1 ? true : false "
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
+                                    @change="changeSwitch(scope.row)"
                             />
                         </template>
                     </el-table-column>
@@ -80,6 +81,7 @@
                                     v-model="scope.row.mobile_terminal_status === 1 ? true : false "
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
+                                    @change="moveSwitch(scope.row)"
                             />
                         </template>
                     </el-table-column>
@@ -133,6 +135,8 @@
                 isShow: false,//查看
                 isShowsUpd: false,//修改
                 tableData: [],//员工列表
+                // user_status:false,
+                // mobile_terminal_status:false,
                 queryInfo: { //分页
                     query: '',
                     pagenum: 1, //当前第几页
@@ -198,6 +202,20 @@
             handleCurrentChange(newPage) { //当前页数操作
                 this.queryInfo.pagenum = newPage;
                 this.getSelectList()
+            },
+            changeSwitch(status){ //状态切换开关
+                if(status.user_status === 1){
+                    status.user_status= 2
+                }else {
+                    status.user_status= 1
+                }
+            },
+            moveSwitch(status){ //开通手机端切换开关
+                if(status.mobile_terminal_status === 1){
+                    status.mobile_terminal_status= 2
+                }else {
+                    status.mobile_terminal_status= 1
+                }
             },
         },
         mounted() {

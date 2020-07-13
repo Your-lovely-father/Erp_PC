@@ -116,6 +116,7 @@
                                     v-model="selectUpd.user_status === 1 ? true :false "
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
+                                    @change="changeSwitch(selectUpd.user_status)"
                             >
                             </el-switch>
                         </div>
@@ -125,6 +126,7 @@
                                     v-model="selectUpd.mobile_terminal_status === 1 ? true :false "
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
+                                    @change="moveSwitch(selectUpd.mobile_terminal_status)"
                             >
                             </el-switch>
                         </div>
@@ -187,10 +189,10 @@
             }
         },
         methods: {
-            cancel() {
+            cancel() { //取消
                 this.$emit("update:isShowsUpd", false);
             },
-            confirm() {
+            confirm() { //确认/修改
                 this.$emit("update:isShowsUpd", false);
             },
             headHandleRemove(file, fileList) {
@@ -199,6 +201,20 @@
             headHandlePictureCardPreview(file) {
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
+            },
+            changeSwitch(status){ //状态切换开关
+                if(status === 1){
+                    this.selectUpd.user_status= 2
+                }else {
+                    this.selectUpd.user_status= 1
+                }
+            },
+            moveSwitch(status){ //开通手机端切换开关
+                if(status === 1){
+                    this.selectUpd.mobile_terminal_status= 2
+                }else {
+                    this.selectUpd.mobile_terminal_status= 1
+                }
             },
         }
     }
