@@ -53,14 +53,8 @@
                         <div class="header-left">
                             <span class="iconfont icon-shouqi" @click="up" style="display: block" v-if="flag"></span>
                             <span class="iconfont icon-zhankai" @click="up" style="display: block" v-else></span>
-                            <div class="nav-page">
-                                <!--  面包屑导航     -->
-                                <el-breadcrumb>
-                                    <el-breadcrumb-item>{{crumbs}}</el-breadcrumb-item>
-                                </el-breadcrumb>
-                            </div>
                         </div>
-                        <div class="header-right">
+                        <div class="header-right" @mousemove="move" @mouseleave="leave">
                             <el-dropdown>
                                 <ul class="exit">
                                     <li>
@@ -78,7 +72,9 @@
                                         <ol class="exit_btn">
                                             <li>
                                                 <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item @click="exit()">退出</el-dropdown-item>
+                                                    <el-dropdown-item class="exit_Btn">
+                                                        <p @click="exit()">退出</p>
+                                                    </el-dropdown-item>
                                                 </el-dropdown-menu>
                                             </li>
                                         </ol>
@@ -88,6 +84,36 @@
                         </div>
                     </div>
                 </el-header>
+                <!--         面包屑导航           -->
+                <div class="crumbs">
+                    <div class="arrow1" @click="gotoPage(prevIndex)">
+                        <p class="iconfont icon-xiangzuoshuangjiantou"></p>
+                    </div>
+                    <ul class="crumbs_content" :style="{width:currentIndex + 'px',left:left + 'px'}">
+                        <li v-for="(itme,index) in tags" :key="index" @click="gotoPage(index)">
+                            <div class="border-top"></div>
+                            <div class="listContent">
+                                <router-link to="" tag="p">{{itme.title}}</router-link>
+                                <p class="el-icon-close"></p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="position_box">
+                        <div class="right_box">
+                            <div class="left" @click="gotoPage(nextIndex)">
+                                <span class="iconfont icon-xiangyoushuangjiantou"></span>
+                            </div>
+                            <div class="left" @mousemove="crumbsMove" @mouseleave="crumbsLeave">
+                                <span class="iconfont icon-xiajiantou_huaban"></span>
+                                <div class="down" v-show="crumbsText">
+                                    <p>关闭当前标签</p>
+                                    <p>关闭所有标签</p>
+                                    <!--                                <p>关闭面包屑导航</p>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!--       主体区域         -->
                 <el-main>
                     <router-view></router-view>
@@ -110,7 +136,9 @@
                 flag: true,
                 //侧边栏数据
                 isShowIcon: false,//退出图标切换
-                crumbs: '客户报表',
+                crumbsText: false,//面包屑
+                currentIndex: 1595,   //默认页
+                left:0,
                 list: [
                     {
                         id: '0',
@@ -196,7 +224,87 @@
                     '0': 'iconfont icon-menu-pass-Emp',
                     '1': 'iconfont icon-quanxianshezhi',
                     '2': 'iconfont icon-xitongquanxianshezhi'
-                }
+                },
+                tags: [
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    },
+                    {
+                        title: '啦啦啦'
+                    }
+                ]
             }
         },
         methods: {
@@ -209,23 +317,38 @@
                 this.isLogoText = !this.isLogoText;
                 this.flag = !this.flag
             },
-            mouseOver() {
-                this.isShowIcon = !this.isShowIcon;
+            move() {
+                this.isShowIcon = true
             },
-            mouseLeave(){
-                this.isShowIcon = !this.isShowIcon;
+            leave() {
+                this.isShowIcon = false
+            },
+            crumbsMove() {
+                this.crumbsText = true
+            },
+            crumbsLeave() {
+                this.crumbsText = false
+            },
+            gotoPage(index) {
+                this.currentIndex = index;
             }
         },
-        // 监听,当路由发生变化的时候执行
-        watch: {
-            $route: {
-                handler: function (val, oldVal) {
-                    this.crumbs = val.meta.title
-                },
-                // 深度观察监听
-                deep: true
+        computed: {
+            //上一张
+            prevIndex() {
+                if(this.currentIndex == 1595) {
+                    return this.tags.length - 1;
+                }else{
+                    return this.currentIndex - 1;
+                }
+            },
+            //下一张
+            nextIndex() {
+                // if(this.currentIndex == 1595) {
+                    this.left=this.currentIndex*2
+                // }
             }
-        },
+        }
     }
 </script>
 
@@ -310,11 +433,6 @@
         align-items: center;
     }
 
-    .nav-page {
-        margin-left: 30px;
-        margin-top: 14px;
-    }
-
     #icon {
         font-weight: 400;
         color: #ffffff;
@@ -349,5 +467,144 @@
 
     .icon_top_bottom {
         margin-left: 5px;
+    }
+
+    .exit_Btn {
+        width: 70px;
+        text-align: center;
+    }
+
+    .crumbs {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-top: 1px;
+    }
+
+    .arrow1 {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border-right: 1px #eee solid;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #ffffff;
+    }
+    .position_box{
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #ffffff;
+    }
+    .arrow1:hover {
+        background: #eee;
+    }
+    .left:hover {
+        background: #eee;
+    }
+
+    .left {
+        border-left: 1px #eee solid;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+    }
+
+    .right_box {
+        display: flex;
+        position: relative;
+    }
+
+    .crumbs_content {
+        width: 1595px;
+        overflow: hidden;
+        display: flex;
+        position: relative;
+        margin-left: 40px;
+    }
+
+    .crumbs_content > li {
+        width: 115px;
+        display: flex;
+        position: relative;
+    }
+
+    .listContent {
+        width: 150px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        border-right: 1px #eee solid;
+        padding: 0 10px;
+    }
+
+    .border-top {
+        position: absolute;
+        top: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(#28a9ea,#1981e4);
+    }
+
+    .crumbs_content > li:hover .border-top {
+        animation: myfirst 1s;
+        -webkit-animation-fill-mode:forwards;
+
+    }
+
+    @keyframes myfirst {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    .listContent > p:nth-child(1) {
+        min-width: 80px;
+    }
+
+    .listContent > p:nth-child(2) {
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        line-height: 15px;
+        text-align: center;
+    }
+
+    .listContent > p:nth-child(2):hover {
+        background: red;
+        color: #ffffff;
+
+    }
+
+    .listContent:hover {
+        background: #eee;
+    }
+
+    .down {
+        width: 130px;
+        position: absolute;
+        top: 40px;
+        left: -50px;
+        background: #ffffff;
+        border: 1px solid #eee;
+        z-index: 99;
+    }
+
+    .down > p {
+        font-size: 10px;
+        color: #333333;
+        margin: 5px 0;
+    }
+
+    .down > p:hover {
+        background: #eee;
     }
 </style>
