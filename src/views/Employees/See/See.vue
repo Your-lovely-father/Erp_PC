@@ -12,7 +12,7 @@
                             <label>姓名</label>
                             <el-input
                                     placeholder="请输入姓名"
-                                    v-model="name"
+                                    v-model="selectSee.user_name"
                                     clearable
                                     class="report_int"
                                     :disabled="true"
@@ -23,7 +23,7 @@
                             <label>电话</label>
                             <el-input
                                     placeholder="请输入电话"
-                                    v-model="phone"
+                                    v-model="selectSee.user_phone"
                                     clearable
                                     class="report_int"
                                     :disabled="true"
@@ -34,29 +34,29 @@
                             <label>年龄</label>
                             <el-input
                                     placeholder="请输入年龄"
-                                    v-model="age"
+                                    v-model="selectSee.user_age"
                                     clearable
                                     class="report_int"
                                     :disabled="true"
                             >
                             </el-input>
                         </div>
-                        <div class="int_box">
-                            <label>职位</label>
-                            <el-input
-                                    placeholder="请输入职位"
-                                    v-model="position"
-                                    clearable
-                                    class="report_int"
-                                    :disabled="true"
-                            >
-                            </el-input>
-                        </div>
+<!--                        <div class="int_box">-->
+<!--                            <label>职位</label>-->
+<!--                            <el-input-->
+<!--                                    placeholder="请输入职位"-->
+<!--                                    v-model="position"-->
+<!--                                    clearable-->
+<!--                                    class="report_int"-->
+<!--                                    :disabled="true"-->
+<!--                            >-->
+<!--                            </el-input>-->
+<!--                        </div>-->
                         <div class="int_box">
                             <label>性别</label>
                             <el-input
                                     placeholder="请输入性别"
-                                    v-model="gender"
+                                    v-model="selectSee.user_sex === 10 ? '男': '女'"
                                     clearable
                                     class="report_int"
                                     :disabled="true"
@@ -67,7 +67,7 @@
                             <label>身份证号</label>
                             <el-input
                                     placeholder="请输入身份证号"
-                                    v-model="idNumber"
+                                    v-model="selectSee.user_id_card"
                                     clearable
                                     class="report_int"
                                     :disabled="true"
@@ -75,10 +75,21 @@
                             </el-input>
                         </div>
 <!--                        <div class="int_box">-->
-<!--                            <label>账号</label>-->
+<!--                            <label>密码</label>-->
 <!--                            <el-input-->
-<!--                                    placeholder="请输入账号"-->
-<!--                                    v-model="account"-->
+<!--                                    placeholder="请输入密码"-->
+<!--                                    v-model="password"-->
+<!--                                    clearable-->
+<!--                                    class="report_int"-->
+<!--                                    :disabled="true"-->
+<!--                            >-->
+<!--                            </el-input>-->
+<!--                        </div>-->
+<!--                        <div class="int_box">-->
+<!--                            <label>角色管理</label>-->
+<!--                            <el-input-->
+<!--                                    placeholder="请输入角色管理"-->
+<!--                                    v-model="role"-->
 <!--                                    clearable-->
 <!--                                    class="report_int"-->
 <!--                                    :disabled="true"-->
@@ -86,32 +97,10 @@
 <!--                            </el-input>-->
 <!--                        </div>-->
                         <div class="int_box">
-                            <label>密码</label>
-                            <el-input
-                                    placeholder="请输入密码"
-                                    v-model="password"
-                                    clearable
-                                    class="report_int"
-                                    :disabled="true"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="int_box">
-                            <label>角色管理</label>
-                            <el-input
-                                    placeholder="请输入角色管理"
-                                    v-model="role"
-                                    clearable
-                                    class="report_int"
-                                    :disabled="true"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="int_box">
                             <label>门店</label>
                             <el-input
                                     placeholder="请输入门店"
-                                    v-model="stores"
+                                    v-model="selectSee.storefront_id"
                                     clearable
                                     class="report_int"
                                     :disabled="true"
@@ -123,7 +112,7 @@
                         <div class="int_box">
                             <label>状态</label>
                             <el-switch
-                                    v-model="state"
+                                    v-model="selectSee.user_status === 1 ? true : false"
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
                                     :disabled="true"
@@ -133,7 +122,7 @@
                         <div class="int_box">
                             <label>开通手机端</label>
                             <el-switch
-                                    v-model="open"
+                                    v-model="selectSee.mobile_terminal_status === 1 ? true : false"
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
                                     :disabled="true"
@@ -175,22 +164,14 @@
             isShow: {
                 type: Boolean,
                 default: false
+            },
+            selectSee:{
+                type: Object,
+                default: {},
             }
         },
         data() {
             return {
-                name: '',
-                phone: '',
-                age: '',
-                position: '',
-                gender: '',
-                idNumber: '',
-                password:'',
-                // account:'',
-                role:'',
-                stores:'',
-                state: false,
-                open:false,
                 headDialogImageUrl: '',
                 headDialogVisible: false,
             };

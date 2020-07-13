@@ -67,7 +67,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="storefront_name"
+                            prop="storefront_id"
                             label="门店"
                             width="180">
                     </el-table-column>
@@ -88,16 +88,16 @@
                             label="操作"
                             width="200">
                         <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                            <el-button type="text" size="small" @click="upd()">编辑</el-button>
+                            <el-button @click="handleClick(scope.row.id)" type="text" size="small">查看</el-button>
+                            <el-button type="text" size="small" @click="upd(scope.row)">编辑</el-button>
                             <el-button type="text" size="small" @click="del(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
-            <mySee :isShow.sync="isShow"/>
-            <myModify :isShowsUpd.sync="isShowsUpd"/>
-            <myAdd :isShowAdd.sync="isShowAdd"/>
+            <mySee :isShow.sync="isShow" :selectSee="selectSee"/>
+            <myModify :isShowsUpd.sync="isShowsUpd" :selectUpd="selectUpd"/>
+            <myAdd :isShowAdd.sync="isShowAdd"  @getSelectList="getSelectList"/>
             <!--     分页区域       -->
             <div class="page">
                 <el-pagination
@@ -138,20 +138,26 @@
                     pagenum: 1, //当前第几页
                     pagesize: 5 //当前显示几条
                 },
-                totalPage: 0 //总条数
-
-
+                totalPage: 0 ,//总条数
+                selectSee:{},//详情数据
+                selectUpd:{}//修改数据
             }
         },
         methods: {
-            handleClick(row) {
-                console.log(row);
+            handleClick(id) { //查看
+               Api.postSee(id).then((res)=>{
+                   if (res.code !== 200) {
+                       return this.$message.error('获取详情失败')
+                   }
+                    this.selectSee=res.data
+               });
                 this.isShow = true
             },
             add() {//添加弹框
                 this.isShowAdd = true
             },
-            upd() { //修改弹框
+            upd(val) { //修改弹框
+                this.selectUpd=val;
                 this.isShowsUpd = true
             },
             del(id) { //删除操作
@@ -163,7 +169,7 @@
                     Api.postDel(id).then(res => {
                         if (res.code === "100006") {
                             this.$message.success(res.msg);
-                            // this.getSelectList()
+                            this.getSelectList()
                         } else {
                             this.$message.error(res.msg);
                         }
@@ -180,10 +186,10 @@
                     if (res.code !== 200) {
                         return this.$message.error('获取员工列表失败')
                     }
-                    this.tableData = res.data.user_data;
-                    this.totalPage = res.data.count
+                    this.tableData = res.data.user_data ; //员工列表数据
+                    this.totalPage = res.data.count //分页总条数
 
-                })
+                });
             },
             handleSizeChange(newSize) { //当前显示多少条操作
                 this.queryInfo.pagesize = newSize;
@@ -195,7 +201,7 @@
             },
         },
         mounted() {
-            this.getSelectList()
+            this.getSelectList();
         }
     }
 </script>

@@ -12,7 +12,7 @@
                             <label>姓名</label>
                             <el-input
                                     placeholder="请输入姓名"
-                                    v-model="name"
+                                    v-model="selectUpd.user_name"
                                     clearable
                                     class="report_int"
                             >
@@ -22,7 +22,7 @@
                             <label>电话</label>
                             <el-input
                                     placeholder="请输入电话"
-                                    v-model="phone"
+                                    v-model="selectUpd.user_phone"
                                     clearable
                                     class="report_int"
                             >
@@ -32,27 +32,27 @@
                             <label>年龄</label>
                             <el-input
                                     placeholder="请输入年龄"
-                                    v-model="age"
+                                    v-model="selectUpd.user_age"
                                     clearable
                                     class="report_int"
                             >
                             </el-input>
                         </div>
-                        <div class="int_box">
-                            <label>职位</label>
-                            <el-input
-                                    placeholder="请输入职位"
-                                    v-model="position"
-                                    clearable
-                                    class="report_int"
-                            >
-                            </el-input>
-                        </div>
+<!--                        <div class="int_box">-->
+<!--                            <label>职位</label>-->
+<!--                            <el-input-->
+<!--                                    placeholder="请输入职位"-->
+<!--                                    v-model="position"-->
+<!--                                    clearable-->
+<!--                                    class="report_int"-->
+<!--                            >-->
+<!--                            </el-input>-->
+<!--                        </div>-->
                         <div class="int_box">
                             <label>性别</label>
                             <el-input
                                     placeholder="请输入性别"
-                                    v-model="gender"
+                                    v-model="selectUpd.user_sex === 10 ? '男' : '女'"
                                     clearable
                                     class="report_int"
                             >
@@ -62,7 +62,7 @@
                             <label>身份证号</label>
                             <el-input
                                     placeholder="请输入身份证号"
-                                    v-model="idNumber"
+                                    v-model="selectUpd.user_id_card"
                                     clearable
                                     class="report_int"
                             >
@@ -78,31 +78,31 @@
 <!--                            >-->
 <!--                            </el-input>-->
 <!--                        </div>-->
-                        <div class="int_box">
-                            <label>密码</label>
-                            <el-input
-                                    placeholder="请输入密码"
-                                    v-model="password"
-                                    clearable
-                                    class="report_int"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="int_box">
-                            <label>角色管理</label>
-                            <el-input
-                                    placeholder="请输入角色管理"
-                                    v-model="role"
-                                    clearable
-                                    class="report_int"
-                            >
-                            </el-input>
-                        </div>
+<!--                        <div class="int_box">-->
+<!--                            <label>密码</label>-->
+<!--                            <el-input-->
+<!--                                    placeholder="请输入密码"-->
+<!--                                    v-model="password"-->
+<!--                                    clearable-->
+<!--                                    class="report_int"-->
+<!--                            >-->
+<!--                            </el-input>-->
+<!--                        </div>-->
+<!--                        <div class="int_box">-->
+<!--                            <label>角色管理</label>-->
+<!--                            <el-input-->
+<!--                                    placeholder="请输入角色管理"-->
+<!--                                    v-model="role"-->
+<!--                                    clearable-->
+<!--                                    class="report_int"-->
+<!--                            >-->
+<!--                            </el-input>-->
+<!--                        </div>-->
                         <div class="int_box">
                             <label>门店</label>
                             <el-input
                                     placeholder="请输入门店"
-                                    v-model="stores"
+                                    v-model="selectUpd.storefront_id"
                                     clearable
                                     class="report_int"
                             >
@@ -113,7 +113,7 @@
                         <div class="int_box">
                             <label>状态</label>
                             <el-switch
-                                    v-model="state"
+                                    v-model="selectUpd.user_status === 1 ? true :false "
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
                             >
@@ -122,7 +122,7 @@
                         <div class="int_box">
                             <label>开通手机端</label>
                             <el-switch
-                                    v-model="open"
+                                    v-model="selectUpd.mobile_terminal_status === 1 ? true :false "
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
                             >
@@ -162,22 +162,26 @@
             isShowsUpd: {
                 type: Boolean,
                 default: false
+            },
+            selectUpd:{
+                type:Object,
+                default: {}
             }
         },
         data() {
             return {
-                name: '',
-                phone: '',
-                age: '',
-                position: '',
-                gender: '',
-                idNumber: '',
-                password:'',
-                // account:'',
-                role:'',
-                stores:'',
-                state: false,
-                open:false,
+                user_name:'',//员工姓名
+                user_sex:'',//员工性别
+                user_phone:'',//员工手机号
+                user_age:'',//员工年龄
+                user_id_card:'',//员工身份证号
+                user_image:'',//员工头像
+                user_password:'',//员工密码
+                user_status:'',//员工状态（1开通2锁定）
+                user_role:'',//员工角色
+                area_id:'',//区域id
+                storefront_id:'',//门店id
+                mobile_terminal_status:'',//是否开启手机端（1开通2锁定）
                 headDialogImageUrl: '',
                 headDialogVisible: false,
             }

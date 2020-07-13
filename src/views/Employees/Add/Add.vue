@@ -84,7 +84,7 @@
                     </div>
                     <div class="int_box">
                         <label>门店</label>
-                        <el-select v-model="stores" placeholder="请输入门店" class="report_int"
+                        <el-select v-model="storefront_id" placeholder="请输入门店" class="report_int"
                                    @change="obtain($event)"
                         >
                             <el-option
@@ -101,7 +101,7 @@
                         <div class="int_box">
                             <label>状态</label>
                             <el-switch
-                                    v-model="state"
+                                    v-model="user_status"
                                     active-color="#13ce66"
                                     inactive-color="#ff4949">
                             </el-switch>
@@ -109,7 +109,7 @@
                         <div class="int_box">
                             <label>开通手机端</label>
                             <el-switch
-                                    v-model="open"
+                                    v-model="mobile_terminal_status"
                                     active-color="#13ce66"
                                     inactive-color="#ff4949"
                             >
@@ -144,31 +144,39 @@
 <script>
     import Axios from '../../../api/pub/pub'
     import Api from '../../../api/Employees/Employees'
+
     export default {
         name: "See",
         props: {
             isShowAdd: {
                 type: Boolean,
                 default: false
-            }
+            },
         },
+
         data() {
             return {
                 user_name: '',//员工姓名
                 user_phone: '', //电话
                 user_age: '', //年龄
-                gender:'',//性别
+                gender: '',//性别
                 user_id_card: '', //身份证号
                 user_password: '',//密码
                 user_role: '',//角色管理
-                user_image:'',//员工头像
-                storefront_id:'',//门店
-                province_id:'',//省
-                city_id:'',//市
-                area_id:'',//区
-                user_status:false,//员工状态
-                mobile_terminal_status:false,//是否开通手机端
-                genderOptions: [{
+                user_image: '',//员工头像
+                storefront_id: '',//门店
+                province_id: '',//省
+                city_id: '',//市
+                area_id: '',//区
+                user_status: false,//员工状态
+                user_statusValue:'',//状态值
+                mobile_terminal_status: false,//是否开通手机端
+                mobile_terminal_statusValue:'',//手机端值
+                headDialogVisible: false,//图片显示隐藏
+                headDialogImageUrl: '',//图片
+                areaOptions: [],//区域三级联动数据
+                storesOptions: [],//门店数据
+                genderOptions: [{ //性别
                     value: '10',
                     label: '男'
                 }, {
@@ -182,28 +190,25 @@
                 this.$emit("update:isShowAdd", false);
             },
             confirm() {//添加
-                var user_status;
-                if (this.state === true) { //状态
-                    user_status = 1
+                if (this.user_status === true) { //状态
+                    this.user_statusValue = 1
                 } else {
-                    user_status = 2
+                    this.user_statusValue = 2
                 }
-                const user_role = this.role;//员工角色id
-                const province_id = this.provinceValue;//省级id
-                const city_id = this.cityValue;//市级id
-                const area_id = this.areaValue;//区域id
-                const storefront_id = this.storesId;//门店id
-                var mobile_terminal_status;
-                if (this.open === true) {//是否开启手机端(1开通2锁定)
-                    mobile_terminal_status = 1
+                if (this.mobile_terminal_status === true) {//是否开启手机端(1开通2锁定)
+                    this.mobile_terminal_statusValue = 1
                 } else {
-                    mobile_terminal_status = 2
+                    this.mobile_terminal_statusValue = 2
                 }
                 Api.postAdd(
-
+                    this.user_name, this.user_phone, this.user_age,this.gender, this.user_id_card,
+                    this.user_password, this.user_role, this.storefront_id,
+                    this.province_id,this.city_id,this.area_id,
+                    this.user_statusValue,this.mobile_terminal_statusValue,
                 ).then((res) => {
                     if (res.code === "200001") {
                         this.$message.success(res.msg);
+                        this.$emit('getSelectList'); //调用父组件上的员工列表方法
                         this.$emit("update:isShowAdd", false);
                     } else {
                         this.$message.error(res.msg);
@@ -212,7 +217,7 @@
                 });
                 this.$emit("update:isShowAdd", false);
             },
-            getSelect() {
+            getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {
                     const data = res.data[0].son;
                     data.map((item) => {
@@ -235,26 +240,27 @@
                             })
                         }
                     });
+                    //把数据存在本地长期储存中
                     window.sessionStorage.setItem('linkage', JSON.stringify(data));
                     var linkage = window.sessionStorage.getItem('linkage');
                     this.areaOptions = JSON.parse(linkage)
                 })
             },
-            handleChange() {
+            handleChange() { //获取省市区id传给后台获取门店数据
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
-                this.provinceValue = pathvalue[0];
-                this.cityValue = pathvalue[1];
-                this.areaValue = pathvalue[2];
+                this.province_id = pathvalue[0];
+                this.city_id = pathvalue[1];
+                this.area_id = pathvalue[2];
                 Axios.postStores().then(res => {
                     let cityData = JSON.stringify(res.data);
                     this.storesOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 })
             },
-            obtain(e) {
-                this.storesId = e
+            obtain(e) { //门店id
+                this.storefront_id = e
             },
-            genderValue(e) {
-                this.age = e
+            genderValue(e) { //性别
+                this.gender = e
             },
             headHandleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -305,7 +311,8 @@
         display: flex;
         justify-content: space-between;
     }
-    .upload{
+
+    .upload {
         margin-left: 50px;
     }
 </style>
