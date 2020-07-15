@@ -116,7 +116,9 @@
                 </div>
                 <!--       主体区域         -->
                 <el-main>
-                    <router-view></router-view>
+                    <transition name="fade-transform" mode="out-in">
+                        <router-view></router-view>
+                    </transition>
                 </el-main>
             </el-container>
         </el-container>
@@ -138,7 +140,7 @@
                 isShowIcon: false,//退出图标切换
                 crumbsText: false,//面包屑
                 currentIndex: 1595,   //默认页
-                left:0,
+                left: 0,
                 list: [
                     {
                         id: '0',
@@ -336,16 +338,16 @@
         computed: {
             //上一张
             prevIndex() {
-                if(this.currentIndex == 1595) {
+                if (this.currentIndex == 1595) {
                     return this.tags.length - 1;
-                }else{
+                } else {
                     return this.currentIndex - 1;
                 }
             },
             //下一张
             nextIndex() {
                 // if(this.currentIndex == 1595) {
-                    this.left=this.currentIndex*2
+                this.left = this.currentIndex * 2
                 // }
             }
         }
@@ -369,6 +371,7 @@
 
     .el-main {
         background-color: #f0f2f5;
+        padding: 15px !important;
     }
 
     .el-menu {
@@ -494,15 +497,18 @@
         left: 0;
         background: #ffffff;
     }
-    .position_box{
+
+    .position_box {
         position: absolute;
         top: 0;
         right: 0;
         background: #ffffff;
     }
+
     .arrow1:hover {
         background: #eee;
     }
+
     .left:hover {
         background: #eee;
     }
@@ -548,12 +554,12 @@
         top: 0;
         width: 0;
         height: 2px;
-        background: linear-gradient(#28a9ea,#1981e4);
+        background: linear-gradient(#28a9ea, #1981e4);
     }
 
     .crumbs_content > li:hover .border-top {
         animation: myfirst 1s;
-        -webkit-animation-fill-mode:forwards;
+        -webkit-animation-fill-mode: forwards;
 
     }
 
@@ -606,5 +612,51 @@
 
     .down > p:hover {
         background: #eee;
+    }
+    /* fade */
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.28s;
+    }
+
+    .fade-enter,
+    .fade-leave-active {
+        opacity: 0;
+    }
+
+    /* fade-transform */
+    .fade-transform-leave-active,
+    .fade-transform-enter-active {
+        transition: all .5s;
+    }
+
+    .fade-transform-enter {
+        opacity: 0;
+        transform: translateX(-5px);
+    }
+
+    .fade-transform-leave-to {
+        opacity: 0;
+        transform: translateX(5px);
+    }
+
+    /* breadcrumb transition */
+    .breadcrumb-enter-active,
+    .breadcrumb-leave-active {
+        transition: all .5s;
+    }
+
+    .breadcrumb-enter,
+    .breadcrumb-leave-active {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    .breadcrumb-move {
+        transition: all .5s;
+    }
+
+    .breadcrumb-leave-active {
+        position: absolute;
     }
 </style>

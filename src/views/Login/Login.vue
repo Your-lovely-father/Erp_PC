@@ -57,7 +57,7 @@
                     if(val===200){
                         this.$message.success('登录成功');
                         this.$router.push('/body');
-                        window.sessionStorage.setItem('token',val);
+                        window.localStorage.setItem('token',val);
                         return;
                     }else {
                         this.$message.error('登录失败');

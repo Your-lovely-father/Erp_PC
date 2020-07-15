@@ -1,9 +1,21 @@
 <template>
     <div class="report">
-        <!--    卡片视图区域    -->
-        <el-card>
-            <!--     表格区域       -->
-            <div class="tab">
+        <div class="add_box" v-show="reportStatus">
+            <!--    搜索区域        -->
+            <el-card>
+                <div class="add_content">
+                    <div class="content_title">
+                        <p>
+                            客户报备
+                        </p>
+                    </div>
+                    <div class="content_btn">
+                        <p @click="reportAdd()">
+                            <span class="el-icon-plus"></span>
+                            <span>报备添加</span>
+                        </p>
+                    </div>
+                </div>
                 <div class="search">
                     <div class="box_form">
                         <div class="form">
@@ -35,15 +47,17 @@
                                         v-model="searchDate"
                                         type="date"
                                         placeholder="选择日期"
-                                        class="date"
+                                        class="report_int"
                                         prefix-icon="el-icon-search"
                                 >
                                 </el-date-picker>
-                                -
+                                <span class="cross">
+                                    -
+                                </span>
                                 <el-time-picker
                                         v-model="searchTime"
                                         placeholder="选择时间"
-                                        class="date"
+                                        class="report_int"
                                         prefix-icon="el-icon-search"
                                 >
                                 </el-time-picker>
@@ -125,114 +139,112 @@
                                     </el-option>
                                 </el-select>
                             </div>
+                            <div class="int_box btn_search">
+                                <el-button type="primary" class="btn">搜索</el-button>
+                            </div>
                         </div>
                     </div>
                 </div>
-               <div class="tab_btn">
-                   <div class="add">
-                       <el-row>
-                           <el-button type="primary" @click="add()">添加</el-button>
-                       </el-row>
-                   </div>
-                   <div class="sub_btn">
-                       <el-button type="primary">搜索</el-button>
-                   </div>
-               </div>
-                <el-table
-                        :data="tableData"
-                        border
-                        style="width: 100%;"
+            </el-card>
+            <!--    表格区域        -->
+            <el-card class="top">
+                <div class="tab">
+                    <el-table
+                            :data="tableData"
+                            border
+                            style="width: 100%;"
+                            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+                    >
+                        <el-table-column
+                                fixed
+                                prop="name"
+                                label="姓名"
+                                width="200">
+                        </el-table-column>
+                        <el-table-column
+                                prop="phone"
+                                label="电话"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="date"
+                                label="报备时间"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="look"
+                                label="带看楼盘"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="maintenance"
+                                label="维护人"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="intention"
+                                label="意向楼盘"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="area"
+                                label="区域"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="stores"
+                                label="门店"
+                                width="180">
+                        </el-table-column>
 
-                >
-                    <el-table-column
-                            fixed
-                            prop="name"
-                            label="姓名"
-                            width="200">
-                    </el-table-column>
-                    <el-table-column
-                            prop="phone"
-                            label="电话"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="date"
-                            label="报备时间"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="look"
-                            label="带看楼盘"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="maintenance"
-                            label="维护人"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="intention"
-                            label="意向楼盘"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="area"
-                            label="区域"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="stores"
-                            label="门店"
-                            width="180">
-                    </el-table-column>
-
-                    <el-table-column
-                            prop="note"
-                            label="备注"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="customer"
-                            label="客户类别"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            fixed="right"
-                            label="操作"
-                            width="200">
-                        <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                            <el-button type="text" size="small" @click="upd()">编辑</el-button>
-                            <el-popconfirm
-                                    confirmButtonText='确定'
-                                    cancelButtonText='取消'
-                                    icon="el-icon-info"
-                                    iconColor="red"
-                                    title="确定要删除吗？"
-                            >
-                                <el-button type="text" size="small" slot="reference" class="el-popconfirm">删除
-                                </el-button>
-                            </el-popconfirm>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-            <mySee :isShow.sync="isShow"/>
-            <myAdd :isShowAdd.sync="isShowAdd"/>
-            <myModify :isShowsUpd.sync="isShowsUpd"/>
-            <!--     分页区域       -->
-            <!--            <div class="page">-->
-            <!--                <el-pagination-->
-            <!--                        @size-change="handleSizeChange"-->
-            <!--                        @current-change="handleCurrentChange"-->
-            <!--                        :current-page="currentPage4"-->
-            <!--                        :page-sizes="[100, 200, 300, 400]"-->
-            <!--                        :page-size="100"-->
-            <!--                        layout="total, sizes, prev, pager, next, jumper"-->
-            <!--                        :total="400">-->
-            <!--                </el-pagination>-->
-            <!--            </div>-->
-        </el-card>
+                        <el-table-column
+                                prop="note"
+                                label="备注"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                prop="customer"
+                                label="客户类别"
+                                width="180">
+                        </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="200">
+                            <template slot-scope="scope">
+                                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                                <el-button type="text" size="small" @click="upd()">编辑</el-button>
+                                <el-popconfirm
+                                        confirmButtonText='确定'
+                                        cancelButtonText='取消'
+                                        icon="el-icon-info"
+                                        iconColor="red"
+                                        title="确定要删除吗？"
+                                >
+                                    <el-button type="text" size="small" slot="reference" class="el-popconfirm">删除
+                                    </el-button>
+                                </el-popconfirm>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <!--     分页区域       -->
+                <div class="page">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage4"
+                            :page-sizes="[100, 200, 300, 400]"
+                            :page-size="100"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="400">
+                    </el-pagination>
+                </div>
+            </el-card>
+        </div>
+        <mySee :isShow.sync="isShow"/>
+        <myAdd :isShowAdd.sync="reportStatus"/>
+        <myModify :isShowsUpd.sync="isShowsUpd"/>
     </div>
 </template>
 
@@ -259,6 +271,7 @@
                 searchLook: '',
                 searchMaintenance: '',
                 searchIntention: '',
+                flag: false,
                 searchAreaOptions: [{
                     value: 'province',
                     label: '辽宁省',
@@ -312,7 +325,7 @@
                 ],
                 currentPage4: 4,
                 isShow: false,//查看
-                isShowsUpd: false//修改
+                isShowsUpd: false,//修改
             }
         },
         methods: {
@@ -332,7 +345,20 @@
             add() {
                 this.isShowAdd = true
             },
+            reportAdd() {
+                this.$store.commit('reportStatus',false)
+                this.$store.commit('addStatus',true)
+            }
         },
+        created() {
+
+
+        },
+        computed: {
+            reportStatus() {
+                return this.$store.state.reportStatus
+            }
+        }
     }
 </script>
 
@@ -342,21 +368,39 @@
         height: 100%;
     }
 
-    .el-card {
-        height: 100%;
+    .add_box {
+        width: 100%;
     }
 
-    .el-popconfirm {
-        margin-left: 10px;
-    }
-
-    .search {
+    .add_content {
         width: 100%;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        border-bottom: 1px #eee solid;
     }
+
+    .content_title {
+        padding-left: 20px;
+        padding-bottom: 20px;
+    }
+
+    .content_btn {
+        padding-right: 20px;
+        padding-bottom: 20px;
+        color: #1981e4;
+    }
+
+    .content_btn > p:nth-child(1) {
+        font-weight: bold;
+    }
+
+
+    .add_box >>> .el-card__body {
+        padding: 20px 0 !important;
+    }
+
     .box_form {
-        width: 100%;
+        padding: 20px;
     }
 
     .form {
@@ -364,11 +408,10 @@
         margin-top: 15px;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
     }
 
     .report_int {
-        width: 286px;
+        width: 200px;
     }
 
     label {
@@ -376,29 +419,39 @@
         padding: 10px 0;
     }
 
-    .date {
-        width: 135px;
+    .int_box {
+        margin-right: 30px;
     }
-    .tab {
-        width: 100%;
+
+    .btn_search {
+        margin-top: 37px;
+    }
+
+    .btn {
+        width: 100px;
+        background: linear-gradient(#28a9ea, #1981e4);
+    }
+
+    .cross {
+        padding: 0 7px;
+    }
+
+    .top {
+        margin-top: 20px;
+        padding: 20px;
     }
 
     .tab >>> .el-table .cell, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell {
         text-align: center;
     }
 
+    .el-popconfirm {
+        margin-left: 10px;
+    }
+
     .page {
         width: 100%;
         text-align: center;
-        padding: 30px 0;
-    }
-    .tab_btn{
-        width: 100%;
-        display: flex;
-        margin: 30px 0;
-
-    }
-    .sub_btn{
-        margin-left: 20px;
+        margin-top: 30px;
     }
 </style>

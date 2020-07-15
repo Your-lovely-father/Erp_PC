@@ -20,7 +20,6 @@ Vue.prototype.$message=Message;
 // import Vant from 'vant'
 // import 'vant/lib/index.css'
 // Vue.use(Vant);
-
 // console.log(process.env.VUE_APP_BASEURL)
 new Vue({
   router,

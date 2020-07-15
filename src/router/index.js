@@ -136,7 +136,7 @@ router.beforeEach((to, from, next) => {
     // next 放行
     if (to.path === '/login') return next();
     //获取token
-    const token = window.sessionStorage.getItem('token');
+    const token = window.localStorage.getItem('token');
     if (!token) return next('/login');
     next()
 });
