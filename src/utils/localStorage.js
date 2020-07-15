@@ -7,7 +7,7 @@ const storage = {
         // 反序列化，将 JSON 字符串转换成 JSON 对象
         return JSON.parse(localStorage.getItem(key)||'[]')
     },
-    remove(){  //  删除
+    remove(key){  //  删除
         localStorage.removeItem(key)
     }
 };

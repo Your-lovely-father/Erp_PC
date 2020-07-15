@@ -1,126 +1,134 @@
 <template>
-    <!--    <div class="See" >-->
-    <!--        <el-dialog-->
-    <!--                width="60%"-->
-    <!--        :visible="isShowAdd"-->
-    <!--                -->
-    <!--        >-->
-    <!--            &lt;!&ndash;     表单区域       &ndash;&gt;-->
-    <!--            <div class="box_form">-->
-    <!--                <div class="form">-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>姓名</label>-->
-    <!--                        <el-input-->
-    <!--                                placeholder="请输入姓名"-->
-    <!--                                v-model="name"-->
-    <!--                                clearable-->
-    <!--                                class="report_int"-->
-    <!--                        >-->
-    <!--                        </el-input>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>电话</label>-->
-    <!--                        <el-input-->
-    <!--                                placeholder="请输入电话"-->
-    <!--                                v-model="phone"-->
-    <!--                                clearable-->
-    <!--                                class="report_int">-->
-    <!--                        </el-input>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>报备时间</label>-->
-    <!--                        <el-date-picker-->
-    <!--                                v-model="date"-->
-    <!--                                type="date"-->
-    <!--                                placeholder="选择日期"-->
-    <!--                                class="date"-->
-    <!--                        >-->
-    <!--                        </el-date-picker>-->
-    <!--                        - -->
-    <!--                        <el-time-picker-->
-    <!--                                v-model="time"-->
-    <!--                                placeholder="选择时间"-->
-    <!--                                class="date"-->
-    <!--                        >-->
-    <!--                        </el-time-picker>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>带看楼盘</label>-->
-    <!--                        <el-input-->
-    <!--                                placeholder="请输入带看楼盘"-->
-    <!--                                v-model="look"-->
-    <!--                                clearable-->
-    <!--                                class="report_int">-->
-    <!--                        </el-input>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>维护人</label>-->
-    <!--                        <el-input-->
-    <!--                                placeholder="请输入维护人"-->
-    <!--                                v-model="maintenance"-->
-    <!--                                clearable-->
-    <!--                                class="report_int">-->
-    <!--                        </el-input>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>意向楼盘</label>-->
-    <!--                        <el-input-->
-    <!--                                placeholder="请输入意向楼盘"-->
-    <!--                                v-model="intention"-->
-    <!--                                clearable-->
-    <!--                                class="report_int">-->
-    <!--                        </el-input>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>区域</label>-->
-    <!--                        <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>门店</label>-->
-    <!--                        <el-select v-model="stores" placeholder="请选择" class="report_int"-->
-    <!--                        >-->
-    <!--                            <el-option-->
-    <!--                                    v-for="item in storesOptions"-->
-    <!--                                    :key="item.stores"-->
-    <!--                                    :label="item.label"-->
-    <!--                                    :value="item.stores"-->
-    <!--                            >-->
-    <!--                            </el-option>-->
-    <!--                        </el-select>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>备注</label>-->
-    <!--                        <el-input-->
-    <!--                                placeholder="请输入备注"-->
-    <!--                                v-model="note"-->
-    <!--                                clearable-->
-    <!--                                class="report_int">-->
-    <!--                        </el-input>-->
-    <!--                    </div>-->
-    <!--                    <div class="int_box">-->
-    <!--                        <label>客户类别</label>-->
-    <!--                        <el-select v-model="customer" placeholder="请选择" class="report_int"-->
-    <!--                        >-->
-    <!--                            <el-option-->
-    <!--                                    v-for="item in customerOoptions"-->
-    <!--                                    :key="item.customer"-->
-    <!--                                    :label="item.label"-->
-    <!--                                    :value="item.customer"-->
-    <!--                            >-->
-    <!--                            </el-option>-->
-    <!--                        </el-select>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--            <span slot="footer" class="dialog-footer">-->
-    <!--                <el-button @click="cancel">取 消</el-button>-->
-    <!--                <el-button type="primary" @click="confirm">确 定</el-button>-->
-    <!--           </span>-->
-    <!--        </el-dialog>-->
-    <!--    </div>-->
     <div class="reportAdd" v-show="addStatus">
         <div class="add_box">
-            11111111111
+            <div class="poor">
+                <div class="poor_text">
+                    添加报备
+                </div>
+                <div class="del">
+                    <el-tooltip class="item" effect="dark" content="点击此处返回上一页" placement="bottom-end">
+                        <span class="el-icon-close" @click="onPage"></span>
+                    </el-tooltip>
+                </div>
+            </div>
+            <div class="addContent">
+                <div class="The_title">
+                    <p>报备信息</p>
+                </div>
+               <div class="content_box">
+                <!--      表单添加区域      -->
+                   <div class="box_form">
+                       <div class="form">
+                           <div class="int_box">
+                               <label>姓名</label>
+                               <el-input
+                                       placeholder="请输入姓名"
+                                       v-model="name"
+                                       clearable
+                                       class="report_int"
+                               >
+                               </el-input>
+                           </div>
+                           <div class="int_box">
+                               <label>电话</label>
+                               <el-input
+                                       placeholder="请输入电话"
+                                       v-model="phone"
+                                       clearable
+                                       class="report_int">
+                               </el-input>
+                           </div>
+                           <div class="int_box">
+                               <label>报备时间</label>
+                               <el-date-picker
+                                       v-model="date"
+                                       type="date"
+                                       placeholder="选择日期"
+                                       class="date"
+                               >
+                               </el-date-picker>
+                               -
+                               <el-time-picker
+                                       v-model="time"
+                                       placeholder="选择时间"
+                                       class="date"
+                               >
+                               </el-time-picker>
+                           </div>
+                           <div class="int_box">
+                               <label>带看楼盘</label>
+                               <el-input
+                                       placeholder="请输入带看楼盘"
+                                       v-model="look"
+                                       clearable
+                                       class="report_int">
+                               </el-input>
+                           </div>
+                           <div class="int_box">
+                               <label>维护人</label>
+                               <el-input
+                                       placeholder="请输入维护人"
+                                       v-model="maintenance"
+                                       clearable
+                                       class="report_int">
+                               </el-input>
+                           </div>
+                           <div class="int_box">
+                               <label>意向楼盘</label>
+                               <el-input
+                                       placeholder="请输入意向楼盘"
+                                       v-model="intention"
+                                       clearable
+                                       class="report_int">
+                               </el-input>
+                           </div>
+                           <div class="int_box">
+                               <label>区域</label>
+                               <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
+                           </div>
+                           <div class="int_box">
+                               <label>门店</label>
+                               <el-select v-model="stores" placeholder="请选择" class="report_int"
+                               >
+                                   <el-option
+                                           v-for="item in storesOptions"
+                                           :key="item.stores"
+                                           :label="item.label"
+                                           :value="item.stores"
+                                   >
+                                   </el-option>
+                               </el-select>
+                           </div>
+                           <div class="int_box">
+                               <label>备注</label>
+                               <el-input
+                                       placeholder="请输入备注"
+                                       v-model="note"
+                                       clearable
+                                       class="report_int">
+                               </el-input>
+                           </div>
+                           <div class="int_box">
+                               <label>客户类别</label>
+                               <el-select v-model="customer" placeholder="请选择" class="report_int"
+                               >
+                                   <el-option
+                                           v-for="item in customerOoptions"
+                                           :key="item.customer"
+                                           :label="item.label"
+                                           :value="item.customer"
+                                   >
+                                   </el-option>
+                               </el-select>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+                <div class="footer">
+                    <el-button size="medium" @click="cancel()">取消</el-button>
+                    <el-button type="primary" size="medium" @click="confirm()">确认</el-button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -179,37 +187,40 @@
             }
         },
         methods: {
-            // cancel() {
-            //     this.$emit("update:isShowAdd", false);
-            // },
-            // confirm() {
-            //     this.$emit("update:isShowAdd", false);
-            // }
+            onPage() {
+                this.$store.commit('showReport', true);
+                this.$store.commit('showStatus', false);
+            },
+            cancel(){
+               this.onPage()
+            },
+            confirm(){
+                this.onPage()
+            },
         },
         computed: {
             addStatus() {
-                return this.$store.state.addStatus
-            }
-
+                return this.$store.state.report.addStatus
+            },
         },
     }
 </script>
 
 <style scoped>
-    .reportAdd{
+    .reportAdd {
         width: 100%;
         height: 100%;
         position: relative;
-
     }
-    .add_box{
+
+    .add_box {
         width: 300px;
         height: 300px;
-        background: red;
+        background: #f0f2f5;
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
         animation: change 1s;
         -webkit-animation-fill-mode: forwards;
         overflow: hidden;
@@ -217,7 +228,7 @@
 
     @keyframes change {
         from {
-            width:300px;
+            width: 300px;
             height: 300px;
         }
 
@@ -228,49 +239,64 @@
 
     }
 
-    /*.See {*/
-    /*    width: 100%;*/
-    /*}*/
-    /*.box_form{*/
-    /*    width: 100%;*/
-    /*}*/
-    /*.form{*/
-    /*    width: 100%;*/
-    /*    display: flex;*/
-    /*    flex-wrap: wrap;*/
-    /*    justify-content: space-around;*/
-    /*}*/
-    /*label {*/
-    /*    display: block;*/
-    /*    padding: 10px 0;*/
-    /*}*/
-    /*.report_int {*/
-    /*    width: 458px;*/
-    /*}*/
-    /*.See >>> .el-dialog__header {*/
-    /*    display: none !important;*/
-    /*}*/
-    /*.reportAdd {*/
-    /*    width: 100%;*/
-    /*    height: 100%;*/
-    /*    position: relative;*/
-    /*}*/
+    .poor {
+        width: 98.3%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        border-bottom: 1px #eee solid;
+        background: #eee;
+        justify-content: space-between;
+    }
 
-    /*.add_box {*/
-    /*    width: 500px;*/
-    /*    height: 500px;*/
-    /*    !*position: absolute;*!*/
-    /*    !*top: 50%;*!*/
-    /*    background: #C94E00;*/
-    /*    position: absolute;*/
-    /*    top: 50%;*/
-    /*    left: 50%;*/
-    /*    !*transform: translate(-50% ,-50%);*!*/
-    /*    !*animation: change 5s;*!*/
-    /*    !*animation-fill-mode:forwards;*!*/
+    .el-icon-close {
+        color: #333;
+        font-weight: bold;
+        font-size: 18px;
+    }
 
-    /*}*/
+    .addContent {
+        width: 98.3%;
+        margin: 15px;
+        background: #ffffff;
+        border-radius: 5px;
+    }
 
-
-
+    .The_title {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px #eee solid;
+        padding-left: 15px;
+    }
+    .content_box{
+        width: 98.3%;
+        padding: 15px;
+    }
+    .footer{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+    }
+    .box_form{
+        width: 100%;
+    }
+    .form{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    .report_int{
+        width: 600px;
+    }
+    label{
+        display: block;
+        padding: 20px 0;
+    }
+    .date{
+        width: 295px;
+    }
 </style>

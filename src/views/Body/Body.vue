@@ -85,7 +85,7 @@
                     </div>
                 </el-header>
                 <!--         面包屑导航           -->
-                <div class="crumbs">
+                <div class="crumbs" v-show="page">
                     <div class="arrow1" @click="gotoPage(prevIndex)">
                         <p class="iconfont icon-xiangzuoshuangjiantou"></p>
                     </div>
@@ -139,6 +139,7 @@
                 //侧边栏数据
                 isShowIcon: false,//退出图标切换
                 crumbsText: false,//面包屑
+                page:false,
                 currentIndex: 1595,   //默认页
                 left: 0,
                 list: [
@@ -311,7 +312,8 @@
         },
         methods: {
             exit() {
-                window.sessionStorage.clear();
+                window.localStorage.clear();
+                window.location.reload()
                 this.$router.push('/')
             },
             up() {
@@ -369,9 +371,9 @@
         background-color: #304156;
     }
 
-    .el-main {
+    .home>>>.el-main {
         background-color: #f0f2f5;
-        padding: 15px !important;
+        padding: 0 !important;
     }
 
     .el-menu {
