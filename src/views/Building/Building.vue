@@ -1,6 +1,6 @@
 <template>
     <div class="component">
-        <div class="report" v-show="reportStatus">
+        <div class="report" v-show="buildingStatus">
             <div class="add_box">
                 <div class="add_content">
                     <div class="content_title">
@@ -169,8 +169,8 @@
         },
         methods: {
             reportAdd() {
-                this.$store.commit('reportStatus', false);
-                this.$store.commit('addStatus', true)
+                this.$store.commit('buildingStatus', false);
+                this.$store.commit('addBuiding', true)
             },
             handleClick() {
                 this.$store.commit('reportStatus', false);
@@ -188,8 +188,8 @@
             },
         },
         computed: {
-            reportStatus() {
-                return this.$store.state.building.reportStatus
+            buildingStatus() {
+                return this.$store.state.building.buildingStatus
             },
         }
     }

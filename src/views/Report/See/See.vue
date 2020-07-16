@@ -1,65 +1,75 @@
 <template>
     <div class="reportAdd" v-show="seeStatus">
         <div class="add_box">
-            <div class="poor">
-                <div class="poor_text">
-                    查看报备
+            <div class="com">
+                <div class="poor">
+                    <div class="poor_text">
+                        查看报备
+                    </div>
+                    <div class="del">
+                        <el-tooltip class="item" effect="dark" content="点击此处返回上一页"
+                                    placement="bottom-end">
+                            <span class="el-icon-close" @click="onPage"></span>
+                        </el-tooltip>
+                    </div>
                 </div>
-                <div class="del">
-                    <el-tooltip class="item" effect="dark" content="点击此处返回上一页"
-                                placement="bottom-end">
-                        <span class="el-icon-close" @click="onPage"></span>
-                    </el-tooltip>
-                </div>
-            </div>
-            <div class="addContent">
-                <div class="The_title">
-                    <p>查看报备</p>
-                </div>
-                <div class="content_box">
-                    <div class="See_int">
-                        <div class="int">
-                            <label>姓名</label>
-                            <el-input
-                                    :disabled="true"
-                                    class="report_int"
-                            >
-                            </el-input>
+                <div class="addContent">
+                    <div class="The_title">
+                        <p>查看报备</p>
+                    </div>
+                    <div class="content_box">
+                        <div class="See_int">
+                            <div class="int">
+                                <label>姓名</label>
+                                <el-input
+                                        :disabled="true"
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int">
+                                <label>电话</label>
+                                <el-input
+                                        :disabled="true"
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int">
+                                <label>时间</label>
+                                <el-input
+                                        :disabled="true"
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int">
+                                <label>带看楼盘</label>
+                                <el-input
+                                        :disabled="true"
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int">
+                                <label>维护人</label>
+                                <el-input
+                                        :disabled="true"
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int">
+                                <label>意向楼盘</label>
+                                <el-input
+                                        :disabled="true"
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
                         </div>
-                        <div class="int">
-                            <label>电话</label>
-                            <el-input
-                                    :disabled="true"
-                                    class="report_int"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="int">
-                            <label>时间</label>
-                            <el-input
-                                    :disabled="true"
-                                    class="report_int"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="int">
-                            <label>带看楼盘</label>
-                            <el-input
-                                    :disabled="true"
-                                    class="report_int"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="int">
-                            <label>维护人</label>
-                            <el-input
-                                    :disabled="true"
-                                    class="report_int"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="int">
-                            <label>意向楼盘</label>
+                        <div class="int left">
+                            <label>备注</label>
                             <el-input
                                     :disabled="true"
                                     class="report_int"
@@ -67,18 +77,10 @@
                             </el-input>
                         </div>
                     </div>
-                    <div class="int left">
-                        <label>备注</label>
-                        <el-input
-                                :disabled="true"
-                                class="report_int"
-                        >
-                        </el-input>
+                    <div class="footer">
+                        <el-button size="medium" @click="cancel()">取消</el-button>
+                        <el-button type="primary" size="medium" @click="confirm()">确认</el-button>
                     </div>
-                </div>
-                <div class="footer">
-                    <el-button size="medium" @click="cancel()">取消</el-button>
-                    <el-button type="primary" size="medium" @click="confirm()">确认</el-button>
                 </div>
             </div>
         </div>
@@ -153,6 +155,8 @@
         border-bottom: 1px #eee solid;
         background: #eee;
         justify-content: space-between;
+        position: fixed;
+        top: 0;
     }
 
     .el-icon-close {
@@ -166,6 +170,7 @@
         margin: 15px;
         background: #ffffff;
         border-radius: 5px;
+        margin-top: 55px;
     }
 
     .The_title {
@@ -205,5 +210,11 @@
     }
     .left{
         margin-left: 32px;
+    }
+    .com{
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
 </style>

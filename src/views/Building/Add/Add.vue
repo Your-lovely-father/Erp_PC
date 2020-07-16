@@ -1,160 +1,162 @@
 <template>
-    <div class="reportAdd" v-show="addStatus">
+    <div class="reportAdd" v-show="addBuiding">
         <div class="add_box">
-            <div class="poor">
-                <div class="poor_text">
-                    添加楼盘
+            <div class="com">
+                <div class="poor">
+                    <div class="poor_text">
+                        添加楼盘
+                    </div>
+                    <div class="del">
+                        <el-tooltip class="item" effect="dark" content="点击此处返回上一页" placement="bottom-end">
+                            <span class="el-icon-close" @click="onPage"></span>
+                        </el-tooltip>
+                    </div>
                 </div>
-                <div class="del">
-                    <el-tooltip class="item" effect="dark" content="点击此处返回上一页" placement="bottom-end">
-                        <span class="el-icon-close" @click="onPage"></span>
-                    </el-tooltip>
-                </div>
-            </div>
-            <div class="addContent">
-                <div class="The_title">
-                    <p>楼盘信息</p>
-                </div>
-                <div class="content_box">
-                    <!--      表单添加区域      -->
-                    <div class="box_form">
-                        <div class="form">
-                            <div class="int_box">
-                                <label>楼盘名称</label>
-                                <el-input
-                                        placeholder="请输入楼盘名称"
-                                        v-model="name"
-                                        clearable
-                                        class="report_int"
-                                >
-                                </el-input>
+                <div class="addContent">
+                    <div class="The_title">
+                        <p>楼盘信息</p>
+                    </div>
+                    <div class="content_box">
+                        <!--      表单添加区域      -->
+                        <div class="box_form">
+                            <div class="form">
+                                <div class="int_box">
+                                    <label>楼盘名称</label>
+                                    <el-input
+                                            placeholder="请输入楼盘名称"
+                                            v-model="name"
+                                            clearable
+                                            class="report_int"
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>楼盘别称</label>
+                                    <el-input
+                                            placeholder="请输入楼盘别称"
+                                            v-model="nickname"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>时间</label>
+                                    <el-date-picker
+                                            v-model="date"
+                                            type="date"
+                                            placeholder="选择日期"
+                                            class="date"
+                                    >
+                                    </el-date-picker>
+                                    -
+                                    <el-time-picker
+                                            v-model="time"
+                                            placeholder="选择时间"
+                                            class="date"
+                                    >
+                                    </el-time-picker>
+                                </div>
+                                <div class="int_box">
+                                    <label>楼盘缩写</label>
+                                    <el-input
+                                            placeholder="请输入楼盘缩写"
+                                            v-model="abbreviations"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>楼盘地址</label>
+                                    <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
+                                </div>
+                                <div class="int_box">
+                                    <label>平均单价</label>
+                                    <el-input
+                                            placeholder="请输入平均单价"
+                                            v-model="price"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>开盘时间</label>
+                                    <el-date-picker
+                                            v-model="openDate"
+                                            type="date"
+                                            placeholder="选择日期"
+                                            class="date"
+                                    >
+                                    </el-date-picker>
+                                    -
+                                    <el-time-picker
+                                            v-model="openTime"
+                                            placeholder="选择时间"
+                                            class="date"
+                                    >
+                                    </el-time-picker>
+                                </div>
+                                <div class="int_box">
+                                    <label>总建筑面积</label>
+                                    <el-input
+                                            placeholder="请输入总建筑面积"
+                                            v-model="area"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>绿化面积</label>
+                                    <el-input
+                                            placeholder="请输入绿化面积"
+                                            v-model="greening"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>区域管理</label>
+                                    <el-input
+                                            placeholder="请输入区域管理"
+                                            v-model="management"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
                             </div>
-                            <div class="int_box">
-                                <label>楼盘别称</label>
-                                <el-input
-                                        placeholder="请输入楼盘别称"
-                                        v-model="nickname"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>时间</label>
-                                <el-date-picker
-                                        v-model="date"
-                                        type="date"
-                                        placeholder="选择日期"
-                                        class="date"
-                                >
-                                </el-date-picker>
-                                -
-                                <el-time-picker
-                                        v-model="time"
-                                        placeholder="选择时间"
-                                        class="date"
-                                >
-                                </el-time-picker>
-                            </div>
-                            <div class="int_box">
-                                <label>楼盘缩写</label>
-                                <el-input
-                                        placeholder="请输入楼盘缩写"
-                                        v-model="abbreviations"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>楼盘地址</label>
-                                <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
-                            </div>
-                            <div class="int_box">
-                                <label>平均单价</label>
-                                <el-input
-                                        placeholder="请输入平均单价"
-                                        v-model="price"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>开盘时间</label>
-                                <el-date-picker
-                                        v-model="openDate"
-                                        type="date"
-                                        placeholder="选择日期"
-                                        class="date"
-                                >
-                                </el-date-picker>
-                                -
-                                <el-time-picker
-                                        v-model="openTime"
-                                        placeholder="选择时间"
-                                        class="date"
-                                >
-                                </el-time-picker>
-                            </div>
-                            <div class="int_box">
-                                <label>总建筑面积</label>
-                                <el-input
-                                        placeholder="请输入总建筑面积"
-                                        v-model="area"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>绿化面积</label>
-                                <el-input
-                                        placeholder="请输入绿化面积"
-                                        v-model="greening"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>区域管理</label>
-                                <el-input
-                                        placeholder="请输入区域管理"
-                                        v-model="management"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="upload">
-                            <div class="int_box">
-                                <label>楼盘图片</label>
-                                <el-upload
-                                        class="upload-demo"
-                                        action="https://jsonplaceholder.typicode.com/posts/"
-                                        :on-preview="handlePreview"
-                                        :on-remove="handleRemove"
-                                        :file-list="fileList"
-                                        list-type="picture">
-                                    <el-button size="small" type="primary">点击上传</el-button>
-                                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                </el-upload>
-                            </div>
-                            <div class="int_box">
-                                <label>户型图片</label>
-                                <el-upload
-                                        class="upload-demo"
-                                        action="https://jsonplaceholder.typicode.com/posts/"
-                                        :on-preview="handlePreview"
-                                        :on-remove="handleRemove"
-                                        :file-list="fileList"
-                                        list-type="picture">
-                                    <el-button size="small" type="primary">点击上传</el-button>
-                                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                </el-upload>
+                            <div class="upload">
+                                <div class="int_box">
+                                    <label>楼盘图片</label>
+                                    <el-upload
+                                            class="upload-demo"
+                                            action="https://jsonplaceholder.typicode.com/posts/"
+                                            :on-preview="handlePreview"
+                                            :on-remove="handleRemove"
+                                            :file-list="fileList"
+                                            list-type="picture">
+                                        <el-button size="small" type="primary">点击上传</el-button>
+                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                    </el-upload>
+                                </div>
+                                <div class="int_box">
+                                    <label>户型图片</label>
+                                    <el-upload
+                                            class="upload-demo"
+                                            action="https://jsonplaceholder.typicode.com/posts/"
+                                            :on-preview="handlePreview"
+                                            :on-remove="handleRemove"
+                                            :file-list="fileList"
+                                            list-type="picture">
+                                        <el-button size="small" type="primary">点击上传</el-button>
+                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                    </el-upload>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="footer">
-                    <el-button size="medium" @click="cancel()">取消</el-button>
-                    <el-button type="primary" size="medium" @click="confirm()">确认</el-button>
+                    <div class="footer">
+                        <el-button size="medium" @click="cancel()">取消</el-button>
+                        <el-button type="primary" size="medium" @click="confirm()">确认</el-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -220,8 +222,8 @@
             }
         },
         computed: {
-            addStatus() {
-                return this.$store.state.building.addStatus
+            addBuiding() {
+                return this.$store.state.building.addBuiding
             },
         },
     }
@@ -233,7 +235,12 @@
         height: 100%;
         position: relative;
     }
-
+    .com{
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
     .add_box {
         width: 300px;
         height: 300px;
@@ -270,6 +277,7 @@
         position: fixed !important;
         top: 0;
         left: 0;
+        z-index: 99;
     }
 
     .el-icon-close {
@@ -283,7 +291,7 @@
         margin: 15px;
         background: #ffffff;
         border-radius: 5px;
-        overflow: auto;
+        margin-top: 55px;
     }
 
     .The_title {
@@ -332,8 +340,6 @@
     .upload-demo{
         width: 610px;
     }
-
-
 </style>
 
 
