@@ -231,7 +231,6 @@
                     if (res.code === "200001") {
                         this.$message.success(res.msg);
                         this.$emit('getSelectList'); //调用父组件上的员工列表方法
-                        this.$emit("update:isShowAdd", false);
                     } else {
                         this.$message.error(res.msg);
                     }

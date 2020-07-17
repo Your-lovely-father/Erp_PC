@@ -1,56 +1,38 @@
 <template>
-    <div class="See">
-        <el-dialog
-                width="60%"
-                :visible="isShowPassword"
-        >
-
-            <div class="int_box">
-                <label>角色</label>
-                <el-input
-                        placeholder="请输角色"
-                        v-model="name"
-                        clearable
-                        class="report_int"
-                >
-                </el-input>
-            </div>
-
-            <div class="int_box">
-                <label>权限设置</label>
-                <el-tree
-                        :data="data"
-                        show-checkbox
-                        node-key="id"
-                        :default-expanded-keys="[2, 3]"
-                        :default-checked-keys="[5]"
-                        :props="defaultProps"
-                        default-expand-all
-                >
-                </el-tree>
-            </div>
-            <div class="int_box">
-                <label>时间</label>
-                <el-date-picker
-                        v-model="date"
-                        type="date"
-                        placeholder="选择日期"
-                        class="report_int"
-                >
-                </el-date-picker>
-                -
-                <el-time-picker
-                        v-model="time"
-                        placeholder="选择时间"
-                        class="report_int"
-                >
-                </el-time-picker>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="cancel">取 消</el-button>
-                <el-button type="primary" @click="confirm">确 定</el-button>
-           </span>
-        </el-dialog>
+    <div class="updPass_box" v-show="isShowPassword">
+       <div class="updPass">
+           <div class="updPass_conntent">
+               <div class="upd_title">
+                  <div class="title_box">
+                      <div></div>
+                      <div class="title">
+                          修改密码
+                      </div>
+                      <div class="icon" @click="cancel">
+                          <p class="el-icon-close"></p>
+                      </div>
+                  </div>
+               </div>
+               <div class="content_form">
+                   <div class="int_box">
+                       <span>旧密码</span>
+                       <el-input v-model="password" placeholder="请输入旧密码" class="int"></el-input>
+                   </div>
+                   <div class="int_box">
+                       <span>新密码</span>
+                       <el-input v-model="newpass" placeholder="请输入新密码" class="int"></el-input>
+                   </div>
+                   <div class="int_box">
+                       <span>新密码</span>
+                       <el-input v-model="newpassword" placeholder="请输入新密码" class="int"></el-input>
+                   </div>
+               </div>
+               <div class="footer_btn">
+                   <el-button @click="cancel" size="small">取 消</el-button>
+                   <el-button type="primary" @click="confirm" size="small">确 定</el-button>
+               </div>
+           </div>
+       </div>
     </div>
 </template>
 
@@ -63,76 +45,93 @@
                 default: false
             }
         },
-        data() {
-            return {
-                type: [],
-                date: '',
-                time: '',
-                name: '',
-                data: [{
-                    id: 1,
-                    label: '权限设置',
-                    children: [{
-                        id: 4,
-                        label: '权限管理',
-                        children: [
-                            {
-                                id: 9,
-                                label: '权限删除'
-                            },
-                            {
-                                id: 10,
-                                label: '权限修改'
-                            },
-                            {
-                                id: 11,
-                                label: '权限查询'
-                            },
-                            {
-                                id: 12,
-                                label: '权限添加'
-                            },
-                        ]
-                    }]
-                }],
-                defaultProps: {
-                    children: 'children',
-                    label: 'label'
-                }
-            };
+        data(){
+            return{
+                password:'',
+                newpass:'',
+                newpassword:'',
+
+            }
         },
         methods: {
             cancel() {
-                this.$emit("update:isShowAdd", false);
+                this.$emit("update:isShowPassword", false);
             },
             confirm() {
-                this.$emit("update:isShowAdd", false);
+                this.$emit("update:isShowPassword", false);
             }
+        },
+        created() {
+            this.list = JSON.parse(this.isShowPassword);
         }
     }
 </script>
 
 <style scoped>
-    .See {
+   .updPass_box{
+       position: fixed;
+       top: 0;
+       width: 100%;
+       height: 100%;
+       background: rgba(0,0,0,0.5);
+       z-index: 99;
+   }
+    .updPass{
         width: 100%;
-
+        height: 100%;
+        position: relative;
     }
-
-    .See >>> .el-dialog__header {
-        display: none !important;
+    .updPass_conntent{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        background: #ffffff;
+        width: 500px;
+        height: 400px;
+        border-radius: 5px;
     }
-
-    .See_int {
+    .upd_title{
+        width: 100%;
+        background: #eee;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .title_box{
+        padding: 0 20px;
+        width: 93%;
+        height: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .title{
+        font-size: 16px;
+    }
+    .el-icon-close{
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .footer_btn{
+        width: 100%;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        padding: 30px 0;
+    }
+    .content_form{
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: center;
     }
-    .report_int{
-        width: 500px;
+    .int{
+        width: 300px;
     }
-    label {
-        display: block;
-        padding: 15px 0;
+    .int_box{
+        margin-top: 45px;
+    }
+    .int_box>span{
+        padding-right:20px;
     }
 </style>

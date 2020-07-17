@@ -125,7 +125,7 @@
                 </el-main>
             </el-container>
         </el-container>
-        <myPassword :isShowAdd.sync="isShowPassword"/>
+        <myPassword :isShowPassword.sync="isShowPassword"/>
     </div>
 </template>
 
@@ -346,7 +346,6 @@
                 this.currentIndex = index;
             },
             updPass(){
-                alert('1111')
                 this.isShowPassword=true
             }
         },

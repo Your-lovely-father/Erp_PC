@@ -47,7 +47,7 @@
                 >
                 </el-input>
             </div>
-            <div class="search_btn">
+            <div class="search_btn search_box">
                 <el-button type="primary" size="medium" class="btn">搜索</el-button>
             </div>
         </div>
@@ -92,6 +92,7 @@
     .search{
         width: 100%;
         display: flex;
+        flex-wrap: wrap;
         padding: 0 20px;
     }
     .search_box>span{
@@ -99,6 +100,7 @@
     }
     .search_box{
         margin-right: 20px;
+        padding: 10px 0;
     }
     .el-input{
         width: 269px;
