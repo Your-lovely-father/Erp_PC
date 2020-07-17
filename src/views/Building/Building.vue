@@ -173,12 +173,12 @@
                 this.$store.commit('addBuiding', true)
             },
             handleClick() {
-                this.$store.commit('reportStatus', false);
-                this.$store.commit('seeStatus', true)
+                this.$store.commit('buildingStatus', false);
+                this.$store.commit('seeStatusBuilding', true)
             },
             upd() {
-                this.$store.commit('reportStatus', false);
-                this.$store.commit('updStatus', true)
+                this.$store.commit('buildingStatus', false);
+                this.$store.commit('updStatusBuilding', true)
             },
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);

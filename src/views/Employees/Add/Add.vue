@@ -1,145 +1,164 @@
 <template>
-    <div class="See">
-        <el-dialog
-                width="65%"
-                :visible="isShowAdd"
-        >
-            <!--     表单区域       -->
-            <div class="box_form">
-                <div class="form">
-                    <div class="int_box">
-                        <label>姓名</label>
-                        <el-input
-                                placeholder="请输入姓名"
-                                v-model="user_name"
-                                clearable
-                                class="report_int"
-                        >
-                        </el-input>
+    <div class="reportAdd" v-show="addEmployees">
+        <div class="add_box">
+            <div class="com">
+                <div class="poor">
+                    <div class="poor_text">
+                        添加员工
                     </div>
-                    <div class="int_box">
-                        <label>电话</label>
-                        <el-input
-                                placeholder="请输入电话"
-                                v-model="user_phone"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>年龄</label>
-                        <el-input
-                                placeholder="请输入年龄"
-                                v-model="user_age"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>性别</label>
-                        <el-select v-model="gender" placeholder="请输入性别" class="report_int"
-                                   @change="genderValue($event)"
-                        >
-                            <el-option
-                                    v-for="item in genderOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="int_box">
-                        <label>身份证号</label>
-                        <el-input
-                                placeholder="请输入身份证号"
-                                v-model="user_id_card"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>密码</label>
-                        <el-input
-                                placeholder="请输入密码"
-                                v-model="user_password"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>角色管理</label>
-                        <el-input
-                                placeholder="请输入角色管理"
-                                v-model="user_role"
-                                clearable
-                                class="report_int">
-                        </el-input>
-                    </div>
-                    <div class="int_box">
-                        <label>区域</label>
-                        <el-cascader :options="areaOptions" clearable class="report_int"
-                                     @change="handleChange"
-                                     ref="cascaderAddr"
-                        ></el-cascader>
-                    </div>
-                    <div class="int_box">
-                        <label>门店</label>
-                        <el-select v-model="storefront_id" placeholder="请输入门店" class="report_int"
-                                   @change="obtain($event)"
-                        >
-                            <el-option
-                                    v-for="item in storesOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                    ref="id"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="state">
-                        <div class="int_box">
-                            <label>状态</label>
-                            <el-switch
-                                    v-model="user_status"
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949"
-                            >
-                            </el-switch>
-                        </div>
-                        <div class="int_box">
-                            <label>开通手机端</label>
-                            <el-switch
-                                    v-model="mobile_terminal_status"
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949"
-                            >
-                            </el-switch>
-                        </div>
+                    <div class="del">
+                        <el-tooltip class="item" effect="dark" content="点击此处返回上一页" placement="bottom-end">
+                            <span class="el-icon-close" @click="onPage"></span>
+                        </el-tooltip>
                     </div>
                 </div>
-                <div class="upload">
-                    <div class="int_box">
-                        <label>头像</label>
-                        <el-upload
-                                action="/erp/user_add"
-                                list-type="picture-card"
-                                :on-preview="headHandlePictureCardPreview"
-                                :on-remove="headHandleRemove">
-                            <i class="el-icon-plus"></i>
-                        </el-upload>
-                        <el-dialog :visible.sync="headDialogVisible">
-                            <img width="100%" :src="headDialogImageUrl" alt="">
-                        </el-dialog>
+                <div class="addContent">
+                    <div class="The_title">
+                        <p>员工信息</p>
+                    </div>
+                    <div class="content_box">
+                        <!--      表单添加区域      -->
+                        <div class="box_form">
+                            <div class="form">
+                                <div class="int_box">
+                                    <label>姓名</label>
+                                    <el-input
+                                            placeholder="请输入姓名"
+                                            v-model="user_name"
+                                            clearable
+                                            class="report_int"
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>电话</label>
+                                    <el-input
+                                            placeholder="请输入电话"
+                                            v-model="user_phone"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>年龄</label>
+                                    <el-input
+                                            placeholder="请输入年龄"
+                                            v-model="user_age"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>性别</label>
+                                    <el-select v-model="gender" placeholder="请输入性别" class="report_int"
+                                               @change="genderValue($event)"
+                                    >
+                                        <el-option
+                                                v-for="item in genderOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>身份证号</label>
+                                    <el-input
+                                            placeholder="请输入身份证号"
+                                            v-model="user_id_card"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>密码</label>
+                                    <el-input
+                                            placeholder="请输入密码"
+                                            v-model="user_password"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>角色管理</label>
+                                    <el-input
+                                            placeholder="请输入角色管理"
+                                            v-model="user_role"
+                                            clearable
+                                            class="report_int">
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>区域</label>
+                                    <el-cascader :options="areaOptions" clearable class="report_int"
+                                                 @change="handleChange"
+                                                 ref="cascaderAddr"
+                                    ></el-cascader>
+                                </div>
+                                <div class="int_box">
+                                    <label>门店</label>
+                                    <el-select v-model="storefront_id" placeholder="请输入门店" class="report_int"
+                                               @change="obtain($event)"
+                                    >
+                                        <el-option
+                                                v-for="item in storesOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                                ref="id"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                           <div class="status_upload_box">
+                               <div class="state">
+                                   <div class="int_box">
+                                       <label>状态</label>
+                                       <el-switch
+                                               v-model="user_status"
+                                               active-color="#13ce66"
+                                               inactive-color="#ff4949"
+                                       >
+                                       </el-switch>
+                                   </div>
+                                   <div class="int_box">
+                                       <label>开通手机端</label>
+                                       <el-switch
+                                               v-model="mobile_terminal_status"
+                                               active-color="#13ce66"
+                                               inactive-color="#ff4949"
+                                       >
+                                       </el-switch>
+                                   </div>
+                               </div>
+                               <div class="upload">
+                                   <div class="int_box">
+                                       <label>头像</label>
+                                       <el-upload
+                                               action="/erp/user_add"
+                                               list-type="picture-card"
+                                               :on-preview="headHandlePictureCardPreview"
+                                               :on-remove="headHandleRemove">
+                                           <i class="el-icon-plus"></i>
+                                       </el-upload>
+                                       <el-dialog :visible.sync="headDialogVisible">
+                                           <img width="100%" :src="headDialogImageUrl" alt="">
+                                       </el-dialog>
+                                   </div>
+                               </div>
+                           </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <el-button size="medium" @click="cancel()">取消</el-button>
+                        <el-button type="primary" size="medium" @click="confirm()">确认</el-button>
                     </div>
                 </div>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="cancel">取 消</el-button>
-                <el-button type="primary" @click="confirm">确 定</el-button>
-           </span>
-        </el-dialog>
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -147,14 +166,6 @@
     import Api from '../../../api/Employees/Employees'
 
     export default {
-        name: "See",
-        props: {
-            isShowAdd: {
-                type: Boolean,
-                default: false
-            },
-        },
-
         data() {
             return {
                 user_name: '',//员工姓名
@@ -187,16 +198,20 @@
             }
         },
         methods: {
+            onPage() {
+                this.$store.commit('showEmployees', true);
+                this.$store.commit('showStatusEmployees', false);
+            },
             cancel() {
-                this.$emit("update:isShowAdd", false);
+                this.onPage()
             },
             flagSwitch(e) {//状态
                 this.mobile_terminal_status = e
             },
-            flagSwitch(e){//是否开启手机端
+            flagSwitch(e) {//是否开启手机端
                 this.mobile_terminal_statusValue = e
             },
-            confirm() {//添加
+            confirm() {
                 if (this.user_status === true) {
                     this.user_statusValue = 1
                 } else {
@@ -222,7 +237,7 @@
                     }
 
                 });
-                this.$emit("update:isShowAdd", false);
+                this.onPage()
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {
@@ -253,6 +268,7 @@
                     this.areaOptions = JSON.parse(linkage)
                 })
             },
+
             handleChange() { //获取省市区id传给后台获取门店数据
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
                 this.province_id = pathvalue[0];
@@ -279,14 +295,95 @@
         },
         mounted() {
             this.getSelect();
-        }
+        },
+        computed: {
+            addEmployees() {
+                return this.$store.state.employees.addEmployees
+            },
+        },
     }
 </script>
 
 <style scoped>
-    .See {
+    .reportAdd {
         width: 100%;
+        height: 100%;
+        position: relative;
+    }
 
+    .add_box {
+        width: 300px;
+        height: 300px;
+        background: #f0f2f5;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: change 1s;
+        -webkit-animation-fill-mode: forwards;
+        overflow: hidden;
+    }
+
+    @keyframes change {
+        from {
+            width: 300px;
+            height: 300px;
+        }
+
+        to {
+            width: 100%;
+            height: 100%;
+        }
+
+    }
+
+    .poor {
+        width: 98.3%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        border-bottom: 1px #eee solid;
+        background: #eee;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        z-index: 99;
+    }
+
+    .el-icon-close {
+        color: #333;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .addContent {
+        width: 98.3%;
+        margin: 15px;
+        background: #ffffff;
+        border-radius: 5px;
+        margin-top: 55px;
+
+    }
+
+    .The_title {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px #eee solid;
+        padding-left: 15px;
+    }
+
+    .content_box {
+        width: 98.3%;
+        padding: 15px;
+    }
+
+    .footer {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
     }
 
     .box_form {
@@ -296,30 +393,34 @@
     .form {
         width: 100%;
         display: flex;
-        justify-content: space-around;
         flex-wrap: wrap;
-    }
-
-    .See >>> .el-dialog__header {
-        display: none !important;
+        justify-content: space-around;
     }
 
     .report_int {
-        width: 500px;
+        width: 480px;
     }
-
-    label {
-        display: block;
-        padding: 15px 0;
+    .status_upload_box{
+        width: 100%;
     }
-
-    .state {
-        width: 500px;
+    .state{
+        width: 480px;
         display: flex;
         justify-content: space-between;
+        margin-left: 35px;
+    }
+    .upload{
+        margin-left: 35px;
+    }
+    label {
+        display: block;
+        padding: 20px 0;
     }
 
-    .upload {
-        margin-left: 50px;
+    .com {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
 </style>

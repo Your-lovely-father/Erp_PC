@@ -1,118 +1,129 @@
 <template>
-    <div class="report">
-        <!--    卡片视图区域    -->
-        <el-card>
-            <!--     表格区域       -->
-            <div class="tab">
-                <div class="add">
-                    <el-row>
-                        <el-button type="primary" @click="add()">添加</el-button>
-                    </el-row>
+    <div class="component">
+        <div class="report" v-show="employeesStatus">
+            <div class="add_box">
+                <div class="add_content">
+                    <div class="content_title">
+                        <p>
+                            员工管理
+                        </p>
+                    </div>
+                    <div class="content_btn">
+                        <p @click="reportAdd()">
+                            <span class="el-icon-plus"></span>
+                            <span>员工添加</span>
+                        </p>
+                    </div>
                 </div>
-                <el-table
-                        :data="tableData"
-                        border
-                        style="width: 100%;"
+                <!--    表格区域        -->
+                <el-card class="top">
+                    <div class="tab">
+                        <el-table
+                                :data="tableData"
+                                border
+                                style="width: 100%;"
+                                :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+                        >
+                            <el-table-column
+                                    fixed
+                                    prop="user_name"
+                                    label="姓名"
+                                    width="200">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="user_phone"
+                                    label="电话"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="user_image"
+                                    label="头像"
+                                    width="180"
 
-                >
-                    <el-table-column
-                            fixed
-                            prop="user_name"
-                            label="姓名"
-                            width="200">
-                    </el-table-column>
-                    <el-table-column
-                            prop="user_phone"
-                            label="电话"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="user_image"
-                            label="头像"
-                            width="180"
-
-                    >
-                        <template slot-scope="scope">
-                            <img :src="scope.row.headDialogImageUrl" style="height: 50px"/>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="user_age"
-                            label="年龄"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="user_sex"
-                            label="性别"
-                            width="180">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.user_sex === 20 ? '男' : '女'}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="user_id_card"
-                            label="身份证号"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="user_status"
-                            label="状态"
-                            width="180">
-                        <template slot-scope="scope">
-                            <el-switch
-                                    v-model="scope.row.user_status === 1 ? true : false "
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949"
-                                    @change="changeSwitch(scope.row)"
-                            />
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="storefront_id"
-                            label="门店"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="mobile_terminal_status"
-                            label="开通手机端"
-                            width="180">
-                        <template slot-scope="scope">
-                            <el-switch
-                                    v-model="scope.row.mobile_terminal_status === 1 ? true : false "
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949"
-                                    @change="moveSwitch(scope.row)"
-                            />
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            fixed="right"
-                            label="操作"
-                            width="200">
-                        <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row.id)" type="text" size="small">查看</el-button>
-                            <el-button type="text" size="small" @click="upd(scope.row)">编辑</el-button>
-                            <el-button type="text" size="small" @click="del(scope.row.id)">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                            >
+                                <template slot-scope="scope">
+                                    <img :src="scope.row.headDialogImageUrl" style="height: 50px"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="user_age"
+                                    label="年龄"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="user_sex"
+                                    label="性别"
+                                    width="180">
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.user_sex === 20 ? '男' : '女'}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="user_id_card"
+                                    label="身份证号"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="user_status"
+                                    label="状态"
+                                    width="180">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                            v-model="scope.row.user_status === 1 ? true : false "
+                                            active-color="#13ce66"
+                                            inactive-color="#ff4949"
+                                            @change="changeSwitch(scope.row)"
+                                    />
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="storefront_id"
+                                    label="门店"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="mobile_terminal_status"
+                                    label="开通手机端"
+                                    width="180">
+                                <template slot-scope="scope">
+                                    <el-switch
+                                            v-model="scope.row.mobile_terminal_status === 1 ? true : false "
+                                            active-color="#13ce66"
+                                            inactive-color="#ff4949"
+                                            @change="moveSwitch(scope.row)"
+                                    />
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="200">
+                                <template slot-scope="scope">
+                                    <el-button @click="handleClick(scope.row.id)" type="text" size="small">查看</el-button>
+                                    <el-button type="text" size="small" @click="upd(scope.row)">编辑</el-button>
+                                    <el-button type="text" size="small" @click="del(scope.row.id)">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <!--     分页区域       -->
+                    <div class="page">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="queryInfo.pagenum"
+                                :page-sizes="[5, 10, 20, 30]"
+                                :page-size="queryInfo.pagesize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="totalPage">
+                        </el-pagination>
+                    </div>
+                </el-card>
             </div>
-            <mySee :isShow.sync="isShow" :selectSee="selectSee"/>
-            <myModify :isShowsUpd.sync="isShowsUpd" :selectUpd="selectUpd"/>
-            <myAdd :isShowAdd.sync="isShowAdd"  @getSelectList="getSelectList"/>
-            <!--     分页区域       -->
-            <div class="page">
-                <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="queryInfo.pagenum"
-                        :page-sizes="[5, 10, 20, 30]"
-                        :page-size="queryInfo.pagesize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="totalPage">
-                </el-pagination>
-            </div>
-        </el-card>
+        </div>
+        <myAdd  @getSelectList="getSelectList"/>
+        <mySee :selectSee="selectSee"/>
+        <myModify :selectUpd="selectUpd"/>
     </div>
 </template>
 
@@ -142,27 +153,32 @@
                     pagenum: 1, //当前第几页
                     pagesize: 5 //当前显示几条
                 },
-                totalPage: 0 ,//总条数
-                selectSee:{},//详情数据
-                selectUpd:{}//修改数据
+                totalPage: 0,//总条数
+                selectSee: {},//详情数据
+                selectUpd: {}//修改数据
             }
         },
+
         methods: {
+            reportAdd() {
+                this.$store.commit('employeesStatus', false);
+                this.$store.commit('addEmployees', true)
+            },
             handleClick(id) { //查看
-               Api.postSee(id).then((res)=>{
-                   if (res.code !== 200) {
-                       return this.$message.error('获取详情失败')
-                   }
-                    this.selectSee=res.data
-               });
+                this.$store.commit('employeesStatus', false);
+                this.$store.commit('seeEmployees', true)
+                Api.postSee(id).then((res)=>{
+                    if (res.code !== 200) {
+                        return this.$message.error('获取详情失败')
+                    }
+                    this.selectSee=res.data;
+                });
                 this.isShow = true
             },
-            add() {//添加弹框
-                this.isShowAdd = true
-            },
-            upd(val) { //修改弹框
+            upd(val) {
+                this.$store.commit('employeesStatus', false);
+                this.$store.commit('updEmployees', true);
                 this.selectUpd=val;
-                this.isShowsUpd = true
             },
             del(id) { //删除操作
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -220,76 +236,74 @@
         },
         mounted() {
             this.getSelectList();
+        },
+        computed: {
+            employeesStatus() {
+                return this.$store.state.employees.employeesStatus
+            },
         }
     }
 </script>
 
 <style scoped>
+    .component {
+        width: 100%;
+        height: 100%;
+    }
+
     .report {
-        width: 100%;
+        width: 98.3%;
         height: 100%;
+        margin: 15px;
     }
 
-    .el-card {
-        height: 100%;
-        overflow: auto;
-    }
-
-    .el-popconfirm {
-        margin-left: 10px;
-    }
-
-    .box_form {
+    .add_box {
         width: 100%;
     }
 
-    .form {
+    .add_content {
         width: 100%;
-        margin-top: 15px;
+        height: 60px;
+        line-height: 60px;
         display: flex;
-        flex-wrap: wrap;
         justify-content: space-between;
+        background: #ffffff;
+        border-bottom: 1px #eee solid;
+        border-radius: 5px;
     }
 
-    .report_int {
-        width: 800px;
+    .content_title {
+        padding-left: 20px;
+        padding-bottom: 20px;
     }
 
-    label {
-        display: block;
-        padding: 10px 0;
+    .content_btn {
+        padding-right: 20px;
+        padding-bottom: 20px;
+        color: #1981e4;
     }
 
-    .date {
-        width: 392px;
+    .content_btn > p:nth-child(1) {
+        font-weight: bold;
     }
 
-    .sub_btn {
-        padding: 20px 0;
-        text-align: right;
+
+    .add_box >>> .el-card__body {
+        padding: 20px 0 !important;
     }
 
-    .tab {
-        width: 100%;
+    .top {
+        margin-top: 20px;
+        padding: 20px;
     }
 
     .tab >>> .el-table .cell, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell {
         text-align: center;
     }
-
     .page {
         width: 100%;
         text-align: center;
-        padding: 30px 0;
-    }
-
-    .state {
-        display: flex;
-        width: 800px;
-        justify-content: space-between;
-    }
-
-    .add {
-        padding: 30px 0;
+        margin-top: 30px;
     }
 </style>
+

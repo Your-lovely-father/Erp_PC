@@ -252,6 +252,7 @@
         justify-content: space-between;
         position: fixed;
         top: 0;
+        z-index: 99;
     }
 
     .el-icon-close {

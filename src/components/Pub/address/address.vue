@@ -33,7 +33,7 @@
                     </el-option>
                 </el-select>
                 <div class="search_btn">
-                    <el-button type="primary" size="medium">搜索</el-button>
+                    <el-button type="primary" size="medium" class="btn">搜索</el-button>
                 </div>
             </div>
         </div>
@@ -102,7 +102,9 @@
 
 <style scoped>
     .address {
-        width: 100%;
+        width: 98.5%;
+        margin-top: 20px;
+        padding: 0 20px;
     }
 
     .select {
@@ -117,7 +119,7 @@
     }
 
     p {
-        padding: 0 20px;
+        padding: 0 10px;
     }
 
     label {
@@ -125,12 +127,15 @@
     }
 
     .el-select {
-        /*width: 235px;*/
-        width: 466px;
+        width: 300px;
     }
 
     .search_btn {
         margin-left: 20px;
+    }
+    .btn {
+        width: 100px;
+        background: linear-gradient(#28a9ea, #1981e4);
     }
 
 </style>

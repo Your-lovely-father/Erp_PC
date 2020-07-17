@@ -205,8 +205,8 @@
         },
         methods: {
             onPage() {
-                this.$store.commit('showReport', true);
-                this.$store.commit('showStatus', false);
+                this.$store.commit('showBuilding', true);
+                this.$store.commit('showBuildingaStatus', false);
             },
             cancel() {
                 this.onPage()
@@ -276,7 +276,6 @@
         justify-content: space-between;
         position: fixed !important;
         top: 0;
-        left: 0;
         z-index: 99;
     }
 
@@ -330,7 +329,7 @@
     }
     label {
         display: block;
-        padding: 15px 0;
+        padding: 20px 0;
     }
     .upload{
         width: 100%;
