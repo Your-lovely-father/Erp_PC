@@ -8,7 +8,7 @@
                             楼盘管理
                         </p>
                     </div>
-                    <div class="content_btn">
+                    <div class="content_btn" style="cursor:pointer">
                         <p @click="reportAdd()">
                             <span class="el-icon-plus"></span>
                             <span>楼盘添加</span>

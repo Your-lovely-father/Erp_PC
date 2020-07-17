@@ -53,6 +53,7 @@
                         <div class="header-left">
                             <span class="iconfont icon-shouqi" @click="up" style="display: block" v-if="flag"></span>
                             <span class="iconfont icon-zhankai" @click="up" style="display: block" v-else></span>
+                            <span class="iconfont icon-shuaxin" @click="refresh"></span>
                         </div>
                         <div class="header-right" @mousemove="move" @mouseleave="leave">
                             <el-dropdown>
@@ -126,15 +127,19 @@
             </el-container>
         </el-container>
         <myPassword :isShowPassword.sync="isShowPassword"/>
+        <myExit :isExit.sync="isExit"/>
     </div>
 </template>
 
 <script>
     import  myPassword from './Password/Password'
+    import myExit from './Exit/Exit'
     export default {
         name: "Home",
         components:{
-            myPassword
+            myPassword,
+            myExit
+
         },
         data() {
             return {
@@ -151,6 +156,7 @@
                 currentIndex: 1595,   //默认页
                 left: 0,
                 isShowPassword: false,//修改密码
+                isExit:false,//退出
                 list: [
                     {
                         id: '0',
@@ -321,9 +327,7 @@
         },
         methods: {
             exit() {
-                window.localStorage.clear();
-                window.location.reload()
-                this.$router.push('/')
+                this.isExit=true
             },
             up() {
                 this.isCollapsed = !this.isCollapsed;
@@ -347,6 +351,9 @@
             },
             updPass(){
                 this.isShowPassword=true
+            },
+            refresh(){
+                this.$router.go(0)
             }
         },
         computed: {
@@ -411,7 +418,12 @@
     .icon-shouqi {
         cursor: pointer;
     }
-
+    .icon-shuaxin{
+        cursor: pointer;
+        margin-left: 50px;
+        font-size: 18px;
+        font-weight: bolder;
+    }
     .icon-zhankai {
         cursor: pointer;
     }

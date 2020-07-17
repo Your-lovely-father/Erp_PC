@@ -10,7 +10,7 @@
                                 门店管理
                             </p>
                         </div>
-                        <div class="content_btn">
+                        <div class="content_btn" style="cursor:pointer">
                             <p @click="reportAdd()">
                                 <span class="el-icon-plus"></span>
                                 <span>门店添加</span>

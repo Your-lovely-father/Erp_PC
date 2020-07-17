@@ -130,7 +130,7 @@
     }
 
     .poor {
-        width: 98.3%;
+        width: 98.2%;
         height: 40px;
         display: flex;
         align-items: center;

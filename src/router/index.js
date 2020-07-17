@@ -23,8 +23,17 @@ const router = new VueRouter({
             path: '/body',
             name: 'Body',
             component: () => import('../views/Body/Body'),
-            redirect: '/report',
+            redirect: '/browse',
             children: [
+                //总览
+                {
+                    path: '/browse',
+                    name: 'Browse',
+                    component: () => import('../views/Browse/Browse'),
+                    meta:{
+                        title:'客户报表'
+                    }
+                },
                 //客户报表
                 {
                     path: '/report',

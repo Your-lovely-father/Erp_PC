@@ -9,7 +9,7 @@
                           修改密码
                       </div>
                       <div class="icon" @click="cancel">
-                          <p class="el-icon-close"></p>
+                          <p class="el-icon-close" style="cursor:pointer"></p>
                       </div>
                   </div>
                </div>
@@ -38,7 +38,6 @@
 
 <script>
     export default {
-        name: "See",
         props: {
             isShowPassword: {
                 type: Boolean,
@@ -61,9 +60,6 @@
                 this.$emit("update:isShowPassword", false);
             }
         },
-        created() {
-            this.list = JSON.parse(this.isShowPassword);
-        }
     }
 </script>
 
