@@ -73,6 +73,9 @@
                                             <li>
                                                 <el-dropdown-menu slot="dropdown">
                                                     <el-dropdown-item class="exit_Btn">
+                                                        <p @click="updPass()">修改密码</p>
+                                                    </el-dropdown-item>
+                                                    <el-dropdown-item class="exit_Btn">
                                                         <p @click="exit()">退出</p>
                                                     </el-dropdown-item>
                                                 </el-dropdown-menu>
@@ -122,12 +125,17 @@
                 </el-main>
             </el-container>
         </el-container>
+        <myPassword :isShowAdd.sync="isShowPassword"/>
     </div>
 </template>
 
 <script>
+    import  myPassword from './Password/Password'
     export default {
         name: "Home",
+        components:{
+            myPassword
+        },
         data() {
             return {
                 //折叠
@@ -142,6 +150,7 @@
                 page:false,
                 currentIndex: 1595,   //默认页
                 left: 0,
+                isShowPassword: false,//修改密码
                 list: [
                     {
                         id: '0',
@@ -335,6 +344,10 @@
             },
             gotoPage(index) {
                 this.currentIndex = index;
+            },
+            updPass(){
+                alert('1111')
+                this.isShowPassword=true
             }
         },
         computed: {
