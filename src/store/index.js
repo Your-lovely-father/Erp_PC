@@ -10,10 +10,17 @@ import tracking from './modules/Tracking'
 import employees from './modules/Employees'
 import role from './modules/Role'
 import admin from './modules/Admin'
+import storage from "../utils/localStorage";
 Vue.use(Vuex);
 export default new Vuex.Store({
-    state: {},
-    mutations: {},
+    state: {
+        access_token:storage.get('access_token').length === 0 ? '': storage.get('access_token')
+    },
+    mutations: {
+        token: ((state, data) => {
+            storage.set('access_token',state.access_token=data)
+        })
+    },
     actions: {},
     getters: {},
     modules: {

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {errorCode} from './errorCode'
 import { Loading,Message } from 'element-ui';//引入Loading服务
+import store from '../store'
 // 全局的 axios 默认值
 axios.defaults.baseURL = '/api';
 axios.defaults.timeout= 6000;
@@ -35,9 +36,9 @@ function endLoading() {
 }
 // 请求拦截中，我们可以对请求头作处理，比如所有的请求都加一个token等
 axios.interceptors.request.use(config => {
-    const token = '68ee09fb8367f32401063cc9cadf3ba31594107367';
+    let token =store.state.access_token;
     if (token) {
-        config.headers['Access-Token'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+        config.headers['Access-Token'] = token// 让每个请求携带自定义 token 请根据实际情况自行修改
     }
     startLoading();//请求时的加载动画
     return config; //加载动画的时候把config return 回去
@@ -51,7 +52,7 @@ axios.interceptors.response.use((response) => {
 },error => {
     //错误提醒
     endLoading()//如果错误也结束动画
-    Message.error(error.response.data);
+    Message.error(error);
     return Promise.reject(error)
 })
 

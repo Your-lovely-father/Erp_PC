@@ -5,6 +5,7 @@
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store'
 
 Vue.use(VueRouter);
 const router = new VueRouter({
@@ -23,15 +24,16 @@ const router = new VueRouter({
             path: '/body',
             name: 'Body',
             component: () => import('../views/Body/Body'),
-            redirect: '/browse',
+            // redirect: '/browse',
+            redirect: '/report',
             children: [
                 //总览
                 {
                     path: '/browse',
                     name: 'Browse',
                     component: () => import('../views/Browse/Browse'),
-                    meta:{
-                        title:'客户报表'
+                    meta: {
+                        title: '客户报表'
                     }
                 },
                 //客户报表
@@ -39,8 +41,8 @@ const router = new VueRouter({
                     path: '/report',
                     name: 'Report',
                     component: () => import('../views/Report/Report'),
-                    meta:{
-                        title:'客户报表'
+                    meta: {
+                        title: '客户报表'
                     }
                 },
                 //楼盘管理
@@ -48,8 +50,8 @@ const router = new VueRouter({
                     path: '/building',
                     name: 'Building',
                     component: () => import('../views/Building/Building'),
-                    meta:{
-                        title:'楼盘管理'
+                    meta: {
+                        title: '楼盘管理'
                     }
                 },
                 //区域管理
@@ -57,8 +59,8 @@ const router = new VueRouter({
                     path: '/area',
                     name: 'Area',
                     component: () => import('../views/Area/Area'),
-                    meta:{
-                        title:'区域管理'
+                    meta: {
+                        title: '区域管理'
                     }
                 },
                 //门店管理
@@ -66,8 +68,8 @@ const router = new VueRouter({
                     path: '/stores',
                     name: 'Stores',
                     component: () => import('../views/Stores/Stores'),
-                    meta:{
-                        title:'门店管理'
+                    meta: {
+                        title: '门店管理'
                     }
                 },
                 //日志管理
@@ -75,8 +77,8 @@ const router = new VueRouter({
                     path: '/log',
                     name: 'Log',
                     component: () => import('../views/Log/Log'),
-                    meta:{
-                        title:'日志管理'
+                    meta: {
+                        title: '日志管理'
                     }
                 },
                 //带看管理
@@ -84,8 +86,8 @@ const router = new VueRouter({
                     path: '/look',
                     name: 'Look',
                     component: () => import('../views/Look/Look'),
-                    meta:{
-                        title:'带看管理'
+                    meta: {
+                        title: '带看管理'
                     }
                 },
                 //跟进管理
@@ -93,8 +95,8 @@ const router = new VueRouter({
                     path: '/tracking',
                     name: 'Tracking',
                     component: () => import('../views/Tracking/Tracking'),
-                    meta:{
-                        title:'跟进管理'
+                    meta: {
+                        title: '跟进管理'
                     }
                 },
                 //员工管理
@@ -102,8 +104,8 @@ const router = new VueRouter({
                     path: '/employees',
                     name: 'Employees',
                     component: () => import('../views/Employees/Employees'),
-                    meta:{
-                        title:'员工管理'
+                    meta: {
+                        title: '员工管理'
                     }
                 },
                 //角色设置
@@ -111,8 +113,8 @@ const router = new VueRouter({
                     path: '/role',
                     name: 'Role',
                     component: () => import('../views/Role/Role'),
-                    meta:{
-                        title:'角色设置'
+                    meta: {
+                        title: '角色设置'
                     }
                 },
                 //权限管理
@@ -120,8 +122,8 @@ const router = new VueRouter({
                     path: '/admin',
                     name: 'Admin',
                     component: () => import('../views/Admin/Admin'),
-                    meta:{
-                        title:'权限管理'
+                    meta: {
+                        title: '权限管理'
                     }
                 },
             ],
@@ -143,10 +145,15 @@ router.beforeEach((to, from, next) => {
     // to 将要进入的路由
     // from 代表从那个路径跳转而来
     // next 放行
-    if (to.path === '/login') return next();
-    //获取token
-    const token = window.localStorage.getItem('token');
-    if (!token) return next('/login');
-    next()
+    if (to.path === '/login') {
+        return next()
+    } else {
+        const token = store.state.access_token;
+        if (!token) {
+            return next('/login');
+        } else {
+            next()
+        }
+    }
 });
 export default router

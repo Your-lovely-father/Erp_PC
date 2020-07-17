@@ -77,7 +77,7 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                    prop="storefront_id"
+                                    prop="storefront_name"
                                     label="门店"
                                     width="180">
                             </el-table-column>
