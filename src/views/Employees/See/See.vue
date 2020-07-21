@@ -77,12 +77,13 @@
                                 </div>
                                 <div class="int_box">
                                     <label>门店</label>
-                                    <el-select v-model="value.label2" placeholder="请选择"  class="report_int"
+                                    <el-select v-model="value" placeholder="请选择"  class="report_int"
                                     >
                                         <el-option
                                                 v-for="item in storeList"
                                                 :key="item.value"
                                                 :label="item.label"
+                                                value="item.value"
                                         >
                                         </el-option>
                                     </el-select>
@@ -183,7 +184,10 @@
                 StoreApi.postStores().then((res)=>{
                     let cityData = JSON.stringify(res.data);
                     this.storeList = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
-                    console.log(this.storeList)
+                    // console.log(this.storeList)
+                });
+                this.storeList.map((item)=>{
+                    console.log(item)
                 })
             },
             // role() { //角色管理回显处理
