@@ -168,11 +168,11 @@
                         name: '楼盘管理',
                         path: 'building'
                     },
-                    {
-                        id: '3',
-                        name: '区域管理',
-                        path: 'area'
-                    },
+                    // {
+                    //     id: '3',
+                    //     name: '区域管理',
+                    //     path: 'area'
+                    // },
                     {
                         id: '4',
                         name: '门店管理',
@@ -230,7 +230,7 @@
                     '0': 'iconfont icon-kehubaobei',
                     '1': 'iconfont icon-loupanguanli',
                     '2': 'iconfont icon-zuzhi',
-                    '3': 'iconfont icon-ccgl-yundandayinquyu-3',
+                    // '3': 'iconfont icon-ccgl-yundandayinquyu-3',
                     '4': 'iconfont icon-mendian',
                     '5': 'iconfont icon-rizhiguanli',
                     '6': 'iconfont icon-jingjiren_daikanguanli',

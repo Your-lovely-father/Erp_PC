@@ -26,48 +26,48 @@
                         >
                             <el-table-column
                                     fixed
-                                    prop="name"
+                                    prop="building_name"
                                     label="楼盘名称"
                                     width="200">
                             </el-table-column>
                             <el-table-column
-                                    prop="nickname"
+                                    prop="building_nickname"
                                     label="楼盘别称"
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="abbreviations"
+                                    prop="building_abbreviation"
                                     label="楼盘缩写"
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="areaOptions"
+                                    prop="building_address"
                                     label="楼盘地址"
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="price"
+                                    prop="average_unit_price_begin"
                                     label="平均单价"
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="openDate"
+                                    prop="average_unit_price_end"
                                     label="开盘时间"
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="area"
+                                    prop="overall_floorage"
                                     label="总建筑面积"
                                     width="180">
                             </el-table-column>
 
                             <el-table-column
-                                    prop="greening"
+                                    prop="green_area"
                                     label="绿化面积"
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="customer"
+                                    prop="building_images"
                                     label="楼盘图片"
                                     width="180">
                                 <template slot-scope="scope">
@@ -80,12 +80,12 @@
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="date"
+                                    prop="opening_time"
                                     label="时间"
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="customer"
+                                    prop="floor_plan"
                                     label="户型图片"
                                     width="180">
                                 <template slot-scope="scope">
@@ -99,16 +99,8 @@
                                 <template slot-scope="scope">
                                     <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
                                     <el-button type="text" size="small" @click="upd()">编辑</el-button>
-                                    <el-popconfirm
-                                            confirmButtonText='确定'
-                                            cancelButtonText='取消'
-                                            icon="el-icon-info"
-                                            iconColor="red"
-                                            title="确定要删除吗？"
-                                    >
-                                        <el-button type="text" size="small" slot="reference" class="el-popconfirm">删除
+                                        <el-button type="text" size="small" slot="reference" class="el-popconfirm" @click="del(scope.row.id)">删除
                                         </el-button>
-                                    </el-popconfirm>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -118,11 +110,11 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[100, 200, 300, 400]"
-                                :page-size="100"
+                                :current-page="queryInfo.pagenum"
+                                :page-sizes="[5, 10, 20, 30]"
+                                :page-size="queryInfo.pagesize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="totalPage">
                         </el-pagination>
                     </div>
                 </el-card>
@@ -138,7 +130,7 @@
     import mySee from '../../views/Building/See/See'
     import myModify from '../../views/Building/Modify/Modify'
     import myAdd from '../../views/Building/Add/Add'
-
+    import Api from '../../api/Building/Building'
     export default {
         name: "Report",
         components: {
@@ -148,23 +140,13 @@
         },
         data() {
             return {
-                currentPage4:4,
-                tableData: [
-                    {
-                        name: '楼盘名称',
-                        nickname: '别名',
-                        date: '2020/7/3',
-                        abbreviations: '缩写',
-                        areaOptions: '辽宁沈阳红番区',
-                        price: '100万',
-                        area:'1000',
-                        openDate: '2020/8/30',
-                        greening: '100平',
-                        management: '80',
-                        buildingDialogImageUrl: require('../../assets/images/logo-ip.png'),
-                        modelDialogImageUrl: require('../../assets/images/logo-ip.png'),
-                    }
-                ],
+                tableData: [],
+                queryInfo: { //分页
+                    query: '',
+                    pagenum: 1, //当前第几页
+                    pagesize: 5 //当前显示几条
+                },
+                totalPage: 0,//总条数
             }
         },
         methods: {
@@ -180,17 +162,49 @@
                 this.$store.commit('buildingStatus', false);
                 this.$store.commit('updStatusBuilding', true)
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            handleSizeChange(newSize) { //当前显示多少条操作
+                this.queryInfo.pagesize = newSize;
+                this.buildingList()
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+            handleCurrentChange(newPage) { //当前页数操作
+                this.queryInfo.pagenum = newPage;
+                this.buildingList()
             },
+            del(id) { //删除操作
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.reportDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.buildingList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            buildingList(){
+                Api.buildingList(this.queryInfo.pagenum,this.queryInfo.pagesize).then((res)=>{
+                    this.tableData=res.data.data
+                    this.totalPage=res.data.count
+                })
+            }
         },
         computed: {
             buildingStatus() {
                 return this.$store.state.building.buildingStatus
             },
+        },
+        mounted() {
+            this.buildingList()
         }
     }
 </script>

@@ -24,6 +24,7 @@
                                 <el-input
                                         :disabled="true"
                                         class="report_int"
+                                        v-model="logSeeObject.user_name"
                                 >
                                 </el-input>
                             </div>
@@ -32,6 +33,7 @@
                                 <el-input
                                         :disabled="true"
                                         class="report_int"
+                                        v-model="logSeeObject.create_time"
                                 >
                                 </el-input>
                             </div>
@@ -40,30 +42,27 @@
                                 <el-input
                                         :disabled="true"
                                         class="report_int"
+                                        v-model="logSeeObject.title"
                                 >
                                 </el-input>
                             </div>
+                        </div>
+                        <div class="int_box">
                             <div class="int">
                                 <label>区域管理</label>
                                 <el-input
                                         :disabled="true"
                                         class="report_int"
+                                        v-model=" logSeeObject.province_name"
                                 >
                                 </el-input>
                             </div>
-                            <div class="int ">
+                            <div class="int left">
                                 <label>门店管理</label>
                                 <el-input
                                         :disabled="true"
                                         class="report_int"
-                                >
-                                </el-input>
-                            </div>
-                            <div class="int">
-                                <label>备注</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
+                                        v-model="logSeeObject.storefront_name"
                                 >
                                 </el-input>
                             </div>
@@ -100,6 +99,9 @@
             seeLog() {
                 return this.$store.state.log.seeLog
             },
+            logSeeObject(){
+                return this.$store.state.log.logSeeObject
+            }
         },
     }
 </script>
@@ -202,5 +204,12 @@
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
+    }
+    .int_box{
+        margin-left: 50px;
+        display: flex;
+    }
+    .left{
+        margin-left: 106px;
     }
 </style>

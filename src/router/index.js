@@ -55,14 +55,14 @@ const router = new VueRouter({
                     }
                 },
                 //区域管理
-                {
-                    path: '/area',
-                    name: 'Area',
-                    component: () => import('../views/Area/Area'),
-                    meta: {
-                        title: '区域管理'
-                    }
-                },
+                // {
+                //     path: '/area',
+                //     name: 'Area',
+                //     component: () => import('../views/Area/Area'),
+                //     meta: {
+                //         title: '区域管理'
+                //     }
+                // },
                 //门店管理
                 {
                     path: '/stores',

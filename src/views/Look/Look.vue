@@ -1,5 +1,5 @@
 <template>
-    <div class="component" >
+    <div class="component">
         <div class="report" v-show="lookStatus">
             <div class="add_box">
                 <!--    搜索区域        -->
@@ -17,9 +17,9 @@
                             </p>
                         </div>
                     </div>
-                   <div class="share">
-                       <myShare/>
-                   </div>
+                    <div class="share">
+                        <myShare/>
+                    </div>
                 </el-card>
                 <!--    表格区域        -->
                 <el-card class="top">
@@ -32,33 +32,27 @@
                         >
                             <el-table-column
                                     label="时间"
-                                    prop="date">
+                                    prop="look_time">
                             </el-table-column>
                             <el-table-column
                                     label="带看记录"
-                                    prop="look">
+                                    prop="guide_look_content">
                             </el-table-column>
                             <el-table-column
-                                    align="right"  label="操作">
+                                    align="right" label="操作">
                                 <template slot-scope="scope">
                                     <el-button
                                             size="mini"
-                                            @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-                                    <el-button type="primary"  size="mini" @click="upd">修改</el-button>
-                                    <el-popconfirm
-                                            confirmButtonText='确定'
-                                            cancelButtonText='取消'
-                                            icon="el-icon-info"
-                                            iconColor="red"
-                                            title="确定要删除吗？"
-                                    >
-                                        <el-button
-                                                slot="reference"
-                                                size="mini"
-                                                type="danger"
-                                                class="left_btn"
-                                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                                    </el-popconfirm>
+                                            @click="handleEdit(scope.$index, scope.row)">查看
+                                    </el-button>
+                                    <el-button type="primary" size="mini" @click="upd">修改</el-button>
+                                    <el-button
+                                            slot="reference"
+                                            size="mini"
+                                            type="danger"
+                                            class="left_btn"
+                                            @click="handleDelete(scope.row.id)">删除
+                                    </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -68,11 +62,11 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[100, 200, 300, 400]"
-                                :page-size="100"
+                                :current-page="queryInfo.pagenum"
+                                :page-sizes="[5, 10, 20, 30]"
+                                :page-size="queryInfo.pagesize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="totalPage">
                         </el-pagination>
                     </div>
                 </el-card>
@@ -89,6 +83,7 @@
     import myModify from '../../views/Look/Modify/Modify'
     import myShare from '../../components/Pub/share/share'
     import myAdd from '../../views/Look/Add/Add'
+    import Api from '../../api/Look/Look'
 
     export default {
         components: {
@@ -99,15 +94,13 @@
         },
         data() {
             return {
-                isShowAdd:false,
-                tableData: [{
-                    date:'2019-5-30 12:20',
-                    look:'删除了门店',
+                tableData: [],
+                queryInfo: { //分页
+                    query: '',
+                    pagenum: 1, //当前第几页
+                    pagesize: 5 //当前显示几条
                 },
-                ],
-                isShow:false,
-                isShowsUpd:false,
-                currentPage4: 4,
+                totalPage: 0,//总条数
             }
         },
         methods: {
@@ -123,29 +116,59 @@
                 this.$store.commit('lookStatus', false);
                 this.$store.commit('updLook', true)
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+            handleDelete(id) { //删除操作
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.lookDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.lookList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            handleSizeChange(newSize) { //当前显示多少条操作
+                this.queryInfo.pagesize = newSize;
+                this.lookList()
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+            handleCurrentChange(newPage) { //当前页数操作
+                this.queryInfo.pagenum = newPage;
+                this.lookList()
             },
+            lookList() { //列表数据
+                Api.lookList(this.queryInfo.pagenum, this.queryInfo.pagesize).then((res) => {
+                    this.tableData = res.data.data;
+                    this.totalPage = res.data.count
+                })
+            }
         },
         computed: {
             lookStatus() {
                 return this.$store.state.look.lookStatus
             },
+        },
+        mounted() {
+            this.lookList()
         }
     }
 </script>
 
 <style scoped>
-    .component{
+    .component {
         width: 100%;
         height: 100%;
     }
+
     .report {
         width: 98.3%;
         height: 100%;
@@ -182,9 +205,11 @@
     .add_box >>> .el-card__body {
         padding: 20px 0 !important;
     }
-    .share{
+
+    .share {
         margin-top: 20px;
     }
+
     .top {
         margin-top: 20px;
         padding: 20px;
@@ -193,9 +218,11 @@
     .tab >>> .el-table .cell, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell {
         text-align: center;
     }
-    .left_btn{
+
+    .left_btn {
         margin-left: 10px;
     }
+
     .page {
         width: 100%;
         text-align: center;

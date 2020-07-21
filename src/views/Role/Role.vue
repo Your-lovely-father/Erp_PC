@@ -1,5 +1,5 @@
 <template>
-    <div class="component" >
+    <div class="component">
         <div class="report" v-show="roleStatus">
             <div class="add_box">
                 <!--    搜索区域        -->
@@ -22,27 +22,44 @@
                         <el-table
                                 :data="tableData"
                                 style="width: 100%"
-                                 border
+                                border
                                 :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                         >
                             <el-table-column type="expand">
-                                <template slot-scope="props">
-                                    <div class="content" style="text-align: left">
-                                        <el-form label-position="left" inline class="demo-table-expand">
-                                            <el-form-item :label="itme.adminName" v-for="itme in props.row.children">
-                                                <span>{{ props.row.name }}</span>
-                                            </el-form-item>
-                                        </el-form>
-                                    </div>
+                                <template slot-scope="scope">
+                                    <el-row v-for="(item1,i1) in scope.row.son" :key="item1.id"
+                                            :class="['dbbottom',i1 === 0 ? 'dbtop' : '']">
+                                        <!--       一级权限      -->
+                                        <el-col :span="5">
+                                            <el-tag class="btn"> {{item1.group_name}}</el-tag>
+                                            <i class="el-icon-caret-right"></i>
+                                        </el-col>
+                                        <!--       二级权限 和三级权限     -->
+                                        <el-col :span="19">
+                                            <!--       通过for循环嵌套渲染二级权限     -->
+                                            <el-row :class="[i2=== 0 ? '' : 'dbtop']" v-for="(item2,i2) in item1.son"
+                                                    :key="item2.id">
+                                                <el-col :span="6">
+                                                    <el-tag class="btn" type="success"> {{item1.group_name}}</el-tag>
+                                                    <i class="el-icon-caret-right"></i>
+                                                </el-col>
+                                                <el-col :span="18">
+                                                    <el-tag class="btn" type="warning" v-for="(item3,i3) in item2.son"
+                                                            :key="item3.id"> {{item3.group_name}}
+                                                    </el-tag>
+                                                </el-col>
+                                            </el-row>
+                                        </el-col>
+                                    </el-row>
                                 </template>
                             </el-table-column>
                             <el-table-column
                                     label='角色名称'
-                                    prop="name">
+                                    prop="group_name">
                             </el-table-column>
                             <el-table-column
                                     label="时间"
-                                    prop="date">
+                                    prop="create_time">
                             </el-table-column>
                             <el-table-column
                                     align="right"
@@ -51,43 +68,36 @@
                                 <template slot-scope="scope">
                                     <el-button
                                             size="mini"
-                                            @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                                            @click="handleEdit(scope.$index, scope.row)">查看
+                                    </el-button>
                                     <el-button
                                             type="primary"
                                             size="mini"
                                             @click="upd()">修改
                                     </el-button>
-                                    <el-popconfirm
-                                            confirmButtonText='确定'
-                                            cancelButtonText='取消'
-                                            icon="el-icon-info"
-                                            iconColor="red"
-                                            title="确定要删除吗？"
-                                    >
-                                        <el-button
-                                                slot="reference"
-                                                size="mini"
-                                                type="danger"
-                                                class="left_btn"
-                                                @click="handleDelete(scope.$index, scope.row)">删除
-                                        </el-button>
-                                    </el-popconfirm>
+                                    <el-button
+                                            slot="reference"
+                                            size="mini"
+                                            type="danger"
+                                            class="left_btn"
+                                            @click="handleDelete(scope.row.id)">删除
+                                    </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
                     </div>
                     <!--     分页区域       -->
-                    <div class="page">
-                        <el-pagination
-                                @size-change="handleSizeChange"
-                                @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[100, 200, 300, 400]"
-                                :page-size="100"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
-                        </el-pagination>
-                    </div>
+                    <!--                    <div class="page">-->
+                    <!--                        <el-pagination-->
+                    <!--                                @size-change="handleSizeChange"-->
+                    <!--                                @current-change="handleCurrentChange"-->
+                    <!--                                :current-page="queryInfo.pagenum"-->
+                    <!--                                :page-sizes="[5, 10, 20, 30]"-->
+                    <!--                                :page-size="queryInfo.pagesize"-->
+                    <!--                                layout="total, sizes, prev, pager, next, jumper"-->
+                    <!--                                :total="totalPage">-->
+                    <!--                        </el-pagination>-->
+                    <!--                    </div>-->
                 </el-card>
             </div>
         </div>
@@ -101,6 +111,7 @@
     import mySee from '../../views/Role/See/See'
     import myModify from '../../views/Role/Modify/Modify'
     import myAdd from '../../views/Role/Add/Add'
+    import Api from '../../api/Role/Role'
 
     export default {
         name: "Report",
@@ -111,26 +122,16 @@
         },
         data() {
             return {
-                isShowAdd:false,
-                tableData: [{
-                    name: '超级管理员',
-                    date: '2019-5-30 12:20',
-                    children:[
-                        {
-                            adminName:'客户管理',
-                        },
-                        {
-                            adminName:'楼盘管理',
-                        }
-                    ]
-                },
-                ],
-                search: '',
-                currentPage4: 4,
+                tableData: [],
+                // queryInfo: { //分页
+                //     query: '',
+                //     pagenum: 1, //当前第几页
+                //     pagesize: 5 //当前显示几条
+                // },
+                // totalPage: 0,//总条数
             }
         },
         methods: {
-
             reportAdd() {
                 this.$store.commit('roleStatus', false);
                 this.$store.commit('addSRole', true)
@@ -143,29 +144,58 @@
                 this.$store.commit('roleStatus', false);
                 this.$store.commit('updRole', true)
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+            handleDelete(id) { //删除操作
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.roleDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.roleList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
-            },
+            // handleSizeChange(newSize) { //当前显示多少条操作
+            //     this.queryInfo.pagesize = newSize;
+            //     this.roleList()
+            // },
+            // handleCurrentChange(newPage) { //当前页数操作
+            //     this.queryInfo.pagenum = newPage;
+            //     this.roleList()
+            // },
+            roleList() {
+                Api.roleList().then((res) => {
+                    this.tableData = res.data;
+                })
+            }
         },
         computed: {
             roleStatus() {
                 return this.$store.state.role.roleStatus
             },
+        },
+        mounted() {
+            this.roleList()
         }
     }
 </script>
 
 <style scoped>
-    .component{
+    .component {
         width: 100%;
         height: 100%;
     }
+
     .report {
         width: 98.3%;
         height: 100%;
@@ -202,9 +232,11 @@
     .add_box >>> .el-card__body {
         padding: 20px 0 !important;
     }
-    .left_btn{
+
+    .left_btn {
         margin-left: 10px;
     }
+
     label {
         display: block;
         padding: 10px 0;
@@ -235,6 +267,7 @@
     .content_btn > p:nth-child(1) {
         font-weight: bold;
     }
+
     .top {
         margin-top: 20px;
         padding: 20px;
@@ -244,9 +277,20 @@
         text-align: center;
     }
 
-    .page {
-        width: 100%;
-        text-align: center;
-        margin-top: 30px;
+    /*.page {*/
+    /*    width: 100%;*/
+    /*    text-align: center;*/
+    /*    margin-top: 30px;*/
+    /*}*/
+    .dbtop {
+        border-top: 1px #eee solid;
+    }
+
+    .dbbottom {
+        border-bottom: 1px #eee solid;
+    }
+
+    .btn {
+        margin: 10px 0;
     }
 </style>

@@ -32,11 +32,11 @@
                         >
                             <el-table-column
                                     label="时间"
-                                    prop="date">
+                                    prop="follow_time">
                             </el-table-column>
                             <el-table-column
                                     label="跟进记录"
-                                    prop="tracking">
+                                    prop="record_content">
                             </el-table-column>
                             <el-table-column
                                     align="right"  label="操作">
@@ -45,20 +45,13 @@
                                             size="mini"
                                             @click="handleEdit(scope.$index, scope.row)">查看</el-button>
                                     <el-button type="primary"  size="mini" @click="upd">修改</el-button>
-                                    <el-popconfirm
-                                            confirmButtonText='确定'
-                                            cancelButtonText='取消'
-                                            icon="el-icon-info"
-                                            iconColor="red"
-                                            title="确定要删除吗？"
-                                    >
+
                                         <el-button
                                                 slot="reference"
                                                 size="mini"
                                                 type="danger"
                                                 class="left_btn"
-                                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                                    </el-popconfirm>
+                                                @click="handleDelete(scope.row.id)">删除</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -68,11 +61,11 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[100, 200, 300, 400]"
-                                :page-size="100"
+                                :current-page="queryInfo.pagenum"
+                                :page-sizes="[5, 10, 20, 30]"
+                                :page-size="queryInfo.pagesize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="totalPage">
                         </el-pagination>
                     </div>
                 </el-card>
@@ -89,6 +82,7 @@
     import myModify from '../../views/Tracking/Modify/Modify'
     import myShare from '../../components/Pub/share/share'
     import myAdd from '../../views/Tracking/Add/Add'
+    import  Api from '../../api/Tracking/Tracking'
     export default {
         components: {
             mySee,
@@ -98,16 +92,13 @@
         },
         data() {
             return {
-                isShowAdd:false,
-                tableData: [{
-                    date:'2019-5-30 12:20',
-                    tracking:'删除了门店',
+                tableData: [],//员工列表
+                queryInfo: { //分页
+                    query: '',
+                    pagenum: 1, //当前第几页
+                    pagesize: 5 //当前显示几条
                 },
-                ],
-                search: '',
-                isShow:false,
-                isShowsUpd:false,
-                currentPage4: 4,
+                totalPage: 0,//总条数
             }
         },
         methods: {
@@ -123,20 +114,49 @@
                 this.$store.commit('trackingStatus', false);
                 this.$store.commit('updTracking', true)
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+            handleDelete(id){ //删除操作
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.trackingDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.trackingList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            handleSizeChange(newSize) { //当前显示多少条操作
+                this.queryInfo.pagesize = newSize;
+                this.trackingList()
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+            handleCurrentChange(newPage) { //当前页数操作
+                this.queryInfo.pagenum = newPage;
+                this.trackingList()
             },
+            trackingList(){
+                Api.trackingList(this.queryInfo.pagenum ,this.queryInfo.pagesize).then((res)=>{
+                    this.tableData=res.data.data;
+                    this.totalPage=res.data.count
+                })
+            }
         },
         computed: {
             trackingStatus() {
                 return this.$store.state.tracking.trackingStatus
             },
+        },
+        mounted() {
+            this.trackingList()
         }
     }
 </script>

@@ -158,35 +158,35 @@
                         >
                             <el-table-column
                                     fixed
-                                    prop="name"
+                                    prop="client_name"
                                     label="姓名"
                                     width="200">
                             </el-table-column>
                             <el-table-column
-                                    prop="phone"
+                                    prop="client_phone"
                                     label="电话"
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="date"
+                                    prop="reported_time"
                                     label="报备时间"
                                     width="180">
                             </el-table-column>
-                            <el-table-column
-                                    prop="look"
-                                    label="带看楼盘"
-                                    width="180">
-                            </el-table-column>
+<!--                            <el-table-column-->
+<!--                                    prop="look"-->
+<!--                                    label="带看楼盘"-->
+<!--                                    width="180">-->
+<!--                            </el-table-column>-->
                             <el-table-column
                                     prop="maintenance"
                                     label="维护人"
                                     width="180">
                             </el-table-column>
-                            <el-table-column
-                                    prop="intention"
-                                    label="意向楼盘"
-                                    width="180">
-                            </el-table-column>
+<!--                            <el-table-column-->
+<!--                                    prop="intention"-->
+<!--                                    label="意向楼盘"-->
+<!--                                    width="180">-->
+<!--                            </el-table-column>-->
                             <el-table-column
                                     prop="area"
                                     label="区域"
@@ -199,7 +199,7 @@
                             </el-table-column>
 
                             <el-table-column
-                                    prop="note"
+                                    prop="remarks"
                                     label="备注"
                                     width="180">
                             </el-table-column>
@@ -215,16 +215,8 @@
                                 <template slot-scope="scope">
                                     <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
                                     <el-button type="text" size="small" @click="upd()">编辑</el-button>
-                                    <el-popconfirm
-                                            confirmButtonText='确定'
-                                            cancelButtonText='取消'
-                                            icon="el-icon-info"
-                                            iconColor="red"
-                                            title="确定要删除吗？"
-                                    >
-                                        <el-button type="text" size="small" slot="reference" class="el-popconfirm">删除
+                                        <el-button type="text" size="small" slot="reference" class="el-popconfirm" @click="del(scope.row.id)">删除
                                         </el-button>
-                                    </el-popconfirm>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -234,11 +226,11 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[100, 200, 300, 400]"
-                                :page-size="100"
+                                :current-page="queryInfo.pagenum"
+                                :page-sizes="[5, 10, 20, 30]"
+                                :page-size="queryInfo.pagesize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="totalPage">
                         </el-pagination>
                     </div>
                 </el-card>
@@ -254,6 +246,7 @@
     import mySee from '../../views/Report/See/See'
     import myModify from '../../views/Report/Modify/Modify'
     import myAdd from '../../views/Report/Add/Add'
+    import  Api from '../../api/Report/Report'
 
     export default {
         name: "Report",
@@ -310,21 +303,13 @@
                     }
                 ],
                 searchCustomer: '',
-                tableData: [
-                    {
-                        name: '王志远',
-                        phone: '15942999924',
-                        date: '2019/9/14-11:14',
-                        look: '阳光100',
-                        maintenance: '小周',
-                        intention: '别墅',
-                        area: '辽宁省沈阳市铁西区',
-                        stores: 'A门店',
-                        note: '这套房子我喜欢',
-                        customer: 'A级客户',
-                    }
-                ],
-                currentPage4: 4,
+                tableData: [],
+                queryInfo: { //分页
+                    query: '',
+                    pagenum: 1, //当前第几页
+                    pagesize: 5 //当前显示几条
+                },
+                totalPage: 0,//总条数
             }
         },
         methods: {
@@ -340,17 +325,50 @@
                 this.$store.commit('reportStatus', false);
                 this.$store.commit('updStatus', true)
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            handleSizeChange(newSize) { //当前显示多少条操作
+                this.queryInfo.pagesize = newSize;
+                this.reportList()
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+            handleCurrentChange(newPage) { //当前页数操作
+                this.queryInfo.pagenum = newPage;
+                this.reportList()
             },
+            del(id) { //删除操作
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.reportDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.reportList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            reportList(){
+                Api.reportList( this.queryInfo.pagenum,this.queryInfo.pagesize).then((res)=>{
+                    this.tableData=res.data.data;
+                    this.totalPage=res.data.count;
+                    console.log( this.tableData)
+                })
+            }
         },
         computed: {
             reportStatus() {
                 return this.$store.state.report.reportStatus
             },
+        },
+        mounted() {
+            this.reportList()
         }
     }
 </script>

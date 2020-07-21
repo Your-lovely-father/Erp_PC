@@ -17,23 +17,27 @@
                         >
                             <el-table-column
                                     label="操作人"
-                                    prop="operation">
+                                    prop="user_name">
                             </el-table-column>
                             <el-table-column
                                     label="操作时间"
-                                    prop="date">
+                                    prop="create_time">
                             </el-table-column>
                             <el-table-column
                                     label="操作内容"
-                                    prop="content">
+                                    prop="title">
                             </el-table-column>
                             <el-table-column
                                     label="区域管理"
-                                    prop="area">
+                                    prop="province_name,city_name,area_name">
+                                <template slot-scope="scope">
+                                    {{scope.row.province_name}}-{{scope.row.city_name}}-{{scope.row.area_name}}
+                                </template>
                             </el-table-column>
                             <el-table-column
                                     label="门店管理"
-                                    prop="stores">
+                                    prop="storefront_name">
+
                             </el-table-column>
 
                             <el-table-column
@@ -44,23 +48,15 @@
                                     <el-button
                                             type="primary"
                                             size="mini"
-                                            @click="handleEdit(scope.$index, scope.row)">修改
+                                            @click="handleEdit(scope.row)">查看
                                     </el-button>
-                                    <el-popconfirm
-                                            confirmButtonText='确定'
-                                            cancelButtonText='取消'
-                                            icon="el-icon-info"
-                                            iconColor="red"
-                                            title="确定要删除吗？"
-                                    >
                                         <el-button
                                                 slot="reference"
                                                 size="mini"
                                                 type="danger"
                                                 class="left_btn"
-                                                @click="handleDelete(scope.$index, scope.row)">删除
+                                                @click="handleDelete( scope.row.id)">删除
                                         </el-button>
-                                    </el-popconfirm>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -70,11 +66,11 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[100, 200, 300, 400]"
-                                :page-size="100"
+                                :current-page="queryInfo.pagenum"
+                                :page-sizes="[5, 10, 20, 30]"
+                                :page-size="queryInfo.pagesize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="totalPage">
                         </el-pagination>
                     </div>
                 </el-card>
@@ -87,6 +83,7 @@
 <script>
     import mySee from '../../views/Log/See/See'
     import  myShare from '../../components/Pub/share/share'
+    import Api from '../../api/Log/Log'
     export default {
         components:{
             mySee,
@@ -94,39 +91,65 @@
         },
         data() {
             return {
-                tableData: [{
-                    operation:'12',
-                    date:'2019-5-30 12:20',
-                    content:'删除了门店',
-                    area:'20',
-                    stores:'30',
-                },
-                ],
+                tableData: [],
                 search: '',
-                isShow:false,
-                currentPage4: 4,
+                queryInfo: { //分页
+                    query: '',
+                    pagenum: 1, //当前第几页
+                    pagesize: 5 //当前显示几条
+                },
+                totalPage: 0,//总条数
             }
         },
         methods: {
-            handleEdit(index, row) {
-                console.log(index, row);
+            handleEdit(row) {
                 this.$store.commit('logStatus', false);
-                this.$store.commit('seeLog', true)
+                this.$store.commit('seeLog', true);
+                this.$store.commit('logSeeObject',row)
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+            handleDelete(id){ //删除操作
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.logDel(id).then(res => {
+                        if (res.code === "200") {
+                            this.$message.success("删除"+res.msg);
+                            this.logSee()
+                        } else {
+                            this.$message.error("删除"+res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            handleSizeChange(newSize) { //当前显示多少条操作
+                this.queryInfo.pagesize = newSize;
+                this.logSee()
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+            handleCurrentChange(newPage) { //当前页数操作
+                this.queryInfo.pagenum = newPage;
+                this.logSee()
             },
+            logSee(){
+                Api.logSee(this.queryInfo.pagenum, this.queryInfo.pagesize).then((res)=>{
+                    this.tableData=res.data.data;
+                    this.totalPage=res.data.count
+                })
+            }
         },
         computed: {
             logStatus() {
                 return this.$store.state.log.logStatus
             },
+        },
+        mounted() {
+            this.logSee()
         }
     }
 </script>

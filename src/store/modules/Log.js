@@ -3,6 +3,7 @@ export default {
     state: {
         logStatus: storage.get('logStatus'),
         seeLog: storage.get('seeLog').length === 0 ? 0 : 1,
+        logSeeObject:storage.get('logSeeObject') ||{}
     },
     mutations: {
         logStatus: ((state, data) => {
@@ -18,5 +19,9 @@ export default {
             storage.set('seeLog', state.seeLog = data);
             storage.remove('seeLog')
         }),
+        //日志查看数据
+        logSeeObject:((state,data)=>{
+            storage.set('logSeeObject', state.logSeeObject = data);
+        })
     },
 }
