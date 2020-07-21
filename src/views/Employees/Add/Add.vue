@@ -111,43 +111,49 @@
                                     </el-select>
                                 </div>
                             </div>
-                           <div class="status_upload_box">
-                               <div class="state">
-                                   <div class="int_box">
-                                       <label>状态</label>
-                                       <el-switch
-                                               v-model="user_status"
-                                               active-color="#13ce66"
-                                               inactive-color="#ff4949"
-                                       >
-                                       </el-switch>
-                                   </div>
-                                   <div class="int_box">
-                                       <label>开通手机端</label>
-                                       <el-switch
-                                               v-model="mobile_terminal_status"
-                                               active-color="#13ce66"
-                                               inactive-color="#ff4949"
-                                       >
-                                       </el-switch>
-                                   </div>
-                               </div>
-                               <div class="upload">
-                                   <div class="int_box">
-                                       <label>头像</label>
-                                       <el-upload
-                                               action="/erp/user_add"
-                                               list-type="picture-card"
-                                               :on-preview="headHandlePictureCardPreview"
-                                               :on-remove="headHandleRemove">
-                                           <i class="el-icon-plus"></i>
-                                       </el-upload>
-                                       <el-dialog :visible.sync="headDialogVisible">
-                                           <img width="100%" :src="headDialogImageUrl" alt="">
-                                       </el-dialog>
-                                   </div>
-                               </div>
-                           </div>
+                            <div class="status_upload_box">
+                                <div class="state">
+                                    <div class="int_box">
+                                        <label>状态</label>
+                                        <el-switch
+                                                v-model="user_status"
+                                                active-color="#13ce66"
+                                                inactive-color="#ff4949"
+                                                active-value="1"
+                                                inactive-value="2"
+                                                @change="status($event)"
+                                        >
+                                        </el-switch>
+                                    </div>
+                                    <div class="int_box">
+                                        <label>开通手机端</label>
+                                        <el-switch
+                                                v-model="mobile_terminal_status"
+                                                active-color="#13ce66"
+                                                inactive-color="#ff4949"
+                                                active-value="1"
+                                                inactive-value="2"
+                                                @change="mobileStatus($event)"
+                                        >
+                                        </el-switch>
+                                    </div>
+                                </div>
+                                <div class="upload">
+                                    <div class="int_box">
+                                        <label>头像</label>
+                                        <el-upload
+                                                action="/erp/user_add"
+                                                list-type="picture-card"
+                                                :on-preview="headHandlePictureCardPreview"
+                                                :on-remove="headHandleRemove">
+                                            <i class="el-icon-plus"></i>
+                                        </el-upload>
+                                        <el-dialog :visible.sync="headDialogVisible">
+                                            <img width="100%" :src="headDialogImageUrl" alt="">
+                                        </el-dialog>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="footer">
@@ -180,10 +186,8 @@
                 province_id: '',//省
                 city_id: '',//市
                 area_id: '',//区
-                user_status: false,//员工状态
-                user_statusValue: false,//状态值
-                mobile_terminal_status: false,//是否开通手机端
-                mobile_terminal_statusValue: '',//手机端值
+                user_status: 0,//员工状态
+                mobile_terminal_status: 0,//是否开通手机端
                 headDialogVisible: false,//图片显示隐藏
                 headDialogImageUrl: '',//图片
                 areaOptions: [],//区域三级联动数据
@@ -205,28 +209,28 @@
             cancel() {
                 this.onPage()
             },
-            flagSwitch(e) {//状态
+            status(e) { //状态
+                this.user_status = e
+            },
+            mobileStatus(e) { //手机端状态
                 this.mobile_terminal_status = e
             },
-            flagSwitch(e) {//是否开启手机端
-                this.mobile_terminal_statusValue = e
-            },
+
             confirm() {
-                if (this.user_status === true) {
-                    this.user_statusValue = 1
-                } else {
-                    this.user_statusValue = 2
-                }
-                if (this.mobile_terminal_status === true) {
-                    this.mobile_terminal_statusValue = 1
-                } else {
-                    this.mobile_terminal_statusValue = 2
-                }
                 Api.postAdd(
-                    this.user_name, this.user_phone, this.user_age, this.gender, this.user_id_card,
-                    this.user_password, this.user_role, this.storefront_id,
-                    this.province_id, this.city_id, this.area_id,
-                    this.user_statusValue, this.mobile_terminal_statusValue,
+                    this.user_name,
+                    this.user_phone,
+                    this.user_age,
+                    this.gender,
+                    this.user_id_card,
+                    this.user_password,
+                    this.user_role,
+                    this.storefront_id,
+                    this.province_id,
+                    this.city_id,
+                    this.area_id,
+                    this.user_status,
+                    this.mobile_terminal_status,
                 ).then((res) => {
                     if (res.code === "200001") {
                         this.$message.success(res.msg);
@@ -261,10 +265,6 @@
                             })
                         }
                     });
-                    //把数据存在本地长期储存中
-                    window.sessionStorage.setItem('linkage', JSON.stringify(data));
-                    var linkage = window.sessionStorage.getItem('linkage');
-                    this.areaOptions = JSON.parse(linkage)
                 })
             },
 
@@ -399,18 +399,22 @@
     .report_int {
         width: 480px;
     }
-    .status_upload_box{
+
+    .status_upload_box {
         width: 100%;
     }
-    .state{
+
+    .state {
         width: 480px;
         display: flex;
         justify-content: space-between;
         margin-left: 35px;
     }
-    .upload{
+
+    .upload {
         margin-left: 35px;
     }
+
     label {
         display: block;
         padding: 20px 0;
