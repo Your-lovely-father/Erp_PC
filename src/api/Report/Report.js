@@ -1,7 +1,7 @@
 import  Axios from '../../utils/request'
 
 export  default {
-    //客户列表
+    //客户列表 //查询
     reportList(page,offset){
         return Axios.post('/erp/get_client_report_list',{ page:page, offset:offset})
     },

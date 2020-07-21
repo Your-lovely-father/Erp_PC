@@ -1,8 +1,7 @@
 <template>
-    <div class="component" >
+    <div class="component">
         <div class="report" v-show="reportStatus">
             <div class="add_box">
-                <!--    搜索区域        -->
                 <el-card>
                     <div class="add_content">
                         <div class="content_title">
@@ -17,6 +16,7 @@
                             </p>
                         </div>
                     </div>
+                    <!--    搜索区域        -->
                     <div class="search">
                         <div class="box_form">
                             <div class="form">
@@ -42,26 +42,49 @@
                                     >
                                     </el-input>
                                 </div>
-                                <div class="int_box">
-                                    <label>报备时间</label>
-                                    <el-date-picker
-                                            v-model="searchDate"
-                                            type="date"
-                                            placeholder="选择日期"
-                                            class="report_int"
-                                            prefix-icon="el-icon-search"
-                                    >
-                                    </el-date-picker>
-                                    <span class="cross">
+                                <div class="int_box dateTime">
+                                    <div class="start">
+                                        <label class="">起止时间</label>
+                                        <el-date-picker
+                                                v-model="searchDate"
+                                                type="date"
+                                                placeholder="选择日期"
+                                                class="report_int"
+                                                prefix-icon="el-icon-search"
+                                        >
+                                        </el-date-picker>
+                                        <span class="cross">
                                     -
                                 </span>
-                                    <el-time-picker
-                                            v-model="searchTime"
-                                            placeholder="选择时间"
-                                            class="report_int"
-                                            prefix-icon="el-icon-search"
-                                    >
-                                    </el-time-picker>
+                                        <el-time-picker
+                                                v-model="searchTime"
+                                                placeholder="选择时间"
+                                                class="report_int"
+                                                prefix-icon="el-icon-search"
+                                        >
+                                        </el-time-picker>
+                                    </div>
+                                    <div class="finish">
+                                        <label class="label">结束时间</label>
+                                        <el-date-picker
+                                                v-model="searchDate"
+                                                type="date"
+                                                placeholder="选择日期"
+                                                class="report_int"
+                                                prefix-icon="el-icon-search"
+                                        >
+                                        </el-date-picker>
+                                        <span class="cross">
+                                    -
+                                </span>
+                                        <el-time-picker
+                                                v-model="searchTime"
+                                                placeholder="选择时间"
+                                                class="report_int"
+                                                prefix-icon="el-icon-search"
+                                        >
+                                        </el-time-picker>
+                                    </div>
                                 </div>
                                 <div class="int_box">
                                     <label>带看楼盘</label>
@@ -172,21 +195,21 @@
                                     label="报备时间"
                                     width="180">
                             </el-table-column>
-<!--                            <el-table-column-->
-<!--                                    prop="look"-->
-<!--                                    label="带看楼盘"-->
-<!--                                    width="180">-->
-<!--                            </el-table-column>-->
+                            <!--                            <el-table-column-->
+                            <!--                                    prop="look"-->
+                            <!--                                    label="带看楼盘"-->
+                            <!--                                    width="180">-->
+                            <!--                            </el-table-column>-->
                             <el-table-column
                                     prop="maintenance"
                                     label="维护人"
                                     width="180">
                             </el-table-column>
-<!--                            <el-table-column-->
-<!--                                    prop="intention"-->
-<!--                                    label="意向楼盘"-->
-<!--                                    width="180">-->
-<!--                            </el-table-column>-->
+                            <!--                            <el-table-column-->
+                            <!--                                    prop="intention"-->
+                            <!--                                    label="意向楼盘"-->
+                            <!--                                    width="180">-->
+                            <!--                            </el-table-column>-->
                             <el-table-column
                                     prop="area"
                                     label="区域"
@@ -215,8 +238,9 @@
                                 <template slot-scope="scope">
                                     <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
                                     <el-button type="text" size="small" @click="upd()">编辑</el-button>
-                                        <el-button type="text" size="small" slot="reference" class="el-popconfirm" @click="del(scope.row.id)">删除
-                                        </el-button>
+                                    <el-button type="text" size="small" slot="reference" class="el-popconfirm"
+                                               @click="del(scope.row.id)">删除
+                                    </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -246,7 +270,7 @@
     import mySee from '../../views/Report/See/See'
     import myModify from '../../views/Report/Modify/Modify'
     import myAdd from '../../views/Report/Add/Add'
-    import  Api from '../../api/Report/Report'
+    import Api from '../../api/Report/Report'
 
     export default {
         name: "Report",
@@ -354,11 +378,10 @@
                     });
                 });
             },
-            reportList(){
-                Api.reportList( this.queryInfo.pagenum,this.queryInfo.pagesize).then((res)=>{
-                    this.tableData=res.data.data;
-                    this.totalPage=res.data.count;
-                    console.log( this.tableData)
+            reportList() {
+                Api.reportList(this.queryInfo.pagenum, this.queryInfo.pagesize).then((res) => {
+                    this.tableData = res.data.data;
+                    this.totalPage = res.data.count;
                 })
             }
         },
@@ -374,10 +397,11 @@
 </script>
 
 <style scoped>
-    .component{
+    .component {
         width: 100%;
         height: 100%;
     }
+
     .report {
         width: 98.3%;
         height: 100%;
@@ -470,4 +494,16 @@
         text-align: center;
         margin-top: 30px;
     }
+    .dateTime{
+        display: flex;
+        height: 79px;
+        align-items: center;
+    }
+    .label{
+        display: block;
+    }
+    .finish{
+        margin-left: 30px;
+    }
+
 </style>
