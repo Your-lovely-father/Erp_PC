@@ -39,12 +39,22 @@
                             </div>
                             <div class="int">
                                 <label>时间</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
+                                <el-date-picker
                                         v-model="detailList.reported_time"
+                                        type="date"
+                                        placeholder="选择日期"
+                                        class="date"
+                                        :disabled="true"
                                 >
-                                </el-input>
+                                </el-date-picker>
+                                -
+                                <el-time-picker
+                                        v-model="detailList.reported_time"
+                                        placeholder="选择时间"
+                                        class="date"
+                                        :disabled="true"
+                                >
+                                </el-time-picker>
                             </div>
                             <div class="int left1">
                                 <label>备注</label>
@@ -112,27 +122,27 @@
                                 :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                         >
                             <el-table-column
-                                    label='维护人'
+                                    label='员工名称'
                                     prop="user_name">
                             </el-table-column>
                             <el-table-column
-                                    label='手机号'
-                                    prop="user_phone">
+                                    label='楼盘名称'
+                                    prop="building_name">
                             </el-table-column>
                             <el-table-column
-                                    label='门店名称'
-                                    prop="storefront_name">
+                                    label='带看内容'
+                                    prop="guide_look_content">
                             </el-table-column>
                             <el-table-column
                                     label='时间'
-                                    prop="update_time">
+                                    prop="look_time">
                             </el-table-column>
                         </el-table>
                         <!--     分页区域       -->
                         <div class="page">
                             <el-pagination
-                                    @size-change="handleSizeChange"
-                                    @current-change="handleCurrentChange"
+                                    @size-change="lookSizeChange"
+                                    @current-change="lookCurrentChange"
                                     :current-page="lookInfo.page"
                                     :page-sizes="[5, 10, 20, 30]"
                                     :page-size="lookInfo.offset"
@@ -146,43 +156,43 @@
                     <div class="The_title">
                         <p>查看意向楼盘</p>
                     </div>
-<!--                    <div class="tab">-->
-<!--                        <el-table-->
-<!--                                :data="tableData"-->
-<!--                                style="width: 100%"-->
-<!--                                border-->
-<!--                                :header-cell-style="{background:'#eef1f6',color:'#606266'}"-->
-<!--                        >-->
-<!--                            <el-table-column-->
-<!--                                    label='维护人'-->
-<!--                                    prop="user_name">-->
-<!--                            </el-table-column>-->
-<!--                            <el-table-column-->
-<!--                                    label='手机号'-->
-<!--                                    prop="user_phone">-->
-<!--                            </el-table-column>-->
-<!--                            <el-table-column-->
-<!--                                    label='门店名称'-->
-<!--                                    prop="storefront_name">-->
-<!--                            </el-table-column>-->
-<!--                            <el-table-column-->
-<!--                                    label='时间'-->
-<!--                                    prop="update_time">-->
-<!--                            </el-table-column>-->
-<!--                        </el-table>-->
-<!--                        &lt;!&ndash;     分页区域       &ndash;&gt;-->
-<!--                        <div class="page">-->
-<!--                            <el-pagination-->
-<!--                                    @size-change="handleSizeChange"-->
-<!--                                    @current-change="handleCurrentChange"-->
-<!--                                    :current-page="queryInfo.page"-->
-<!--                                    :page-sizes="[5, 10, 20, 30]"-->
-<!--                                    :page-size="queryInfo.offset"-->
-<!--                                    layout="total, sizes, prev, pager, next, jumper"-->
-<!--                                    :total="tablePage">-->
-<!--                            </el-pagination>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <div class="tab">
+                        <el-table
+                                :data="likeData"
+                                style="width: 100%"
+                                border
+                                :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+                        >
+                            <el-table-column
+                                    label='维护人'
+                                    prop="user_name">
+                            </el-table-column>
+                            <el-table-column
+                                    label='客户'
+                                    prop="client_name">
+                            </el-table-column>
+                            <el-table-column
+                                    label='意向楼盘'
+                                    prop="building_name">
+                            </el-table-column>
+                            <el-table-column
+                                    label='时间'
+                                    prop="update_time">
+                            </el-table-column>
+                        </el-table>
+                        <!--     分页区域       -->
+                        <div class="page">
+                            <el-pagination
+                                    @size-change="likeSizeChange"
+                                    @current-change="likeCurrentChange"
+                                    :current-page="likeInfo.page"
+                                    :page-sizes="[5, 10, 20, 30]"
+                                    :page-size="likeInfo.offset"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="likePage">
+                            </el-pagination>
+                        </div>
+                    </div>
                     <div class="footer">
                         <el-button size="medium" @click="cancel()">取消</el-button>
                         <el-button type="primary" size="medium" @click="confirm()">确认</el-button>
@@ -196,7 +206,7 @@
 
 <script>
     import Api from '../../../api/Report/Report'
-
+    import localStorage from '../../../utils/localStorage'
     export default {
         name: "See",
         data() {
@@ -215,19 +225,28 @@
                     offset: 5, //每页显示多少条
                 },
                 lookPage: 0,//总条数
-                lookData: []
+                lookData: [],
+
+                likeInfo: {
+                    query: '',
+                    page: 1, //当前第几页
+                    offset: 5, //每页显示多少条
+                },
+                likePage: 0,//总条数
+                likeData: []
             };
         },
         methods: {
             onPage() {
                 this.$store.commit('isReport', true);
                 this.$store.commit('isSee', false);
+                localStorage.remove('detailList')
             },
             cancel() {
-                this.onPage()
+                this.onPage();
             },
             confirm() {
-                this.onPage()
+                this.onPage();
             },
             handleSizeChange(newSize) { //当前显示多少条操作
                 this.queryInfo.offset = newSize;
@@ -237,6 +256,22 @@
                 this.queryInfo.page = newPage;
                 this.getSlectList()
             },
+            lookSizeChange(newSize) { //当前显示多少条操作
+                this.lookInfo.offset = newSize;
+                this.looklist()
+            },
+            lookCurrentChange(newPage) { //当前页数操作
+                this.lookInfo.page = newPage;
+                this.looklist()
+            },
+            likeSizeChange(newSize) { //当前显示多少条操作
+                this.likeInfo.offset = newSize;
+                this.intentionList()
+            },
+            likeCurrentChange(newPage) { //当前页数操作
+                this.likeInfo.page = newPage;
+                this.intentionList()
+            },
             getSlectList() { //维护人列表
                 let page = 1;
                 let offset = 999;
@@ -245,8 +280,8 @@
                 let area_id = this.detailList.area_id;
                 let storefront_id = this.detailList.storefront_id;
                 Api.getSlectList(page, offset, province_id, city_id, area_id, storefront_id).then((res) => {
-                    this.tablePage =res.data.count;
-                    this.tableData=res.data.user_data
+                    this.tablePage=res.data.count;
+                    this.tableData = res.data.user_data;
                 })
             },
             looklist(){ //带看管理列表
@@ -254,13 +289,29 @@
                 let offset = 999;
                 let area_id = this.detailList.area_id;
                 let storefront_id = this.detailList.storefront_id;
-                let user_id =this.detailList.id;
-                Api.lookList(page, offset, storefront_id,area_id,user_id).then((res) => {
-                    console.log(res)
-                    // this.lookPage =res.data.count;
-                    // this.lookData=res.data.data
+                let id =this.detailList.id;
+                Api.lookList(page, offset, storefront_id,area_id,id).then((res) => {
+                    this.lookPage=res.data.count;
+                    this.lookData=res.data.data;
+                })
+            },
+            intentionList(){ //意向楼盘列表
+                let page = 1;
+                let offset = 999;
+                let id =this.detailList.id;
+                Api.intentionList(page,offset,id).then((res)=>{
+                    this.likePage=res.data.count;
+                    let data=res.data.data;
+                    data.map((val)=>{
+                        if (val.client_id===this.detailList.id) {
+                            val.client_name=this.detailList.client_name
+                        }
+                    });
+                   this.likeData=data
+
                 })
             }
+
         },
         computed: {
             seeStatus() {
@@ -270,11 +321,17 @@
                 return this.$store.state.report.detailList
             }
         },
+        created(){
+            this.getSlectList();
+            this.looklist();
+            this.intentionList()
+        },
         watch: {
             detailList(val) {
                 if (val) {
                     this.getSlectList();
-                    this.looklist()
+                    this.looklist();
+                    this.intentionList()
                 }
             }
         }

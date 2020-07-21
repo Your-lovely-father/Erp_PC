@@ -224,7 +224,7 @@
                                     width="200">
                                 <template slot-scope="scope">
                                     <el-button @click="handleClick(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button type="text" size="small" @click="upd()">编辑</el-button>
+                                    <el-button type="text" size="small" @click="upd(scope.row.id)">编辑</el-button>
                                     <el-button type="text" size="small" slot="reference" class="el-popconfirm"
                                                @click="del(scope.row.id)">删除
                                     </el-button>
@@ -249,7 +249,7 @@
         </div>
         <myAdd @reportList="reportList"/>
         <mySee/>
-        <myModify/>
+        <myModify ref="myModify"/>
     </div>
 </template>
 
@@ -308,14 +308,19 @@
                 this.$store.commit('seeStatus', true);
                 //获取详情
                 Api.detailObject(id).then((res)=>{
-                    console.log(res)
                     this.$store.commit('detailList',res.data)
                 })
             },
 
-            upd() {
+            upd(id) {
                 this.$store.commit('reportStatus', false);
-                this.$store.commit('updStatus', true)
+                this.$store.commit('updStatus', true);
+                //获取详情
+                Api.detailObject(id).then((res)=>{
+                    this.$store.commit('detailList',res.data);
+                    this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
+                })
+
             },
             handleSizeChange(newSize) { //当前显示多少条操作
                 this.queryInfo.pagesize = newSize;
@@ -447,6 +452,7 @@
             reportList() { //客户报备列表
                 Api.reportList(this.queryInfo.pagenum, this.queryInfo.pagesize,this.start_time,this.end_time,this.building_id,this.client_name,this.client_phone,this.area_id,this.storefront_id,this.user_id,this.client_type).then((res) => {
                     this.tableData = res.data.data;
+                    // console.log(this.tableData)
                     this.totalPage = res.data.count;
                 })
             },
@@ -460,7 +466,17 @@
             this.reportList();
             this.getSelect();
             this.category();
-        }
+        },
+        // watch:{
+        //     detailList(val){
+        //         if(val){
+        //             this.xiangqing()
+        //             // return false;
+        //         }
+        //         console.log(val+'++++++')
+        //         console.log(val===false)
+        //     }
+        // }
     }
 </script>
 

@@ -23,7 +23,7 @@
                                 <label>姓名</label>
                                 <el-input
                                         placeholder="请输入姓名"
-                                        v-model="name"
+                                        v-model="client_name"
                                         clearable
                                         class="report_int"
                                 >
@@ -33,7 +33,7 @@
                                 <label>电话</label>
                                 <el-input
                                         placeholder="请输入电话"
-                                        v-model="phone"
+                                        v-model="client_phone"
                                         clearable
                                         class="report_int">
                                 </el-input>
@@ -41,7 +41,7 @@
                             <div class="int_box">
                                 <label>报备时间</label>
                                 <el-date-picker
-                                        v-model="date"
+                                        v-model="create_time"
                                         type="date"
                                         placeholder="选择日期"
                                         class="date"
@@ -49,74 +49,91 @@
                                 </el-date-picker>
                                 -
                                 <el-time-picker
-                                        v-model="time"
+                                        v-model="create_time"
                                         placeholder="选择时间"
                                         class="date"
                                 >
                                 </el-time-picker>
                             </div>
                             <div class="int_box">
-                                <label>带看楼盘</label>
+                                <label>备注</label>
                                 <el-input
-                                        placeholder="请输带看楼盘"
-                                        v-model="look"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>维护人</label>
-                                <el-input
-                                        placeholder="请输维护人"
-                                        v-model="maintenance"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>意向楼盘</label>
-                                <el-input
-                                        placeholder="请输意向楼盘"
-                                        v-model="intention"
+                                        placeholder="请输入备注"
+                                        v-model="remarks"
                                         clearable
                                         class="report_int">
                                 </el-input>
                             </div>
                             <div class="int_box">
                                 <label>区域</label>
-                                <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
+                                <el-cascader  v-model="valueArea" :options="areaOptions" clearable class="report_int"
+                                              @change="handleChange"
+                                              ref="cascaderAddr"
+                                ></el-cascader>
                             </div>
                             <div class="int_box">
                                 <label>门店</label>
-                                <el-select v-model="stores" placeholder="请选择" class="report_int"
+                                <el-select v-model="storefront_id" placeholder="请选择区域" class="report_int"
+                                           @change="storefrontValue"
                                 >
                                     <el-option
-                                            v-for="item in storesOptions"
-                                            :key="item.stores"
+                                            v-for="item in storefrontOptions"
+                                            :key="item.value"
                                             :label="item.label"
-                                            :value="item.stores"
+                                            :value="item.value"
                                     >
                                     </el-option>
                                 </el-select>
                             </div>
                             <div class="int_box">
-                                <label>备注</label>
-                                <el-input
-                                        placeholder="请输入备注"
-                                        v-model="note"
-                                        clearable
-                                        class="report_int">
-                                </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>客户类别</label>
-                                <el-select v-model="customer" placeholder="请选择" class="report_int"
+                                <label>维护人</label>
+                                <el-select v-model="user_id" placeholder="请选择维护人" class="report_int"
                                 >
                                     <el-option
-                                            v-for="item in customerOoptions"
-                                            :key="item.customer"
+                                            v-for="item in userOoptions"
+                                            :key="item.value"
                                             :label="item.label"
-                                            :value="item.customer"
+                                            :value="item.value"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div>
+<!--                            <div class="int_box">-->
+<!--                                <label>带看楼盘</label>-->
+<!--                                <el-select v-model="customer" placeholder="请选择带看楼盘" class="report_int"-->
+<!--                                >-->
+<!--                                    <el-option-->
+<!--                                            v-for="item in customerOoptions"-->
+<!--                                            :key="item.customer"-->
+<!--                                            :label="item.label"-->
+<!--                                            :value="item.customer"-->
+<!--                                    >-->
+<!--                                    </el-option>-->
+<!--                                </el-select>-->
+<!--                            </div>-->
+<!--                            <div class="int_box">-->
+<!--                                <label>意向楼盘</label>-->
+<!--                                <el-select v-model="customer" placeholder="请选择意向楼盘" class="report_int"-->
+<!--                                >-->
+<!--                                    <el-option-->
+<!--                                            v-for="item in customerOoptions"-->
+<!--                                            :key="item.customer"-->
+<!--                                            :label="item.label"-->
+<!--                                            :value="item.customer"-->
+<!--                                    >-->
+<!--                                    </el-option>-->
+<!--                                </el-select>-->
+<!--                            </div>-->
+                            <div class="int_box">
+                                <label>客户类别</label>
+                                <el-select v-model="client_type" placeholder="请选择客户类别" class="report_int"
+                                           @change="clientValue"
+                                >
+                                    <el-option
+                                            v-for="item in clientOoptions"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
                                     >
                                     </el-option>
                                 </el-select>
@@ -135,69 +152,25 @@
 </template>
 
 <script>
+    import Axios from '../../../api/pub/pub'
+    import Api from '../../../api/Report/Report'
     export default {
         data() {
             return {
-                name: '',
-                phone: '',
-                type: [],
-                date: '',
-                time: '',
-                look: '',
-                maintenance: '',
-                intention: '',
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-                storesOptions: [{
-                    stores: '选项1',
-                    label: 'A门店'
-                }, {
-                    stores: '选项2',
-                    label: 'B门店'
-                }],
-                stores: '',
-                note: '',
-                customerOoptions: [
-                    {
-                        customer: '选项1',
-                        label: '客户类别A'
-                    },
-                    {
-                        customer: '选项2',
-                        label: '客户类别B'
-                    },
-                    {
-                        customer: '选项3',
-                        label: '客户类别C'
-                    }
-                ],
-                customer: '',
-                search: '',
-                tableData: [
-                    {
-                        name: '王志远',
-                        phone: '15942999924',
-                        date: '2019/9/14-11:14',
-                        look: '阳光100',
-                        maintenance: '小周',
-                        intention: '别墅',
-                        area: '辽宁省沈阳市铁西区',
-                        stores: 'A门店',
-                        note: '这套房子我喜欢',
-                        customer: 'A级客户',
-                    }
-                ],
-                currentPage4: 4,
+                client_name:'', //客户名称
+                client_phone:'', //电话
+                create_time:'', //时间
+                remarks:'', //备注
+                areaOptions:[],  //区域
+                valueArea:[], //区域
+                area_id:'',
+                storefront_id:'',//门店
+                storefrontOptions:[],//门店
+                userOoptions:[],//维护人
+                user_id:'',//维护人
+                client_type:'',//客户类别
+                clientOoptions:[]//客户类别
+
             }
         },
         methods: {
@@ -211,12 +184,114 @@
             confirm() {
                 this.onPage()
             },
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.areaOptions = JSON.parse(linkage)
+                })
+            },
+            handleChange() { //获取省市区id传给后台获取门店数据
+                // var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
+                // this.province_id = pathvalue[0];
+                // this.city_id = pathvalue[1];
+                // this.area_id = pathvalue[2];
+                // Axios.postStores(this.area_id).then(res => {
+                //     let cityData = JSON.stringify(res.data.data);
+                //     this.storefrontOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                // });
+            },
+            stores(){
+                Axios.postStores(this.area_id).then(res => {
+                    let cityData = JSON.stringify(res.data.data);
+                    let data = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                    console.log(this.storefront_id)
+                        data.map((item,index)=>{
+                        if(item.value == this.storefront_id){
+                            this.storefront_id=item.label
+                            console.log(this.storefront_id)
+                        }
+                    })
+                });
+            },
+            storefrontValue(e){ //获取门店id
+                // this.storefront_id=e;
+                // this.getSlectList()
+            },
+            clientValue(e){ //获取客户类别id
+                // this.client_type=e
+            },
+            // getSlectList(){ //获取员工列表拿到维护人id
+            //     let page =1;
+            //     let pagesum =999;
+            //     let province_id =this.province_id;
+            //     let city_id = this.city_id;
+            //     let area_id = this.area_id;
+            //     let storefront_id = this.storefront_id+'';
+            //     Api.getSlectList(page,pagesum,province_id,city_id,area_id,storefront_id).then((res)=>{
+            //         let cityData = JSON.stringify(res.data.user_data);
+            //         this.userOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
+            //     })
+            // },
+            // reportList() { //客户报备列表
+            //     Api.reportList(this.queryInfo.pagenum, this.queryInfo.pagesize,this.start_time,this.end_time,this.building_id,this.client_name,this.client_phone,this.area_id,this.storefront_id,this.user_id,this.client_type).then((res) => {
+            //         this.tableData = res.data.data;
+            //         // console.log(this.tableData)
+            //         this.totalPage = res.data.count;
+            //     })
+            // },
+            setData(data){
+                console.log(data)
+
+                this.client_name=data.client_name;
+                this.client_phone=data.client_phone;
+                this.create_time=data.create_time;
+                this.remarks=data.remarks;
+                this.storefront_id=data.storefront_id;
+                this.area_id=data.area_id;
+                this.valueArea = [data.province_id+'',data.city_id+'',data.area_id+'']
+            },
+            parentMsg(){
+                this.detailList
+            }
         },
         computed: {
             updStatus() {
                 return this.$store.state.report.updStatus
             },
+            detailList() {
+                this.setData(this.$store.state.report.detailList);
+                return  this.$store.state.report.detailList
+            }
         },
+        mounted() {
+            this.getSelect();
+            this.stores()
+            this.detailList
+
+        }
     }
 </script>
 
