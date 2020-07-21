@@ -5,6 +5,7 @@ export default {
         addStatus: storage.get('addStatus').length === 0 ? 0 : 1,
         seeStatus: storage.get('seeStatus').length === 0 ? 0 : 1,
         updStatus:storage.get('updStatus').length === 0 ? 0 : 1,
+        detailList:storage.get('detailList')
     },
     mutations: {
         reportStatus: ((state, data) => {
@@ -40,5 +41,8 @@ export default {
             storage.set('updStatus',state.updStatus=data);
             storage.remove('updStatus')
         }),
+        detailList:((state,data)=>{
+            storage.set('detailList',state.detailList=data)
+        })
     },
 }

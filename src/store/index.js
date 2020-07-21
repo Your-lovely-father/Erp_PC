@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import report from './modules/Report'
 import building from './modules/Building'
-import area from './modules/Area'
+import intention from './modules/Intention'
 import stores from './modules/Stores'
 import log from './modules/Log'
 import look from './modules/Look'
@@ -26,7 +26,7 @@ export default new Vuex.Store({
     modules: {
         report,
         building,
-        area,
+        intention,
         stores,
         log,
         look,

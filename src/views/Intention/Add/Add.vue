@@ -1,60 +1,5 @@
-<!--<template>-->
-<!--    <div class="See">-->
-<!--        <el-dialog-->
-<!--                width="60%"-->
-<!--                :visible="isShowAdd"-->
-<!--        >-->
-<!--            &lt;!&ndash;    表单区域        &ndash;&gt;-->
-<!--            <span slot="footer" class="dialog-footer">-->
-<!--                <el-button @click="cancel">取 消</el-button>-->
-<!--                <el-button type="primary" @click="confirm">确 定</el-button>-->
-<!--           </span>-->
-<!--        </el-dialog>-->
-<!--    </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--    export default {-->
-<!--        name: "See",-->
-<!--        props: {-->
-<!--            isShowAdd: {-->
-<!--                type: Boolean,-->
-<!--                default: false-->
-<!--            }-->
-<!--        },-->
-<!--        methods: {-->
-<!--            cancel() {-->
-<!--                this.$emit("update:isShowAdd", false);-->
-<!--            },-->
-<!--            confirm() {-->
-<!--                this.$emit("update:isShowAdd", false);-->
-<!--            }-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-
-<!--<style scoped>-->
-<!--    .See {-->
-<!--        width: 100%;-->
-
-<!--    }-->
-
-<!--    .See >>> .el-dialog__header {-->
-<!--        display: none !important;-->
-<!--    }-->
-
-<!--    .report_int {-->
-<!--        width: 500px;-->
-<!--    }-->
-
-<!--    label {-->
-<!--        display: block;-->
-<!--        padding: 15px 0;-->
-<!--    }-->
-<!--</style>-->
-
 <template>
-    <div class="reportAdd" v-show="addArea">
+    <div class="reportAdd" v-show="addisIntention">
         <div class="add_box">
             <div class="com">
                 <div class="poor">
@@ -133,8 +78,8 @@
         },
         methods: {
             onPage() {
-                this.$store.commit('showArea', true);
-                this.$store.commit('showAreaStatus', false);
+                this.$store.commit('showIntention', true);
+                this.$store.commit('showIntentionStatus', false);
             },
             cancel() {
                 this.onPage()
@@ -144,8 +89,8 @@
             },
         },
         computed: {
-            addArea() {
-                return this.$store.state.area.addArea
+            addisIntention() {
+                return this.$store.state.intention.addisIntention
             },
         },
     }

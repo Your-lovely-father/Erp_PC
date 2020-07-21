@@ -39,23 +39,23 @@
                                             class="report_int">
                                     </el-input>
                                 </div>
-                                <div class="int_box">
-                                    <label>时间</label>
-                                    <el-date-picker
-                                            v-model="date"
-                                            type="date"
-                                            placeholder="选择日期"
-                                            class="date"
-                                    >
-                                    </el-date-picker>
-                                    -
-                                    <el-time-picker
-                                            v-model="time"
-                                            placeholder="选择时间"
-                                            class="date"
-                                    >
-                                    </el-time-picker>
-                                </div>
+<!--                                <div class="int_box">-->
+<!--                                    <label>时间</label>-->
+<!--                                    <el-date-picker-->
+<!--                                            v-model="date"-->
+<!--                                            type="date"-->
+<!--                                            placeholder="选择日期"-->
+<!--                                            class="date"-->
+<!--                                    >-->
+<!--                                    </el-date-picker>-->
+<!--                                    - -->
+<!--                                    <el-time-picker-->
+<!--                                            v-model="time"-->
+<!--                                            placeholder="选择时间"-->
+<!--                                            class="date"-->
+<!--                                    >-->
+<!--                                    </el-time-picker>-->
+<!--                                </div>-->
                                 <div class="int_box">
                                     <label>楼盘缩写</label>
                                     <el-input

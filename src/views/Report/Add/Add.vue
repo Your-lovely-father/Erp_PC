@@ -24,7 +24,7 @@
                                     <label>姓名</label>
                                     <el-input
                                             placeholder="请输入姓名"
-                                            v-model="name"
+                                            v-model="client_name"
                                             clearable
                                             class="report_int"
                                     >
@@ -34,7 +34,7 @@
                                     <label>电话</label>
                                     <el-input
                                             placeholder="请输入电话"
-                                            v-model="phone"
+                                            v-model="client_phone"
                                             clearable
                                             class="report_int">
                                     </el-input>
@@ -42,60 +42,54 @@
                                 <div class="int_box">
                                     <label>报备时间</label>
                                     <el-date-picker
-                                            v-model="date"
+                                            v-model="reportedData"
                                             type="date"
                                             placeholder="选择日期"
                                             class="date"
+                                            @change="reportData"
+                                            value-format="yyyy-MM-dd"
                                     >
                                     </el-date-picker>
                                     -
                                     <el-time-picker
-                                            v-model="time"
+                                            v-model="reportedTime"
                                             placeholder="选择时间"
                                             class="date"
+                                            @change="reportTime"
+                                            value-format="HH:mm:ss"
                                     >
                                     </el-time-picker>
                                 </div>
                                 <div class="int_box">
-                                    <label>带看楼盘</label>
-                                    <el-input
-                                            placeholder="请输入带看楼盘"
-                                            v-model="look"
-                                            clearable
-                                            class="report_int">
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
-                                    <label>维护人</label>
-                                    <el-input
-                                            placeholder="请输入维护人"
-                                            v-model="maintenance"
-                                            clearable
-                                            class="report_int">
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
-                                    <label>意向楼盘</label>
-                                    <el-input
-                                            placeholder="请输入意向楼盘"
-                                            v-model="intention"
-                                            clearable
-                                            class="report_int">
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
                                     <label>区域</label>
-                                    <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
+                                    <el-cascader :options="areaOptions" clearable class="report_int"
+                                                 @change="handleChange"
+                                                 ref="cascaderAddr"></el-cascader>
                                 </div>
                                 <div class="int_box">
                                     <label>门店</label>
-                                    <el-select v-model="stores" placeholder="请选择" class="report_int"
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
                                     >
                                         <el-option
                                                 v-for="item in storesOptions"
-                                                :key="item.stores"
+                                                :key="item.value"
                                                 :label="item.label"
-                                                :value="item.stores"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>维护人</label>
+                                    <el-select v-model="user_id" placeholder="请选择" class="report_int"
+                                               @change="userValue"
+                                    >
+                                        <el-option
+                                                v-for="item in user_idOoptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
                                         >
                                         </el-option>
                                     </el-select>
@@ -104,20 +98,21 @@
                                     <label>备注</label>
                                     <el-input
                                             placeholder="请输入备注"
-                                            v-model="note"
+                                            v-model="remarks"
                                             clearable
                                             class="report_int">
                                     </el-input>
                                 </div>
                                 <div class="int_box">
                                     <label>客户类别</label>
-                                    <el-select v-model="customer" placeholder="请选择" class="report_int"
+                                    <el-select v-model="client_type" placeholder="请选择" class="report_int"
+                                               @change="clientValue"
                                     >
                                         <el-option
                                                 v-for="item in customerOoptions"
-                                                :key="item.customer"
+                                                :key="item.value"
                                                 :label="item.label"
-                                                :value="item.customer"
+                                                :value="item.value"
                                         >
                                         </el-option>
                                     </el-select>
@@ -137,55 +132,32 @@
 </template>
 
 <script>
+    import Api from '../../../api/Report/Report'
+    import Axios from '../../../api/pub/pub'
+
     export default {
         name: "See",
         data() {
             return {
                 //添加字段
-                name: '',
-                phone: '',
-                type: [],
-                date: '',
-                time: '',
-                look: '',
-                maintenance: '',
-                intention: '',
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-                storesOptions: [{
-                    stores: '选项1',
-                    label: 'A门店'
-                }, {
-                    stores: '选项2',
-                    label: 'B门店'
-                }],
-                stores: '',
-                note: '',
-                customerOoptions: [
-                    {
-                        customer: '选项1',
-                        label: '客户类别A'
-                    },
-                    {
-                        customer: '选项2',
-                        label: '客户类别B'
-                    },
-                    {
-                        customer: '选项3',
-                        label: '客户类别C'
-                    }
-                ],
-                customer: '',
+                client_name: '',//客户姓名
+                client_phone: '',//客户电话
+                reportedData: '',
+                reportedTime: '',
+                reported_time: '',//报备时间
+                user_id: '',//员工id
+                province_id: '',//省级id
+                city_id: '',//市级id
+                area_id: '',// 区域id
+                storefront_id: '',//门店id
+                remarks: '',//备注
+                province_id:'',
+                city_id:'',
+                client_type: '',//客户类型
+                areaOptions: [], //区域
+                storesOptions:[],//门店
+                user_idOoptions: [], //维护人
+                customerOoptions: [],//客户类别
             }
         },
         methods: {
@@ -193,11 +165,96 @@
                 this.$store.commit('showReport', true);
                 this.$store.commit('showStatus', false);
             },
-            cancel(){
-               this.onPage()
-            },
-            confirm(){
+            cancel() {
                 this.onPage()
+            },
+            confirm() { //添加
+                this.onPage();
+                Api.reportAdd(this.client_name, this.client_phone, this.reported_time, this.user_id, this.province_id, this.city_id, this.area_id, this.storefront_id, this.remarks, this.client_type).then((res) => {
+                   if(res.code === '200001'){
+                       this.$message.success('添加成功');
+                       this.$emit('reportList')
+                   }else {
+                       this.$message.error('添加失败')
+                   }
+                });
+            },
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.areaOptions = JSON.parse(linkage)
+                })
+            },
+            handleChange() { //获取省市区id传给后台获取门店数据
+                var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
+                this.province_id = pathvalue[0];
+                this.city_id = pathvalue[1];
+                this.area_id = pathvalue[2];
+                Axios.postStores(this.area_id).then(res => {
+                    let cityData = JSON.stringify(res.data.data);
+                    this.storesOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                });
+            },
+            getSlectList(){ //获取员工列表拿到维护人id
+                let page =1;
+                let pagesum =999;
+                let province_id =this.province_id;
+                let city_id = this.city_id;
+                let area_id = this.area_id;
+                let storefront_id = this.storefront_id+'';
+                Api.getSlectList(page,pagesum,province_id,city_id,area_id,storefront_id).then((res)=>{
+                    let cityData = JSON.stringify(res.data.user_data);
+                    this.user_idOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
+                })
+            },
+            categoryList(){ //客户类别列表
+                let page =1;
+                let pageNum=999;
+                Api.categoryList(page,pageNum).then((res)=>{
+                    let cityData = JSON.stringify(res.data);
+                    this.customerOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/type_name/g, "label"));
+                })
+            },
+            storefrontValue(e) { //获取门店id
+                this.storefront_id = e;
+                this.getSlectList()
+
+            },
+            userValue(e){ //获取维护人id
+                this.user_id=e
+            },
+            reportData(e) { //获取报备时间处理格式
+                this.reportedData = e;
+            },
+            reportTime(e) { //获取报备时间处理格式
+                this.reportedTime = e;
+                this.reported_time = this.reportedData + ' ' + this.reportedTime;
+            },
+            clientValue(e){ //获取客户类别id
+                this.client_type=e
             },
         },
         computed: {
@@ -205,6 +262,10 @@
                 return this.$store.state.report.addStatus
             },
         },
+        mounted() {
+            this.getSelect();
+            this.categoryList()
+        }
     }
 </script>
 
@@ -277,36 +338,44 @@
         border-bottom: 1px #eee solid;
         padding-left: 15px;
     }
-    .content_box{
+
+    .content_box {
         width: 98.3%;
         padding: 15px;
     }
-    .footer{
+
+    .footer {
         width: 100%;
         display: flex;
         justify-content: center;
         padding: 20px 0;
     }
-    .box_form{
+
+    .box_form {
         width: 100%;
     }
-    .form{
+
+    .form {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
     }
-    .report_int{
+
+    .report_int {
         width: 600px;
     }
-    label{
+
+    label {
         display: block;
         padding: 20px 0;
     }
-    .date{
+
+    .date {
         width: 295px;
     }
-    .com{
+
+    .com {
         width: 100%;
         height: 100%;
         overflow-x: hidden;

@@ -193,7 +193,8 @@
             },
             buildingList(){
                 Api.buildingList(this.queryInfo.pagenum,this.queryInfo.pagesize).then((res)=>{
-                    this.tableData=res.data.data
+                    this.tableData=res.data.data;
+                    console.log(this.tableData)
                     this.totalPage=res.data.count
                 })
             }

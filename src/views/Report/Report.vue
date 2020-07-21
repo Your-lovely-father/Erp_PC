@@ -24,7 +24,7 @@
                                     <label>姓名</label>
                                     <el-input
                                             placeholder="请输入姓名"
-                                            v-model="searchName"
+                                            v-model="client_name"
                                             clearable
                                             class="report_int"
                                             prefix-icon="el-icon-search"
@@ -35,7 +35,7 @@
                                     <label>电话</label>
                                     <el-input
                                             placeholder="请输入电话"
-                                            v-model="searchPhone"
+                                            v-model="client_phone"
                                             clearable
                                             class="report_int"
                                             prefix-icon="el-icon-search"
@@ -46,125 +46,119 @@
                                     <div class="start">
                                         <label class="">起止时间</label>
                                         <el-date-picker
-                                                v-model="searchDate"
+                                                v-model="start_data_start"
                                                 type="date"
                                                 placeholder="选择日期"
                                                 class="report_int"
                                                 prefix-icon="el-icon-search"
+                                                @change="getData"
+                                                value-format="yyyy-MM-dd"
                                         >
                                         </el-date-picker>
                                         <span class="cross">
                                     -
                                 </span>
                                         <el-time-picker
-                                                v-model="searchTime"
+                                                v-model="start_time_start"
                                                 placeholder="选择时间"
                                                 class="report_int"
                                                 prefix-icon="el-icon-search"
+                                                @change="getTime"
+                                                value-format="HH:mm:ss"
                                         >
                                         </el-time-picker>
                                     </div>
                                     <div class="finish">
                                         <label class="label">结束时间</label>
                                         <el-date-picker
-                                                v-model="searchDate"
+                                                v-model="end_data_finish"
                                                 type="date"
                                                 placeholder="选择日期"
                                                 class="report_int"
                                                 prefix-icon="el-icon-search"
+                                                @change="finishDate"
+                                                value-format="yyyy-MM-dd"
                                         >
                                         </el-date-picker>
                                         <span class="cross">
                                     -
                                 </span>
                                         <el-time-picker
-                                                v-model="searchTime"
+                                                v-model="end_time_finish"
                                                 placeholder="选择时间"
                                                 class="report_int"
                                                 prefix-icon="el-icon-search"
+                                                @change="finishTime"
+                                                value-format="HH:mm:ss"
                                         >
                                         </el-time-picker>
                                     </div>
                                 </div>
                                 <div class="int_box">
-                                    <label>带看楼盘</label>
-                                    <el-input
-                                            placeholder="请输入带看楼盘"
-                                            v-model="searchLook"
-                                            clearable
-                                            class="report_int"
-                                            prefix-icon="el-icon-search"
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
-                                    <label>维护人</label>
-                                    <el-input
-                                            placeholder="请输入维护人"
-                                            v-model="searchMaintenance"
-                                            clearable
-                                            class="report_int"
-                                            prefix-icon="el-icon-search"
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
-                                    <label>意向楼盘</label>
-                                    <el-input
-                                            placeholder="请输入意向楼盘"
-                                            v-model="searchIntention"
-                                            clearable
-                                            class="report_int"
-                                            prefix-icon="el-icon-search"
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
                                     <label>区域</label>
                                     <el-cascader :options="searchAreaOptions" clearable class="report_int"
+                                                 @change="handleChange"
+                                                 ref="cascaderAddr"
                                     ></el-cascader>
                                 </div>
                                 <div class="int_box">
                                     <label>门店</label>
-                                    <el-select v-model="searchStores" placeholder="请选择" class="report_int"
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
                                     >
                                         <el-option
                                                 v-for="item in searchStoresOptions"
-                                                :key="item.searchStores"
+                                                :key="item.value"
                                                 :label="item.label"
-                                                :value="item.searchStores"
+                                                :value="item.value"
                                         >
                                         </el-option>
                                     </el-select>
                                 </div>
                                 <div class="int_box">
-                                    <label>备注</label>
-                                    <el-input
-                                            placeholder="请输入备注"
-                                            v-model="searchNote"
-                                            clearable
-                                            class="report_int"
-                                            prefix-icon="el-icon-search"
-
+                                    <label>维护人</label>
+                                    <el-select v-model="user_id" placeholder="请选择" class="report_int"
                                     >
-                                    </el-input>
+                                        <el-option
+                                                v-for="item in user_idOoptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>意向楼盘</label>
+                                    <el-select v-model="building_id" placeholder="请选择" class="report_int"
+                                               @change="buildingId"
+                                    >
+                                        <el-option
+                                                v-for="item in building_idOoptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
                                 </div>
                                 <div class="int_box">
                                     <label>客户类别</label>
-                                    <el-select v-model="searchCustomer" placeholder="请选择" class="report_int"
+                                    <el-select v-model="client_type" placeholder="请选择" class="report_int"
+                                               @change="clientValue"
+                                               clearable
                                     >
                                         <el-option
                                                 v-for="item in searchCustomerOoptions"
-                                                :key="item.searchCustomer"
+                                                :key="item.value"
                                                 :label="item.label"
-                                                :value="item.searchCustomer"
-
+                                                :value="item.value"
                                         >
                                         </el-option>
                                     </el-select>
                                 </div>
                                 <div class="int_box btn_search">
-                                    <el-button type="primary" class="btn">搜索</el-button>
+                                    <el-button type="primary" class="btn" @click="searchBtn">搜索</el-button>
                                 </div>
                             </div>
                         </div>
@@ -195,28 +189,21 @@
                                     label="报备时间"
                                     width="180">
                             </el-table-column>
-                            <!--                            <el-table-column-->
-                            <!--                                    prop="look"-->
-                            <!--                                    label="带看楼盘"-->
-                            <!--                                    width="180">-->
-                            <!--                            </el-table-column>-->
                             <el-table-column
-                                    prop="maintenance"
+                                    prop="user_name"
                                     label="维护人"
                                     width="180">
                             </el-table-column>
-                            <!--                            <el-table-column-->
-                            <!--                                    prop="intention"-->
-                            <!--                                    label="意向楼盘"-->
-                            <!--                                    width="180">-->
-                            <!--                            </el-table-column>-->
                             <el-table-column
-                                    prop="area"
+                                    prop="province_name,city_name,area_name"
                                     label="区域"
                                     width="180">
+                                <template slot-scope="scope">
+                                  {{scope.row.province_name}}-{{scope.row.city_name}}-{{scope.row.area_name}}
+                                </template>
                             </el-table-column>
                             <el-table-column
-                                    prop="stores"
+                                    prop="storefront_name"
                                     label="门店"
                                     width="180">
                             </el-table-column>
@@ -227,7 +214,7 @@
                                     width="180">
                             </el-table-column>
                             <el-table-column
-                                    prop="customer"
+                                    prop="type_name"
                                     label="客户类别"
                                     width="180">
                             </el-table-column>
@@ -236,7 +223,7 @@
                                     label="操作"
                                     width="200">
                                 <template slot-scope="scope">
-                                    <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                                    <el-button @click="handleClick(scope.row.id)" type="text" size="small">查看</el-button>
                                     <el-button type="text" size="small" @click="upd()">编辑</el-button>
                                     <el-button type="text" size="small" slot="reference" class="el-popconfirm"
                                                @click="del(scope.row.id)">删除
@@ -260,7 +247,7 @@
                 </el-card>
             </div>
         </div>
-        <myAdd/>
+        <myAdd @reportList="reportList"/>
         <mySee/>
         <myModify/>
     </div>
@@ -271,7 +258,7 @@
     import myModify from '../../views/Report/Modify/Modify'
     import myAdd from '../../views/Report/Add/Add'
     import Api from '../../api/Report/Report'
-
+    import Axios from '../../api/pub/pub'
     export default {
         name: "Report",
         components: {
@@ -282,51 +269,26 @@
         data() {
             return {
                 //搜索字段
-                searchName: '',
-                searchPhone: '',
-                type: [],
-                searchDate: '',
-                searchTime: '',
-                searchLook: '',
-                searchMaintenance: '',
-                searchIntention: '',
-                flag: false,
-                searchAreaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-                searchStoresOptions: [{
-                    searchStores: '选项1',
-                    label: 'A门店'
-                }, {
-                    searchStores: '选项2',
-                    label: 'B门店'
-                }],
-                searchStores: '',
-                searchNote: '',
-                searchCustomerOoptions: [
-                    {
-                        customer: '选项1',
-                        label: '客户类别A'
-                    },
-                    {
-                        customer: '选项2',
-                        label: '客户类别B'
-                    },
-                    {
-                        customer: '选项3',
-                        label: '客户类别C'
-                    }
-                ],
-                searchCustomer: '',
+                start_data_start:'',
+                start_time_start:'',
+                start_time:'',//起始时间
+                end_data_finish:'',
+                end_time_finish:'',
+                end_time:'',//结束时间
+                building_id:'',//楼盘id
+                client_name:'',//客户姓名
+                client_phone:'',//客户电话
+                area_id:'',//区域id
+                storefront_id:'',// 门店id
+                user_id:'',//员工id
+                client_type:'',//客户类型id
+                searchAreaOptions: [], //区域
+                searchStoresOptions: [], //门店
+                searchCustomerOoptions: [], // 客户类别
+                user_idOoptions: [], // 员工列表
+                building_idOoptions: [], // 楼盘列表
+                province_id:'',
+                city_id:'',
                 tableData: [],
                 queryInfo: { //分页
                     query: '',
@@ -341,10 +303,16 @@
                 this.$store.commit('reportStatus', false);
                 this.$store.commit('addStatus', true)
             },
-            handleClick() {
+            handleClick(id) {
                 this.$store.commit('reportStatus', false);
-                this.$store.commit('seeStatus', true)
+                this.$store.commit('seeStatus', true);
+                //获取详情
+                Api.detailObject(id).then((res)=>{
+                    console.log(res)
+                    this.$store.commit('detailList',res.data)
+                })
             },
+
             upd() {
                 this.$store.commit('reportStatus', false);
                 this.$store.commit('updStatus', true)
@@ -378,12 +346,110 @@
                     });
                 });
             },
-            reportList() {
-                Api.reportList(this.queryInfo.pagenum, this.queryInfo.pagesize).then((res) => {
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.searchAreaOptions = JSON.parse(linkage)
+                })
+            },
+            handleChange() { //获取省市区id传给后台获取门店数据
+                var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
+                this.province_id = pathvalue[0];
+                this.city_id = pathvalue[1];
+                this.area_id = pathvalue[2];
+                Axios.postStores(this.area_id).then(res => {
+                    let cityData = JSON.stringify(res.data.data);
+                    this.searchStoresOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                });
+                this.buildingList()
+            },
+            getSlectList(){ //获取员工列表拿到维护人id
+                let page =1;
+                let pagesum =999;
+                let province_id =this.province_id;
+                let city_id = this.city_id;
+                let area_id = this.area_id;
+                let storefront_id = this.storefront_id+'';
+                Api.getSlectList(page,pagesum,province_id,city_id,area_id,storefront_id).then((res)=>{
+                    let cityData = JSON.stringify(res.data.user_data);
+                    this.user_idOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
+                })
+            },
+            buildingList(){ //楼盘字典列表获取意向楼盘
+                let page =1 ;
+                let pagesum = 999;
+                let province_id =this.province_id;
+                let city_id = this.city_id;
+                let area_id = this.area_id;
+                Api.buildingList(page,pagesum,province_id,city_id,area_id).then((res)=>{
+                    let cityData = JSON.stringify(res.data.data);
+                    this.building_idOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/building_name/g, "label"))
+                })
+            },
+            category(){ //客户类别列表
+                let page =1;
+                let pageNum=999;
+                Api.categoryList(page,pageNum).then((res)=>{
+                    let cityData = JSON.stringify(res.data);
+                    this.searchCustomerOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/type_name/g, "label"));
+                })
+            },
+            searchBtn(){//搜索
+                this.reportList()
+            },
+            storefrontValue(e){ //获取门店id
+               this.storefront_id=e;
+                this.getSlectList()
+            },
+            clientValue(e){ //获取客户类别id
+                this.client_type=e
+            },
+            getData(e){ //起止日期处理 yyy-mm-dd
+                this.start_data_start=e;
+            },
+            getTime(e){ //起止时间处理
+                this.start_time_start=e;
+                this.start_time=this.start_data_start + ' ' +this.start_time_start
+            },
+            finishDate(e){ //结束日期处理
+                this.end_data_finish=e;
+            },
+            finishTime(e){ //结束时间处理
+                this.end_time_finish=e;
+                this.end_time=this.end_data_finish + ' ' +this.end_time_finish
+            },
+            buildingId(e){ // 楼盘id
+                this.building_id=e
+            },
+            reportList() { //客户报备列表
+                Api.reportList(this.queryInfo.pagenum, this.queryInfo.pagesize,this.start_time,this.end_time,this.building_id,this.client_name,this.client_phone,this.area_id,this.storefront_id,this.user_id,this.client_type).then((res) => {
                     this.tableData = res.data.data;
                     this.totalPage = res.data.count;
                 })
-            }
+            },
         },
         computed: {
             reportStatus() {
@@ -391,7 +457,9 @@
             },
         },
         mounted() {
-            this.reportList()
+            this.reportList();
+            this.getSelect();
+            this.category();
         }
     }
 </script>

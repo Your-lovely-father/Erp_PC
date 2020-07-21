@@ -1,24 +1,21 @@
 <template>
     <div class="component" >
-        <div class="report" v-show="AreaStatus">
+        <div class="report" v-show="isIntentionStatus">
             <div class="add_box">
                 <!--    搜索区域        -->
-                <el-card>
-                    <div class="add_content">
-                        <div class="content_title">
-                            <p>
-                                区域管理
-                            </p>
-                        </div>
-                        <div class="content_btn" style="cursor:pointer">
-                            <p @click="reportAdd()">
-                                <span class="el-icon-plus"></span>
-                                <span>区域添加</span>
-                            </p>
-                        </div>
+                <div class="add_content">
+                    <div class="content_title">
+                        <p>
+                            意向楼盘
+                        </p>
                     </div>
-                    <myShare/>
-                </el-card>
+                    <div class="content_btn" style="cursor:pointer">
+                        <p @click="reportAdd()">
+                            <span class="el-icon-plus"></span>
+                            <span>意向楼盘添加</span>
+                        </p>
+                    </div>
+                </div>
                 <!--    表格区域        -->
                 <el-card class="top">
                     <div class="tab">
@@ -29,30 +26,34 @@
                                 :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                         >
                             <el-table-column
+                                    label='客户'
+                                    prop="address">
+                            </el-table-column>
+                            <el-table-column
+                                    label='维护人'
+                                    prop="address">
+                            </el-table-column>
+                            <el-table-column
                                     label='区域'
                                     prop="address">
                             </el-table-column>
                             <el-table-column
-                                    label="时间"
-                                    prop="date">
+                                    label='意向楼盘'
+                                    prop="address">
                             </el-table-column>
                             <el-table-column
                                     align="right"
                                     label="操作"
                             >
                                 <template slot-scope="scope">
+                                    <el-button @click="intentionSee(scope.row)"
+                                               size="mini">查看</el-button>
                                     <el-button
                                             type="primary"
                                             size="mini"
                                             @click="handleEdit(scope.$index, scope.row)">修改
                                     </el-button>
-                                    <el-popconfirm
-                                            confirmButtonText='确定'
-                                            cancelButtonText='取消'
-                                            icon="el-icon-info"
-                                            iconColor="red"
-                                            title="确定要删除吗？"
-                                    >
+
                                         <el-button
                                                 slot="reference"
                                                 size="mini"
@@ -60,7 +61,6 @@
                                                 class="left_btn"
                                                 @click="handleDelete(scope.$index, scope.row)">删除
                                         </el-button>
-                                    </el-popconfirm>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -70,67 +70,72 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[100, 200, 300, 400]"
-                                :page-size="100"
+                                :current-page="queryInfo.pagenum"
+                                :page-sizes="[5, 10, 20, 30]"
+                                :page-size="queryInfo.pagesize"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="totalPage">
                         </el-pagination>
                     </div>
                 </el-card>
             </div>
         </div>
         <myAdd/>
+        <mySee/>
         <myModify/>
     </div>
 </template>
 
 <script>
-    import myModify from '../../views/Area/Modify/Modify'
-    import myShare from '../../components/Pub/address/address'
-    import myAdd from '../../views/Area/Add/Add'
+    import myModify from './Modify/Modify'
+    import myAdd from './Add/Add'
+    import mySee from './See/See'
     export default {
-        name: "Report",
         components: {
-            myShare,
             myModify,
-            myAdd
+            myAdd,
+            mySee
         },
         data() {
             return {
-                tableData: [{
-                    address: '辽宁省/沈阳市/铁西区',
-                    date: '2019-5-30 12:20',
+                tableData: [],
+                queryInfo: { //分页
+                    query: '',
+                    pagenum: 1, //当前第几页
+                    pagesize: 5 //当前显示几条
                 },
-                ],
-                isShowAdd:false,
-                isShowsUpd: false,//修改
-                currentPage4: 4,
+                totalPage: 0,//总条数
             }
         },
         methods: {
             reportAdd() {
-                this.$store.commit('AreaStatus', false);
-                this.$store.commit('addArea', true)
+                this.$store.commit('isIntentionStatus', false);
+                this.$store.commit('addisIntention', true)
             },
-            handleEdit(index, row) {
+            intentionSee(index, row) {
                 console.log(index, row);
-                this.$store.commit('AreaStatus', false);
-                this.$store.commit('updStatusArea', true)
+                this.$store.commit('isIntentionStatus', false);
+                this.$store.commit('seeisIntention', true)
             },
             handleDelete(index, row) {
                 console.log(index, row);
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            handleEdit(){
+                this.$store.commit('isIntentionStatus', false);
+                this.$store.commit('updisIntention', true)
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+            handleSizeChange(newSize) { //当前显示多少条操作
+                this.queryInfo.pagesize = newSize;
+                // this.trackingList()
+            },
+            handleCurrentChange(newPage) { //当前页数操作
+                this.queryInfo.pagenum = newPage;
+                // this.trackingList()
             },
         },
         computed: {
-            AreaStatus() {
-                return this.$store.state.area.AreaStatus
+            isIntentionStatus() {
+                return this.$store.state.intention.isIntentionStatus
             },
         }
     }
@@ -198,5 +203,30 @@
     }
     .left_btn {
         margin-left: 10px;
+    }
+    .add_content {
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        display: flex;
+        justify-content: space-between;
+        background: #ffffff;
+        border-bottom: 1px #eee solid;
+        border-radius: 5px;
+    }
+
+    .content_title {
+        padding-left: 20px;
+        padding-bottom: 20px;
+    }
+
+    .content_btn {
+        padding-right: 20px;
+        padding-bottom: 20px;
+        color: #1981e4;
+    }
+
+    .content_btn > p:nth-child(1) {
+        font-weight: bold;
     }
 </style>

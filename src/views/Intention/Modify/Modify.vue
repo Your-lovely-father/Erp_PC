@@ -1,5 +1,5 @@
 <template>
-    <div class="reportAdd" v-show="updArea">
+    <div class="reportAdd" v-show="updisIntention">
         <div class="add_box">
             <div class="com">
                 <div class="poor">
@@ -77,8 +77,8 @@
         },
         methods: {
             onPage() {
-                this.$store.commit('isUpdArea', true);
-                this.$store.commit('isUpdStatusArea', false);
+                this.$store.commit('isUpdupdisIntention', true);
+                this.$store.commit('isUpdStatusupdisIntention', false);
             },
             cancel() {
                 this.onPage()
@@ -88,8 +88,8 @@
             },
         },
         computed: {
-            updArea() {
-                return this.$store.state.area.updArea
+            updisIntention() {
+                return this.$store.state.intention.updisIntention
             },
         },
     }

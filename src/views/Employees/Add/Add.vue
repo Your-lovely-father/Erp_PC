@@ -268,7 +268,7 @@
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
                 this.area_id = pathvalue[2];
                 Axios.postStores(this.area_id).then(res => {
-                    let cityData = JSON.stringify(res.data);
+                    let cityData = JSON.stringify(res.data.data);
                     this.storesOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 })
             },

@@ -54,15 +54,15 @@ const router = new VueRouter({
                         title: '楼盘管理'
                     }
                 },
-                //区域管理
-                // {
-                //     path: '/area',
-                //     name: 'Area',
-                //     component: () => import('../views/Area/Area'),
-                //     meta: {
-                //         title: '区域管理'
-                //     }
-                // },
+                //意向楼盘
+                {
+                    path: '/intention',
+                    name: 'Intention',
+                    component: () => import('../views/Intention/Intention'),
+                    meta: {
+                        title: '意向楼盘'
+                    }
+                },
                 //门店管理
                 {
                     path: '/stores',
