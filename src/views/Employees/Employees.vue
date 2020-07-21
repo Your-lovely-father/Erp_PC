@@ -122,8 +122,8 @@
             </div>
         </div>
         <myAdd  @getSelectList="getSelectList"/>
-        <mySee :selectSee="selectSee"/>
-        <myModify :selectUpd="selectUpd"/>
+        <mySee/>
+        <myModify/>
     </div>
 </template>
 
@@ -142,20 +142,13 @@
         },
         data() {
             return {
-                isShowAdd: false,//添加
-                isShow: false,//查看
-                isShowsUpd: false,//修改
                 tableData: [],//员工列表
-                // user_status:false,
-                // mobile_terminal_status:false,
                 queryInfo: { //分页
                     query: '',
                     pagenum: 1, //当前第几页
                     pagesize: 5 //当前显示几条
                 },
                 totalPage: 0,//总条数
-                selectSee: {},//详情数据
-                selectUpd: {}//修改数据
             }
         },
 
@@ -165,20 +158,19 @@
                 this.$store.commit('addEmployees', true)
             },
             handleClick(id) { //查看
-                this.$store.commit('employeesStatus', false);
-                this.$store.commit('seeEmployees', true)
                 Api.postSee(id).then((res)=>{
                     if (res.code !== 200) {
                         return this.$message.error('获取详情失败')
                     }
-                    this.selectSee=res.data;
+                    this.$store.commit('selectSee',res.data)
                 });
-                this.isShow = true
+                this.$store.commit('employeesStatus', false);
+                this.$store.commit('seeEmployees', true);
             },
             upd(val) {
+                this.$store.commit('selectUpd',val)
                 this.$store.commit('employeesStatus', false);
                 this.$store.commit('updEmployees', true);
-                this.selectUpd=val;
             },
             del(id) { //删除操作
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {

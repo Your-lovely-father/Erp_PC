@@ -86,38 +86,23 @@
                                     >
                                     </el-input>
                                 </div>
-                                <!--                        <div class="int_box">-->
-                                <!--                            <label>密码</label>-->
-                                <!--                            <el-input-->
-                                <!--                                    placeholder="请输入密码"-->
-                                <!--                                    v-model="password"-->
-                                <!--                                    clearable-->
-                                <!--                                    class="report_int"-->
-                                <!--                                    :disabled="true"-->
-                                <!--                            >-->
-                                <!--                            </el-input>-->
-                                <!--                        </div>-->
-                                <!--                        <div class="int_box">-->
-                                <!--                            <label>角色管理</label>-->
-                                <!--                            <el-input-->
-                                <!--                                    placeholder="请输入角色管理"-->
-                                <!--                                    v-model="role"-->
-                                <!--                                    clearable-->
-                                <!--                                    class="report_int"-->
-                                <!--                                    :disabled="true"-->
-                                <!--                            >-->
-                                <!--                            </el-input>-->
-                                <!--                        </div>-->
                                 <div class="int_box">
                                     <label>门店</label>
                                     <el-input
                                             placeholder="请输入门店"
-                                            v-model="selectSee.storefront_id"
+                                            v-model="selectSee.storefront"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
                                     >
                                     </el-input>
+                                </div>
+                            </div>
+                            <div class="role_left">
+                                <div class="int_box ">
+                                    <label>角色管理</label>
+                                    <el-cascader :options="depShowType" clearable class="report_int" v-model="roleValue"
+                                    ></el-cascader>
                                 </div>
                             </div>
                             <div class="state">
@@ -172,18 +157,22 @@
 </template>
 
 <script>
+    import Api from '../../../api/Employees/Employees'
     export default {
-        props: {
-            selectSee: {
-                type: Object,
-                default: {},
-            }
-        },
-
         data() {
             return {
                 headDialogImageUrl: '',
                 headDialogVisible: false,
+                depShowType: [{
+                    value: 'zhinan',
+                    label: '指南',
+                    children: [{
+                        value: 'shejiyuanze',
+                        label: '设计原则',
+                    }]
+                }],
+                id:'',
+                roleValue:'1111111'
             };
         },
         methods: {
@@ -204,11 +193,37 @@
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
             },
+            role() { //角色管理
+                Api.postRole().then((res)=>{
+                    const roleData = res.data;
+                    roleData.map((item) => {
+                        item.label = item.group_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.group_name;
+                                el.value = el.id;
+                                this.id= el.id;
+                            })
+                        }
+                    });
+                    this.roleOptions=roleData;
+                    console.log( this.id)
+                })
+            }
+        },
+
+        mounted() {
+            this.role()
         },
         computed: {
             seeEmployees() {
                 return this.$store.state.employees.seeEmployees
             },
+            selectSee() {
+                return this.$store.state.employees.selectSee
+            }
         },
     }
 </script>
@@ -308,18 +323,22 @@
     .report_int {
         width: 480px;
     }
-    .status_upload_box{
-        width: 100%;
-    }
-    .state{
+
+    .state {
         width: 480px;
         display: flex;
         justify-content: space-between;
-        margin-left: 35px;
+        margin-left: 46px;
     }
-    .upload{
-        margin-left: 35px;
+
+    .role_left {
+        margin-left: 46px;
     }
+
+    .upload {
+        margin-left: 46px;
+    }
+
     label {
         display: block;
         padding: 20px 0;

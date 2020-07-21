@@ -173,27 +173,10 @@
 </template>
 
 <script>
+    import  Api from '../../../api/Employees/Employees'
     export default {
-        props: {
-            selectUpd: {
-                type: Object,
-                default: {}
-            }
-        },
         data() {
             return {
-                user_name: '',//员工姓名
-                user_sex: '',//员工性别
-                user_phone: '',//员工手机号
-                user_age: '',//员工年龄
-                user_id_card: '',//员工身份证号
-                user_image: '',//员工头像
-                user_password: '',//员工密码
-                user_status: '',//员工状态（1开通2锁定）
-                user_role: '',//员工角色
-                area_id: '',//区域id
-                storefront_id: '',//门店id
-                mobile_terminal_status: '',//是否开启手机端（1开通2锁定）
                 headDialogImageUrl: '',
                 headDialogVisible: false,
             }
@@ -207,6 +190,9 @@
                 this.onPage()
             },
             confirm() {
+                Api.postUpd(selectUpd).then((res)=>{
+
+                });
                 this.onPage()
             },
             headHandleRemove(file, fileList) {
@@ -234,6 +220,9 @@
         computed: {
             updEmployees() {
                 return this.$store.state.employees.updEmployees
+            },
+            selectUpd() {
+                return this.$store.state.employees.selectUpd
             },
         },
     }

@@ -5,6 +5,8 @@ export default {
         addEmployees: storage.get('addEmployees').length === 0 ? 0 : 1,
         seeEmployees: storage.get('seeEmployees').length === 0 ? 0 : 1,
         updEmployees:storage.get('updEmployees').length === 0 ? 0 : 1,
+        selectSee:storage.get('selectSee')||{},
+        selectUpd:storage.get('selectUpd')||{}
     },
     mutations: {
         employeesStatus: ((state, data) => {
@@ -44,5 +46,14 @@ export default {
             storage.remove('updEmployees')
         }),
 
+        //员工详情
+        selectSee:((state,data)=>{
+            console.log(data);
+            storage.set('selectSee',state.selectSee=data)
+        }),
+        // 修改回显数据
+        selectUpd:((state,data)=>{
+            storage.set('selectUpd',state.selectUpd=data)
+        })
     },
 }

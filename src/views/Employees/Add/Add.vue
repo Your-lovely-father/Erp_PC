@@ -79,14 +79,13 @@
                                             class="report_int">
                                     </el-input>
                                 </div>
+
                                 <div class="int_box">
                                     <label>角色管理</label>
-                                    <el-input
-                                            placeholder="请输入角色管理"
-                                            v-model="user_role"
-                                            clearable
-                                            class="report_int">
-                                    </el-input>
+                                    <el-cascader :options="roleOptions" clearable class="report_int"
+                                                 @change="roleChange"
+                                                 ref="roleAdd"
+                                    ></el-cascader>
                                 </div>
                                 <div class="int_box">
                                     <label>区域</label>
@@ -192,6 +191,7 @@
                 headDialogImageUrl: '',//图片
                 areaOptions: [],//区域三级联动数据
                 storesOptions: [],//门店数据
+                roleOptions: [],//角色数据
                 genderOptions: [{ //性别
                     value: '10',
                     label: '男'
@@ -209,28 +209,20 @@
             cancel() {
                 this.onPage()
             },
-            status(e) { //状态
+            status(e) { //状态的值
                 this.user_status = e
             },
-            mobileStatus(e) { //手机端状态
+            mobileStatus(e) { //手机
                 this.mobile_terminal_status = e
             },
 
             confirm() {
                 Api.postAdd(
-                    this.user_name,
-                    this.user_phone,
-                    this.user_age,
-                    this.gender,
-                    this.user_id_card,
-                    this.user_password,
-                    this.user_role,
+                    this.user_name, this.user_phone, this.user_age, this.gender, this.user_id_card,
+                    this.user_password, this.user_role,
+                    this.province_id,this.city_id, this.area_id,
                     this.storefront_id,
-                    this.province_id,
-                    this.city_id,
-                    this.area_id,
-                    this.user_status,
-                    this.mobile_terminal_status,
+                    this.user_status, this.mobile_terminal_status,
                 ).then((res) => {
                     if (res.code === "200001") {
                         this.$message.success(res.msg);
@@ -265,18 +257,24 @@
                             })
                         }
                     });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.areaOptions = JSON.parse(linkage)
                 })
             },
 
             handleChange() { //获取省市区id传给后台获取门店数据
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
-                this.province_id = pathvalue[0];
-                this.city_id = pathvalue[1];
                 this.area_id = pathvalue[2];
-                Axios.postStores().then(res => {
+                Axios.postStores(this.area_id).then(res => {
                     let cityData = JSON.stringify(res.data);
                     this.storesOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 })
+            },
+            roleChange(){ //获取角色id
+                var rolevalue = this.$refs.roleAdd.getCheckedNodes()[0].data.id;
+                this.user_role=rolevalue
             },
             obtain(e) { //门店id
                 this.storefront_id = e
@@ -291,15 +289,42 @@
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
             },
+            postRole() { // 查询角色管理
+                Api.postRole().then((res) => {
+                    const roleData = res.data;
+                    roleData.map((item) => {
+                        item.label = item.group_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.group_name;
+                                el.value = el.id;
+                            })
+                        }
+                    });
+                    this.roleOptions=roleData
+                })
+            },
+
         },
+
         mounted() {
             this.getSelect();
+            this.postRole()
         },
         computed: {
             addEmployees() {
                 return this.$store.state.employees.addEmployees
             },
         },
+        watch:{ //三级联动切换区域清空门店内容
+            area_id(val){
+                if(val){
+                   this.storefront_id=''
+                }
+            }
+        }
     }
 </script>
 

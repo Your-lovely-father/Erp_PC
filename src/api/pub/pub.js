@@ -11,7 +11,7 @@ export default {
         return axios.get('/erp/area_list')
     },
     //门店
-    postStores(){
-        return axios.post('/erp/get_storefront_list',{page:1,offset:2})
+    postStores(area_id){
+        return axios.post('/erp/get_storefront_list',{page:1,offset:999,area_id:area_id})
     }
 }
