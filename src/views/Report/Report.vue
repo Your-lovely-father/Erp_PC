@@ -249,7 +249,7 @@
         </div>
         <myAdd @reportList="reportList"/>
         <mySee/>
-        <myModify ref="myModify"/>
+        <myModify ref="myModify" @reportList="reportList"/>
     </div>
 </template>
 

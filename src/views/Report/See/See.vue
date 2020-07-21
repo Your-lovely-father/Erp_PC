@@ -206,7 +206,6 @@
 
 <script>
     import Api from '../../../api/Report/Report'
-    import localStorage from '../../../utils/localStorage'
     export default {
         name: "See",
         data() {
@@ -240,7 +239,6 @@
             onPage() {
                 this.$store.commit('isReport', true);
                 this.$store.commit('isSee', false);
-                localStorage.remove('detailList')
             },
             cancel() {
                 this.onPage();

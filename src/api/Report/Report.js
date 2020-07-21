@@ -77,11 +77,27 @@ export default {
     },
     //意向楼盘列表
 
-    intentionList(page,offset,client_id) {
+    intentionList(page, offset, client_id) {
         return Axios.post('/erp/get_intention_list', {
             page: page,
             offset: offset,
             client_id: client_id
+        })
+    },
+    //客户报备修改
+    clientUpd(client_id, client_name, client_phone, reported_time, user_id, province_id, city_id, area_id, storefront_id, remarks, client_type) {
+        return Axios.post('/erp/client_report_edit', {
+            client_id: client_id,
+            client_name: client_name,
+            client_phone: client_phone,
+            reported_time: reported_time,
+            user_id: user_id,
+            province_id: province_id,
+            city_id: city_id,
+            area_id: area_id,
+            storefront_id: storefront_id,
+            remarks: remarks,
+            client_type: client_type
         })
     }
 
