@@ -193,27 +193,28 @@
                 this.onPage()
             },
             confirm() {
-                Api.clientUpd(
-                    this.id,
-                    this.client_name,
-                    this.client_phone,
-                    this.dataTiem,
-                    this.user_id,
-                    this.valueArea[0],
-                    this.valueArea[1],
-                    this.valueArea[2],
-                    this.storefront_id,
-                    this.remarks,
-                    this.client_type,
-                ).then((res) => {
-                    if(res.code==="200003"){
-                        this.$message.success('修改成功');
-                        this.$emit('reportList')
-                    }else{
-                        this.$message.error('修改失败')
-                    }
-                });
-                this.onPage()
+                console.log(this.storefront_id)
+                // this.onPage()
+                // Api.clientUpd(
+                //     this.id,
+                //     this.client_name,
+                //     this.client_phone,
+                //     this.dataTiem,
+                //     this.user_id,
+                //     this.valueArea[0],
+                //     this.valueArea[1],
+                //     this.valueArea[2],
+                //     this.storefront_id,
+                //     this.remarks,
+                //     this.client_type,
+                // ).then((res) => {
+                //     if(res.code==="200003"){
+                //         this.$message.success('修改成功');
+                //         this.$emit('reportList')
+                //     }else{
+                //         this.$message.error('修改失败')
+                //     }
+                // });
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {
@@ -260,7 +261,7 @@
                 let province_id =  this.valueArea[0];
                 let city_id =  this.valueArea[1];
                 let area_id =  this.valueArea[2];
-                let storefront_id = this.storefront_id + '';
+                let storefront_id = this.storefront_id;
                 Api.getSlectList(page, pagesum, province_id, city_id, area_id, storefront_id).then((res) => {
                     let cityData = JSON.stringify(res.data.user_data);
                     this.userOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
@@ -274,13 +275,13 @@
                     this.clientOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/type_name/g, "label"));
                 })
             },
-            stores() { //门店回显处理数据
-                Axios.postStores( this.valueArea[2]).then(res => {
+            storesData() { //门店回显处理数据
+                Axios.postStores(this.valueArea[2]).then(res => {
                     let cityData = JSON.stringify(res.data.data);
                     let data = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                     data.map((item, index) => {
                         if (item.value == this.storefront_id) {
-                            this.storefront_name = item.label
+                            this.storefront_name = item.label;
                         }
                     })
                 });
@@ -291,7 +292,7 @@
                 let province_id =  this.valueArea[0];
                 let city_id =  this.valueArea[1];
                 let area_id =  this.valueArea[2];
-                let storefront_id = this.storefront_id + '';
+                let storefront_id = this.storefront_id;
                 Api.getSlectList(page, pagesum, province_id, city_id, area_id, storefront_id).then((res) => {
                     let cityData = JSON.stringify(res.data.user_data);
                     let data = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
@@ -348,7 +349,9 @@
             },
             parentMsg() {
                 this.detailList;
-                this.categoryList();
+                this.storesData();
+                this.userData();
+                this.categoryDdta();
             }
         },
         computed: {
@@ -360,13 +363,14 @@
                 return this.$store.state.report.detailList
             }
         },
+
         mounted() {
             this.getSelect();
-            this.stores();
-            this.userData();
-            this.categoryList();
             this.detailList;
+            this.storesData();
+            this.userData();
             this.categoryDdta();
+            this.categoryList();
         }
     }
 </script>
