@@ -48,7 +48,7 @@ export default {
 
         //员工详情
         selectSee:((state,data)=>{
-            console.log(data);
+            // console.log(data);
             storage.set('selectSee',state.selectSee=data)
         }),
         // 修改回显数据

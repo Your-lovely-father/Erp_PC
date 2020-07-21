@@ -53,17 +53,6 @@
                                     >
                                     </el-input>
                                 </div>
-                                <!--                        <div class="int_box">-->
-                                <!--                            <label>职位</label>-->
-                                <!--                            <el-input-->
-                                <!--                                    placeholder="请输入职位"-->
-                                <!--                                    v-model="position"-->
-                                <!--                                    clearable-->
-                                <!--                                    class="report_int"-->
-                                <!--                                    :disabled="true"-->
-                                <!--                            >-->
-                                <!--                            </el-input>-->
-                                <!--                        </div>-->
                                 <div class="int_box">
                                     <label>性别</label>
                                     <el-input
@@ -88,20 +77,22 @@
                                 </div>
                                 <div class="int_box">
                                     <label>门店</label>
-                                    <el-input
-                                            placeholder="请输入门店"
-                                            v-model="selectSee.storefront"
-                                            clearable
-                                            class="report_int"
-                                            :disabled="true"
+                                    <el-select v-model="value.label" placeholder="请选择"  class="report_int"
                                     >
-                                    </el-input>
+                                        <el-option
+                                                v-for="item in storeList"
+                                                :key="item.value"
+                                                :label="item.label"
+                                        >
+                                        </el-option>
+                                    </el-select>
                                 </div>
                             </div>
                             <div class="role_left">
                                 <div class="int_box ">
                                     <label>角色管理</label>
-                                    <el-cascader :options="depShowType" clearable class="report_int" v-model="roleValue"
+                                    <el-cascader :options="roleOptions" clearable class="report_int"
+                                                 :disabled="true"
                                     ></el-cascader>
                                 </div>
                             </div>
@@ -158,21 +149,16 @@
 
 <script>
     import Api from '../../../api/Employees/Employees'
+    import StoreApi from '../../../api/pub/pub'
     export default {
         data() {
             return {
                 headDialogImageUrl: '',
                 headDialogVisible: false,
-                depShowType: [{
-                    value: 'zhinan',
-                    label: '指南',
-                    children: [{
-                        value: 'shejiyuanze',
-                        label: '设计原则',
-                    }]
-                }],
-                id:'',
-                roleValue:'1111111'
+                role:'',
+                value:'',
+                storeList:[],
+                roleOptions:[],
             };
         },
         methods: {
@@ -193,29 +179,21 @@
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
             },
-            role() { //角色管理
-                Api.postRole().then((res)=>{
-                    const roleData = res.data;
-                    roleData.map((item) => {
-                        item.label = item.group_name;
-                        item.value = item.id;
-                        item.children = item.son;
-                        if (item.son) {
-                            item.son.map(el => {
-                                el.label = el.group_name;
-                                el.value = el.id;
-                                this.id= el.id;
-                            })
-                        }
-                    });
-                    this.roleOptions=roleData;
-                    console.log( this.id)
+            store(){ //门店回显处理
+                StoreApi.postStores().then((res)=>{
+                    let cityData = JSON.stringify(res.data);
+                    this.storeList = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                    console.log(this.storeList)
                 })
-            }
+            },
+            // role() { //角色管理回显处理
+            //     Api.postRole().then((res)=>{})
+            // }
         },
 
         mounted() {
-            this.role()
+            this.store()
+            // this.role()
         },
         computed: {
             seeEmployees() {
