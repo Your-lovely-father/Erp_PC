@@ -44,7 +44,6 @@
 
 <script>
     import Axios from '../../../api/pub/pub'
-    import Api from '../../../api/Stores/Stores'
     export default {
         data() {
             return {
@@ -59,8 +58,6 @@
                 province_id:'',
                 city_id:'',
                 area_id:'',
-                page:'1',
-                offset:'999',
             }
         },
         methods: {
@@ -110,12 +107,11 @@
                 this.area_id=obj.value;
             },
             search(){ //搜索
-                Api.storesSee(this.province_id,this.city_id,this.area_id).then((res)=>{
-                    this.$emit('storesSee'); //调用父组件上的员工列表方法
-                    console.log(res.data)
-                })
+                this.$store.commit('province_id',this.province_id);
+                this.$store.commit('city_id',this.city_id);
+                this.$store.commit('area_id',this.area_id);
+                this.$emit("storesSee")
             }
-
         },
         // watch: {
         //     area(val) {

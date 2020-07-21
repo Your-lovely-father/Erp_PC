@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <!--    搜索区域        -->
-                    <myShare/>
+                    <myShare @storesSee="storesSee"/>
                 </el-card>
                 <!--    表格区域        -->
                 <el-card class="top">
@@ -75,8 +75,8 @@
                 </el-card>
             </div>
         </div>
-        <myAdd @storesSee="storesSee"/>
-        <myModify/>
+        <myAdd />
+        <myModify :getDate="modifyDate"/>
     </div>
 </template>
 
@@ -102,6 +102,7 @@
                     offset: 5, //每页显示多少条
                 },
                 tablePage: 0,//总条数
+                modifyDate: {},//传给子组件的数据
             }
         },
         methods: {
@@ -109,9 +110,10 @@
                 this.$store.commit('storesStatus', false);
                 this.$store.commit('addstores', true)
             },
-            handleEdit(id) {
+            handleEdit(id) { //编辑
                 Api.storesDetails(id).then((res) => {
-                    this.$store.commit('modifySee',res.data)
+                    this.$store.commit('modifySee',res.data);
+                    this.modifyDate = [res.data.province_id+'',res.data.city_id+'',res.data.area_id+'']
                 });
                 this.$store.commit('storesStatus', false);
                 this.$store.commit('updStores', true)
@@ -146,9 +148,9 @@
                 this.storesSee()
             },
             storesSee() { //列表的查询
-                Api.storesSee(this.queryInfo.page, this.queryInfo.offset).then((res) => {
+                Api.storesSee(this.queryInfo.page, this.queryInfo.offset,this.$store.state.stores.province_id,this.$store.state.stores.city_id,this.$store.state.stores.area_id).then((res) => {
                     this.tableData = res.data.data;
-                    this.tablePage = res.data.count //总条数
+                    this.tablePage = res.data.count ;//总条数
                 })
             }
         },

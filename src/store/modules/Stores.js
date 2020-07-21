@@ -4,7 +4,12 @@ export default {
         storesStatus: storage.get('storesStatus'),
         addstores: storage.get('addstores').length === 0 ? 0 : 1,
         updstores:storage.get('updstores').length === 0 ? 0 : 1,
-        modifySee:storage.get('modifySee') ||{}
+        modifySee:storage.get('modifySee') || {},
+        province_id:'',
+        city_id:'',
+        area_id:'',
+
+
     },
     mutations: {
         storesStatus: ((state, data) => {
@@ -30,10 +35,17 @@ export default {
             storage.set('updstores',state.updstores=data);
             storage.remove('updstores')
         }),
-
+        province_id:((state,data)=>{
+            state.province_id=data
+        }),
+        city_id:((state,data)=>{
+            state.city_id=data
+        }),
+        area_id:((state,data)=>{
+            state.area_id=data
+        }),
         modifySee:((state,data)=>{
-            console.log(data)
             storage.set('modifySee',state.modifySee=data)
-        })
+        }),
     },
 }

@@ -15,7 +15,7 @@
                 </div>
                 <div class="addContent">
                     <div class="The_title">
-                        <p>修改门店 {{modifySee}}</p>
+                        <p>修改门店</p>
                     </div>
                     <div class="content_box">
                         <div class="form_box">
@@ -31,7 +31,7 @@
                             </div>
                             <div class="int_box">
                             <label>区域</label>
-                            <el-cascader v-model="aa"  :options="areaOptions" clearable class="report_int"></el-cascader>
+                            <el-cascader v-model="value[0]==''?getDate:value" @change="acquireValue" :options="areaOptions" clearable class="report_int"></el-cascader>
                             </div>
                             <!--<div class="int_box">-->
                                 <!--<label>时间</label>-->
@@ -72,9 +72,10 @@
                 // date: '',
                 // time: '',
                 areaOptions: [],
-                aaa:'75222'
+                value:['','',''],
             }
         },
+        props:['getDate'],
         methods: {
             onPage() {
                 this.$store.commit('isUpdStores', true);
@@ -86,8 +87,9 @@
             confirm() {
                 this.onPage()
             },
-            getSelect(){
+            getSelect(){  //这块是接口的三级联动数据
                 Api.getSelect().then((res)=>{
+                    this.value = [ this.$store.state.stores.modifySee.province_id+'', this.$store.state.stores.modifySee.city_id+'', this.$store.state.stores.modifySee.area_id+'']
                     const data = res.data[0].son;
                     data.map((item) => {
                         item.label = item.AREA_NAME;
@@ -103,7 +105,6 @@
                                         key.label = key.AREA_NAME;
                                         key.value = key.AREA_ID;
                                         key.children = key.son;
-
                                     })
                                 }
                             })
@@ -114,6 +115,9 @@
                     var linkage = window.localStorage.getItem('linkage');
                     this.areaOptions = JSON.parse(linkage)
                 })
+            },
+            acquireValue(value){
+                console.log(value)
             }
         },
         computed: {
@@ -126,7 +130,7 @@
             }
         },
         mounted(){
-            this.getSelect()
+            this.getSelect();
         }
     }
 </script>

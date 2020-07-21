@@ -105,38 +105,31 @@
                                                         size="mini"
                                                         @click="upd()">修改
                                                 </el-button>
-                                                <el-popconfirm
-                                                        confirmButtonText='确定'
-                                                        cancelButtonText='取消'
-                                                        icon="el-icon-info"
-                                                        iconColor="red"
-                                                        title="确定要删除吗？"
-                                                >
+
                                                     <el-button
                                                             slot="reference"
                                                             size="mini"
                                                             type="danger"
                                                             class="left_btn"
-                                                            @click="handleDelete(scope.$index, scope.row)">删除
+                                                            @click="handleDelete(scope.row.id)">删除
                                                     </el-button>
-                                                </el-popconfirm>
                                             </template>
                                         </el-table-column>
                                     </el-table>
                                 </div>
                             </div>
                             <!--     分页区域       -->
-                            <div class="page">
-                                <el-pagination
-                                        @size-change="handleSizeChange"
-                                        @current-change="handleCurrentChange"
-                                        :current-page="currentPage4"
-                                        :page-sizes="[100, 200, 300, 400]"
-                                        :page-size="100"
-                                        layout="total, sizes, prev, pager, next, jumper"
-                                        :total="400">
-                                </el-pagination>
-                            </div>
+<!--                            <div class="page">-->
+<!--                                <el-pagination-->
+<!--                                        @size-change="handleSizeChange"-->
+<!--                                        @current-change="handleCurrentChange"-->
+<!--                                        :current-page="queryInfo.pagenum"-->
+<!--                                        :page-sizes="[5, 10, 20, 30]"-->
+<!--                                        :page-size="queryInfo.pagesize"-->
+<!--                                        layout="total, sizes, prev, pager, next, jumper"-->
+<!--                                        :total="totalPage">-->
+<!--                                </el-pagination>-->
+<!--                            </div>-->
                         </div>
                     </div>
                 </el-card>
@@ -152,6 +145,7 @@
     import mySee from '../../views/Admin/See/See'
     import myAdd from '../../views/Admin/Add/Add'
     import myModify from '../../views/Admin/Modify/Modify'
+    import Api from '../../api/Admin/Admin'
 
     export default {
         components: {
@@ -204,19 +198,13 @@
                 type: [],
                 date: '',
                 time: '',
-                currentPage4: 4,
-                tableData: [{
-                    name: '超级管理员',
-                    date: '2019-5-30 12:20',
-                    children: [
-                        {
-                            adminName: '客户管理',
-                        },
-                        {
-                            adminName: '楼盘管理',
-                        }
-                    ]
-                }]
+                tableData: [],
+                queryInfo: { //分页
+                    query: '',
+                    pagenum: 1, //当前第几页
+                    pagesize: 5 //当前显示几条
+                },
+                totalPage: 0,//总条数
             }
         },
         methods: {
@@ -233,23 +221,52 @@
                 this.$store.commit('adminStatus', false);
                 this.$store.commit('updAdmin', true)
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+            handleDelete(id){ //删除操作
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.postDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.getSelectList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             handleNodeClick(data) {
                 console.log(data);
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
-            },
+            // handleSizeChange(newSize) { //当前显示多少条操作
+            //     this.queryInfo.pagesize = newSize;
+            //     this.adminList()
+            // },
+            // handleCurrentChange(newPage) { //当前页数操作
+            //     this.queryInfo.pagenum = newPage;
+            //     this.adminList()
+            // },
+            adminList(){
+                Api.adminList().then((res)=>{
+                    this.tableData=res.data.data;
+                    console.log(res)
+                })
+            }
         },
         computed: {
             adminStatus() {
                 return this.$store.state.admin.adminStatus
             },
+        },
+        mounted() {
+            this.adminList()
         }
     }
 </script>
