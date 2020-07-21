@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="int_box">
                                     <label>门店</label>
-                                    <el-select v-model="value.label" placeholder="请选择"  class="report_int"
+                                    <el-select v-model="value.label2" placeholder="请选择"  class="report_int"
                                     >
                                         <el-option
                                                 v-for="item in storeList"
