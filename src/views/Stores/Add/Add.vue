@@ -24,7 +24,7 @@
                                     <label>门店名称</label>
                                     <el-input
                                             placeholder="请输入门店名称"
-                                            v-model="stores"
+                                            v-model="storefront_name"
                                             clearable
                                             class="report_int"
                                     >
@@ -32,25 +32,28 @@
                                 </div>
                                 <div class="int_box">
                                     <label>负责区域</label>
-                                    <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
+                                    <el-cascader :options="areaOptions" clearable class="report_int"
+                                                 @change="handleChange"
+                                                 ref="cascaderAddr"
+                                    ></el-cascader>
                                 </div>
-                                <div class="int_box_right">
-                                    <label>时间</label>
-                                    <el-date-picker
-                                            v-model="date"
-                                            type="date"
-                                            placeholder="选择日期"
-                                            class="data"
-                                    >
-                                    </el-date-picker>
-                                    -
-                                    <el-time-picker
-                                            v-model="time"
-                                            placeholder="选择时间"
-                                            class="data"
-                                    >
-                                    </el-time-picker>
-                                </div>
+                                <!--<div class="int_box_right">-->
+                                    <!--<label>时间</label>-->
+                                    <!--<el-date-picker-->
+                                            <!--v-model="date"-->
+                                            <!--type="date"-->
+                                            <!--placeholder="选择日期"-->
+                                            <!--class="data"-->
+                                    <!--&gt;-->
+                                    <!--</el-date-picker>-->
+                                    <!-- - -->
+                                    <!--<el-time-picker-->
+                                            <!--v-model="time"-->
+                                            <!--placeholder="选择时间"-->
+                                            <!--class="data"-->
+                                    <!--&gt;-->
+                                    <!--</el-time-picker>-->
+                                <!--</div>-->
                             </div>
                         </div>
                     </div>
@@ -65,25 +68,19 @@
 </template>
 
 <script>
+    import Api from '../../../api/Stores/Stores'
+    import Axios from '../../../api/pub/pub'
     export default {
         data() {
             return {
-                stores: '',
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-                type: [],
-                date: '',
-                time: '',
+                storefront_name: '', //门店名称
+                areaOptions: [], //区域
+                province_id:'', //省
+                city_id:'',//市
+                area_id:'', //区
+                // type: [],
+                // date: '',
+                // time: '',
             }
         },
         methods: {
@@ -94,9 +91,55 @@
             cancel() {
                 this.onPage()
             },
+            handleChange() { //获取省市区id传给后台获取门店数据
+                var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
+                this.province_id=pathvalue[0]
+                this.city_id=pathvalue[1]
+                this.area_id=pathvalue[2]
+            },
             confirm() {
+                Api.storesAdd(this.storefront_name,this.province_id, this.city_id,this.area_id).then((res)=>{
+                    if(res.code==="200001"){
+                        this.$message.success(res.msg);
+                        this.$emit('storesSee'); //调用父组件上的员工列表方法
+                    }else{
+                        this.$message.error(res.msg);
+                    }
+                });
                 this.onPage()
             },
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.areaOptions = JSON.parse(linkage)
+                })
+            },
+        },
+        mounted(){
+            this.getSelect()
         },
         computed: {
             addstores() {

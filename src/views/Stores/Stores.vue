@@ -2,7 +2,6 @@
     <div class="component" >
         <div class="report" v-show="storesStatus">
             <div class="add_box">
-                <!--    搜索区域        -->
                 <el-card>
                     <div class="add_content">
                         <div class="content_title">
@@ -17,6 +16,7 @@
                             </p>
                         </div>
                     </div>
+                    <!--    搜索区域        -->
                     <myShare/>
                 </el-card>
                 <!--    表格区域        -->
@@ -30,15 +30,15 @@
                         >
                             <el-table-column
                                     label='门店名称'
-                                    prop="stores">
+                                    prop="storefront_name">
                             </el-table-column>
-                            <el-table-column
-                                    label='负责区域'
-                                    prop="address">
-                            </el-table-column>
+                            <!--<el-table-column-->
+                                    <!--label='负责区域'-->
+                                    <!--prop="address">-->
+                            <!--</el-table-column>-->
                             <el-table-column
                                     label="时间"
-                                    prop="date">
+                                    prop="update_time">
                             </el-table-column>
                             <el-table-column
                                     align="right"
@@ -50,21 +50,12 @@
                                             size="mini"
                                             @click="handleEdit(scope.$index, scope.row)">修改
                                     </el-button>
-                                    <el-popconfirm
-                                            confirmButtonText='确定'
-                                            cancelButtonText='取消'
-                                            icon="el-icon-info"
-                                            iconColor="red"
-                                            title="确定要删除吗？"
-                                    >
-                                        <el-button
-                                                slot="reference"
+                                    <el-button
                                                 size="mini"
                                                 type="danger"
                                                 class="left_btn"
-                                                @click="handleDelete(scope.$index, scope.row)">删除
-                                        </el-button>
-                                    </el-popconfirm>
+                                                @click="handleDelete(scope.row.id)">删除
+                                     </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -74,17 +65,17 @@
                         <el-pagination
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentChange"
-                                :current-page="currentPage4"
-                                :page-sizes="[100, 200, 300, 400]"
-                                :page-size="100"
+                                :current-page="queryInfo.page"
+                                :page-sizes="[5, 10, 20, 30]"
+                                :page-size="queryInfo.offset"
                                 layout="total, sizes, prev, pager, next, jumper"
-                                :total="400">
+                                :total="tablePage">
                         </el-pagination>
                     </div>
                 </el-card>
             </div>
         </div>
-        <myAdd/>
+        <myAdd @storesSee="storesSee"/>
         <myModify/>
     </div>
 </template>
@@ -93,6 +84,7 @@
     import myModify from '../../views/Stores/Modify/Modify'
     import myShare from '../../components/Pub/address/address'
     import myAdd from '../../views/Stores/Add/Add'
+    import  Api from '../../api/Stores/Stores'
     export default {
         name: "Report",
         components: {
@@ -102,13 +94,13 @@
         },
         data(){
             return{
-                tableData: [{
-                    stores:'沈阳',
-                    address:'辽宁省/沈阳市/铁西区',
-                    date:'2019-5-30 12:20',
+                tableData: [], //门店列表数据
+                queryInfo: {
+                    query:'',
+                    page:1, //当前第几页
+                    offset:5, //每页显示多少条
                 },
-                ],
-                currentPage4: 4,
+                tablePage:0 ,//总条数
             }
         },
         methods: {
@@ -121,20 +113,49 @@
                 this.$store.commit('storesStatus', false);
                 this.$store.commit('updStores', true)
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+            handleDelete(id) { //删除
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.storesDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.storesSee()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            handleSizeChange(newSize) { //当前显示多少条操作
+                this.queryInfo.offset = newSize;
+                this.storesSee()
             },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
+            handleCurrentChange(newPage) { //当前页数操作
+                this.queryInfo.page = newPage;
+                this.storesSee()
             },
+            storesSee(){ //列表的查询
+                Api.storesSee(this.queryInfo.page,this.queryInfo.offset).then((res)=>{
+                    this.tableData=res.data.data;
+                    this.tablePage=res.data.count //总条数
+                })
+            }
         },
         computed: {
             storesStatus() {
                 return this.$store.state.stores.storesStatus
             },
+        },
+        mounted(){
+            this.storesSee()
         }
     }
 </script>
