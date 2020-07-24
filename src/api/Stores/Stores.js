@@ -17,5 +17,11 @@ export default{
     //门店删除
     storesDel(id){
         return Axios.post('/erp/storefront_del',{ id:id})
+    },
+    //门店详情
+    storesDetails(id){
+        return Axios.post('/erp/storefront_detail',{id:id})
     }
+
+    //修改
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="component" >
+    <div class="component">
         <div class="report" v-show="storesStatus">
             <div class="add_box">
                 <el-card>
@@ -33,8 +33,8 @@
                                     prop="storefront_name">
                             </el-table-column>
                             <!--<el-table-column-->
-                                    <!--label='负责区域'-->
-                                    <!--prop="address">-->
+                            <!--label='负责区域'-->
+                            <!--prop="address">-->
                             <!--</el-table-column>-->
                             <el-table-column
                                     label="时间"
@@ -48,14 +48,14 @@
                                     <el-button
                                             type="primary"
                                             size="mini"
-                                            @click="handleEdit(scope.$index, scope.row)">修改
+                                            @click="handleEdit(scope.row.id)">修改
                                     </el-button>
                                     <el-button
-                                                size="mini"
-                                                type="danger"
-                                                class="left_btn"
-                                                @click="handleDelete(scope.row.id)">删除
-                                     </el-button>
+                                            size="mini"
+                                            type="danger"
+                                            class="left_btn"
+                                            @click="handleDelete(scope.row.id)">删除
+                                    </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -84,7 +84,8 @@
     import myModify from '../../views/Stores/Modify/Modify'
     import myShare from '../../components/Pub/address/address'
     import myAdd from '../../views/Stores/Add/Add'
-    import  Api from '../../api/Stores/Stores'
+    import Api from '../../api/Stores/Stores'
+
     export default {
         name: "Report",
         components: {
@@ -92,15 +93,15 @@
             myModify,
             myAdd
         },
-        data(){
-            return{
+        data() {
+            return {
                 tableData: [], //门店列表数据
                 queryInfo: {
-                    query:'',
-                    page:1, //当前第几页
-                    offset:5, //每页显示多少条
+                    query: '',
+                    page: 1, //当前第几页
+                    offset: 5, //每页显示多少条
                 },
-                tablePage:0 ,//总条数
+                tablePage: 0,//总条数
             }
         },
         methods: {
@@ -108,8 +109,10 @@
                 this.$store.commit('storesStatus', false);
                 this.$store.commit('addstores', true)
             },
-            handleEdit(index, row) {
-                console.log(index, row);
+            handleEdit(id) {
+                Api.storesDetails(id).then((res) => {
+                    this.$store.commit('modifySee',res.data)
+                });
                 this.$store.commit('storesStatus', false);
                 this.$store.commit('updStores', true)
             },
@@ -142,10 +145,10 @@
                 this.queryInfo.page = newPage;
                 this.storesSee()
             },
-            storesSee(){ //列表的查询
-                Api.storesSee(this.queryInfo.page,this.queryInfo.offset).then((res)=>{
-                    this.tableData=res.data.data;
-                    this.tablePage=res.data.count //总条数
+            storesSee() { //列表的查询
+                Api.storesSee(this.queryInfo.page, this.queryInfo.offset).then((res) => {
+                    this.tableData = res.data.data;
+                    this.tablePage = res.data.count //总条数
                 })
             }
         },
@@ -154,17 +157,18 @@
                 return this.$store.state.stores.storesStatus
             },
         },
-        mounted(){
+        mounted() {
             this.storesSee()
         }
     }
 </script>
 
 <style scoped>
-    .component{
+    .component {
         width: 100%;
         height: 100%;
     }
+
     .report {
         width: 98.3%;
         height: 100%;
@@ -197,8 +201,7 @@
         font-weight: bold;
     }
 
-
-    .add_box >>> .el-card__body {
+    .add_box > > > .el-card__body {
         padding: 20px 0 !important;
     }
 
@@ -206,20 +209,21 @@
         display: block;
         padding: 10px 0;
     }
+
     .top {
         margin-top: 20px;
         padding: 20px;
     }
 
-    .tab >>> .el-table .cell, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell {
+    .tab>>>.el-table .cell, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
         text-align: center;
     }
-
     .page {
         width: 100%;
         text-align: center;
         margin-top: 30px;
     }
+
     .left_btn {
         margin-left: 10px;
     }

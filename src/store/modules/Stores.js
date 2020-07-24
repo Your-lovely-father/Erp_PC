@@ -4,6 +4,7 @@ export default {
         storesStatus: storage.get('storesStatus'),
         addstores: storage.get('addstores').length === 0 ? 0 : 1,
         updstores:storage.get('updstores').length === 0 ? 0 : 1,
+        modifySee:storage.get('modifySee') ||{}
     },
     mutations: {
         storesStatus: ((state, data) => {
@@ -29,5 +30,10 @@ export default {
             storage.set('updstores',state.updstores=data);
             storage.remove('updstores')
         }),
+
+        modifySee:((state,data)=>{
+            console.log(data)
+            storage.set('modifySee',state.modifySee=data)
+        })
     },
 }
