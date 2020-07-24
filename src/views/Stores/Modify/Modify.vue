@@ -31,7 +31,7 @@
                             </div>
                             <div class="int_box">
                             <label>区域</label>
-                            <el-cascader v-model="aaa"  :options="areaOptions" clearable class="report_int"></el-cascader>
+                            <el-cascader v-model="aaaaa"  :options="areaOptions" clearable class="report_int"></el-cascader>
                             </div>
                             <!--<div class="int_box">-->
                                 <!--<label>时间</label>-->
