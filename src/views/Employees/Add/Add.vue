@@ -140,11 +140,21 @@
                                 <div class="upload">
                                     <div class="int_box">
                                         <label>头像</label>
+                                        <!--       action 图片上传到的api地址
+                                                   on-preview  处理图片预览效果
+                                                   on-remove 处理移除图片的操作
+                                                   on-success	文件上传成功时的钩子
+                                                   on-error	文件上传失败时的钩子
+                                         -->
                                         <el-upload
-                                                action="/erp/user_add"
+                                                :action="uploadUrl"
                                                 list-type="picture-card"
                                                 :on-preview="headHandlePictureCardPreview"
-                                                :on-remove="headHandleRemove">
+                                                :on-remove="headHandleRemove"
+                                                :headers="headersObj"
+                                                :on-success="headHandleSuccess"
+                                                :on-error="headHandleError"
+                                        >
                                             <i class="el-icon-plus"></i>
                                         </el-upload>
                                         <el-dialog :visible.sync="headDialogVisible">
@@ -199,6 +209,10 @@
                     value: '20',
                     label: '女'
                 }],
+                uploadUrl:'https://erp-report-shenyang.oss-cn-beijing.aliyuncs.com/',//上传图片的url地址
+                headersObj:{ //为upload组件设置请求头
+                    Authorization:window.localStorage.getItem('token')
+                },
             }
         },
         methods: {
@@ -282,12 +296,18 @@
             genderValue(e) { //性别
                 this.gender = e
             },
-            headHandleRemove(file, fileList) {
+            headHandleRemove(file, fileList) { //处理移除图片的操作
                 console.log(file, fileList);
             },
-            headHandlePictureCardPreview(file) {
+            headHandlePictureCardPreview(file) { //处理图片预览效果
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
+            },
+            headHandleSuccess(response){ //文件上传成功时的钩子
+                console.log(response)
+            },
+            headHandleError(response){ //文件上传失败时的钩子
+                console.log(response)
             },
             postRole() { // 查询角色管理
                 Api.postRole().then((res) => {

@@ -42,7 +42,7 @@
 
                             >
                                 <template slot-scope="scope">
-                                    <img :src="scope.row.headDialogImageUrl" style="height: 50px"/>
+                                    <img :src="$Tool.formatImg(scope.row.user_image)" style="height: 50px"/>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -149,10 +149,14 @@
                     pagesize: 5 //当前显示几条
                 },
                 totalPage: 0,//总条数
+                table:[]
             }
         },
 
         methods: {
+            formatImg(url){
+
+            },
             reportAdd() {
                 this.$store.commit('employeesStatus', false);
                 this.$store.commit('addEmployees', true)
@@ -168,7 +172,7 @@
                 this.$store.commit('seeEmployees', true);
             },
             upd(val) {
-                this.$store.commit('selectUpd',val)
+                this.$store.commit('selectUpd',val);
                 this.$store.commit('employeesStatus', false);
                 this.$store.commit('updEmployees', true);
             },
@@ -195,10 +199,15 @@
             },
             getSelectList() {//员工列表查询
                 Api.getSlectList(this.queryInfo).then((res) => {
-                    console.log(res)
-                    this.tableData = res.data.user_data ; //员工列表数据
+                    let data =res.data.user_data;
+                    data.map(item => {
+                        return {
+                            ...item,
+                            user_image:this.$Tool.formatImg(item.user_image)
+                        };
+                    });
+                    this.tableData=data;
                     this.totalPage = res.data.count //分页总条数
-
                 });
             },
             handleSizeChange(newSize) { //当前显示多少条操作

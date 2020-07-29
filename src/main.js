@@ -6,6 +6,9 @@ import store from './store'
 import './assets/css/reset.css'
 //字体图标
 import './assets/font/iconfont.css'
+//图片格式化
+import Tool from './assets/js/tool'
+Vue.prototype.$Tool=Tool;
 //rem 换算
 // import '@/utils/flexable'
 //Element-ui
@@ -15,6 +18,7 @@ Vue.use(ElementUI);
 //全局弹框
 import {Message} from 'element-ui'
 Vue.prototype.$message=Message;
+
 
 //Vant
 // import Vant from 'vant'
