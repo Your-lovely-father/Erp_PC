@@ -4,7 +4,14 @@
             <div class="add_box">
                 <!--    搜索区域        -->
                 <el-card>
-                    <myShare/>
+                    <div class="add_content">
+                        <div class="content_title">
+                            <p>
+                                日志管理
+                            </p>
+                        </div>
+                    </div>
+                    <myShare @logSee="logSee"/>
                 </el-card>
                 <!--    表格区域        -->
                 <el-card class="top">
@@ -92,7 +99,6 @@
         data() {
             return {
                 tableData: [],
-                search: '',
                 queryInfo: { //分页
                     query: '',
                     pagenum: 1, //当前第几页
@@ -137,7 +143,7 @@
                 this.logSee()
             },
             logSee(){
-                Api.logSee(this.queryInfo.pagenum, this.queryInfo.pagesize).then((res)=>{
+                Api.logSee(this.queryInfo.pagenum, this.queryInfo.pagesize,this.$store.state.log.area_id,this.$store.state.log.storefront_id,this.$store.state.log.user_id,this.$store.state.log.start_time,this.$store.state.log.end_time).then((res)=>{
                     this.tableData=res.data.data;
                     this.totalPage=res.data.count
                 })
@@ -164,7 +170,16 @@
         height: 100%;
         margin: 15px;
     }
-
+    .add_content {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px #eee solid;
+    }
+    .content_title {
+        padding-left: 20px;
+        padding-bottom: 20px;
+    }
     .add_box {
         width: 100%;
     }

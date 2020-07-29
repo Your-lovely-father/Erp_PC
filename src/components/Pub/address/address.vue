@@ -113,13 +113,6 @@
                 this.$emit("storesSee")
             }
         },
-        // watch: {
-        //     area(val) {
-        //         if (val) {
-        //             // this.isShowArea = false
-        //         }
-        //     }
-        // },
         mounted() {
             this.getSelect()
         }

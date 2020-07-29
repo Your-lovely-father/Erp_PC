@@ -2,111 +2,260 @@
     <div>
         <div class="search">
             <div class="search_box">
-                <span>门店</span>
-                <el-select v-model="searchStores" placeholder="请选择" class="report_int"
-                >
-                    <el-option
-                            v-for="item in searchStoresOptions"
-                            :key="item.searchStores"
-                            :label="item.label"
-                            :value="item.searchStores"
-                    >
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="search_box">
-                <span>时间</span>
-                <el-date-picker
-                        v-model="searchDate"
-                        type="date"
-                        placeholder="选择日期"
-                        class="date"
-                        prefix-icon="el-icon-search"
-                >
-                </el-date-picker>
-                -
-                <el-time-picker
-                        v-model="searchTime"
-                        placeholder="选择时间"
-                        class="date"
-                        prefix-icon="el-icon-search"
-                >
-                </el-time-picker>
-            </div>
-            <div class="search_box">
-                <span>区域</span>
-                <el-cascader :options="searchAreaOptions" clearable class="search_int"></el-cascader>
-            </div>
-            <div class="search_box">
-                <span>维护人</span>
-                <el-input
-                        placeholder="请输入维护人"
-                        v-model="searchMaintenance"
-                        clearable
-                        prefix-icon="el-icon-search"
-                >
-                </el-input>
-            </div>
-            <div class="search_btn search_box">
-                <el-button type="primary" size="medium" class="btn">搜索</el-button>
+
+                <div class="box_form">
+                    <div class="form">
+                        <div class="int_box">
+                            <label>区域</label>
+                            <el-cascader :options="searchAreaOptions" clearable class="report_int"
+                                         @change="handleChange"
+                                         ref="cascaderAddr"
+                            ></el-cascader>
+                        </div>
+                        <div class="int_box">
+                            <label>门店</label>
+                            <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                       @change="storefrontValue"
+                                       clearable
+                            >
+                                <el-option
+                                        v-for="item in searchStoresOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="int_box">
+                            <label>维护人</label>
+                            <el-select v-model="user_id" placeholder="请选择" class="report_int"
+                                       clearable
+                                       @change="userId"
+                            >
+                                <el-option
+                                        v-for="item in user_idOoptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="start">
+                            <label class="">起止时间</label>
+                            <el-date-picker
+                                    v-model="start_data_start"
+                                    type="date"
+                                    placeholder="选择日期"
+                                    class="reportdata"
+                                    prefix-icon="el-icon-search"
+                                    @change="getData"
+                                    value-format="yyyy-MM-dd"
+                                    clearable
+                            >
+                            </el-date-picker>
+                            <span class="cross">
+                                    -
+                                </span>
+                            <el-time-picker
+                                    v-model="start_time_start"
+                                    placeholder="选择时间"
+                                    class="report_int"
+                                    prefix-icon="el-icon-search"
+                                    @change="getTime"
+                                    value-format="HH:mm:ss"
+                                    clearable
+                            >
+                            </el-time-picker>
+                        </div>
+
+                        <div class="finish">
+                            <label class="label">结束时间</label>
+                            <el-date-picker
+                                    v-model="end_data_finish"
+                                    type="date"
+                                    placeholder="选择日期"
+                                    prefix-icon="el-icon-search"
+                                    @change="finishDate"
+                                    class="report_int reportdata"
+                                    value-format="yyyy-MM-dd"
+                                    clearable
+                            >
+                            </el-date-picker>
+                            <span class="cross">
+                                    -
+                                </span>
+                            <el-time-picker
+                                    v-model="end_time_finish"
+                                    placeholder="选择时间"
+                                    prefix-icon="el-icon-search"
+                                    @change="finishTime"
+                                    class="report_int"
+                                    value-format="HH:mm:ss"
+                                    clearable
+                            >
+                            </el-time-picker>
+                        </div>
+                        <div class="int_box btn_search">
+                            <el-button type="primary" class="btn" @click="searchBtn">搜索</el-button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Axios from '../../../api/pub/pub';
+    import Api from '../../../api/Report/Report';
     export default {
         name: "share",
-        data(){
-            return{
-                type: [],
-                searchDate: '',
-                searchTime: '',
-                searchMaintenance:'',
-                searchStoresOptions: [{
-                    searchStores: '选项1',
-                    label: 'A门店'
-                }, {
-                    searchStores: '选项2',
-                    label: 'B门店'
-                }],
-                searchStores: '',
-                searchAreaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
+        data() {
+            return {
+                searchAreaOptions:[] ,//区域列表
+                searchStoresOptions:[],//门店列表
+                storefront_id:'',//门店id
+                user_idOoptions:'',//员工列表
+                user_id:'',//维护人id
+                province_id:'',//省
+                city_id:'',//市
+                area_id:'',//区
+                start_data_start:'',
+                start_time_start:'',
+                start_time:'',//起始时间
+                end_data_finish:'',
+                end_time_finish:'',
+                end_time:'',//结束时间
             }
+        },
+        methods:{
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.searchAreaOptions = JSON.parse(linkage)
+                })
+            },
+            handleChange() { //获取省市区id传给后台获取门店数据
+                var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
+                this.province_id = pathvalue[0];
+                this.city_id = pathvalue[1];
+                this.area_id = pathvalue[2];
+                Axios.postStores(this.area_id).then(res => {
+                    let cityData = JSON.stringify(res.data.data);
+                    this.searchStoresOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                });
+                // this.buildingList()
+
+            },
+            storefrontValue(e){ //获取门店id
+                this.storefront_id=e;
+                this.getSlectList();
+            },
+            getSlectList(){ //获取员工列表拿到维护人id
+                let page =1;
+                let pagesum =999;
+                let province_id =this.province_id;
+                let city_id = this.city_id;
+                let area_id = this.area_id;
+                let storefront_id = this.storefront_id+'';
+                Api.getSlectList(page,pagesum,province_id,city_id,area_id,storefront_id).then((res)=>{
+                    let cityData = JSON.stringify(res.data.user_data);
+                    this.user_idOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
+                })
+            },
+            getData(e){ //起止日期处理 yyy-mm-dd
+                this.start_data_start=e;
+            },
+            getTime(e){ //起止时间处理
+                this.start_time_start=e;
+                this.start_time=this.start_data_start + ' ' +this.start_time_start
+            },
+            finishDate(e){ //结束日期处理
+                this.end_data_finish=e;
+            },
+            finishTime(e){ //结束时间处理
+                this.end_time_finish=e;
+                this.end_time=this.end_data_finish + ' ' +this.end_time_finish
+            },
+            userId (e) {//获取维护人id
+                this.user_Id=e;
+            },
+            searchBtn(){//搜索
+                this.$store.commit('area_id',this.area_id);
+                this.$store.commit('storefront_id',this.storefront_id);
+                this.$store.commit('user_id',this.user_id);
+                this.$store.commit('start_time',this.start_time);
+                this.$store.commit('end_time',this.end_time);
+                this.$emit('logSee')
+            },
+        },
+        mounted(){
+            this.getSelect()
         }
     }
 </script>
 
 <style scoped>
-    .search{
+    .search {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
         padding: 0 20px;
     }
-    .search_box>span{
-        padding-right: 20px;
+
+    label {
+        display: block;
+        padding: 10px 0;
     }
-    .search_box{
+
+    .form {
+        width: 100%;
+        display: flex;
+    }
+
+    .report_int {
+        width: 200px;
+        margin-right: 20px;
+    }
+    .btn_search{
+       margin-top: 39px;
+    }
+    .search_box {
         margin-right: 20px;
         padding: 10px 0;
     }
-    .el-input{
-        width: 269px;
+    .reportdata{
+        width: 200px;
+        margin-right: 0;
     }
     .btn {
         width: 100px;
         background: linear-gradient(#28a9ea, #1981e4);
     }
+
 </style>
