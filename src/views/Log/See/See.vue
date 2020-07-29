@@ -19,53 +19,81 @@
                     </div>
                     <div class="content_box">
                         <div class="See_int">
-                            <div class="int">
-                                <label>操作人</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="logSeeObject.user_name"
-                                >
-                                </el-input>
-                            </div>
-                            <div class="int">
-                                <label>操作时间</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="logSeeObject.create_time"
-                                >
-                                </el-input>
-                            </div>
-                            <div class="int">
-                                <label>操作内容</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="logSeeObject.title"
-                                >
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="int_box">
-                            <div class="int">
-                                <label>区域管理</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model=" logSeeObject.province_name"
-                                >
-                                </el-input>
-                            </div>
-                            <div class="int left">
-                                <label>门店管理</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="logSeeObject.storefront_name"
-                                >
-                                </el-input>
-                            </div>
+                           <div class="int_box">
+                               <div class="int">
+                                   <label>操作人</label>
+                                   <el-input
+                                           :disabled="true"
+                                           class="report_int"
+                                           v-model="a"
+                                   >
+                                   </el-input>
+                               </div>
+                               <div class="int">
+                                   <label>区域管理</label>
+                                   <el-cascader :options="searchAreaOptions" clearable class="report_int"
+                                                @change="handleChange"
+                                                ref="cascaderAddr"
+                                                :disabled="true"
+                                   ></el-cascader>
+                               </div>
+                               <div class="int">
+                                   <label>门店管理</label>
+                                   <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                              @change="storefrontValue"
+                                              clearable
+                                              :disabled="true"
+                                   >
+                                       <el-option
+                                               v-for="item in searchStoresOptions"
+                                               :key="item.value"
+                                               :label="item.label"
+                                               :value="item.value"
+                                       >
+                                       </el-option>
+                                   </el-select>
+                               </div>
+                           </div>
+                           <div class="dataTime">
+                               <div class="int">
+                                   <label>操作内容</label>
+                                   <el-input
+                                           :disabled="true"
+                                           class="report_int"
+                                           v-model="a"
+                                   >
+                                   </el-input>
+                               </div>
+                               <div class="int">
+                                   <label>操作时间</label>
+                                   <el-date-picker
+                                           v-model="end_data_finish"
+                                           type="date"
+                                           placeholder="选择日期"
+                                           prefix-icon="el-icon-search"
+                                           @change="finishDate"
+                                           class="report_int reportdata"
+                                           value-format="yyyy-MM-dd"
+                                           clearable
+                                           :disabled="true"
+                                   >
+                                   </el-date-picker>
+                                   <span class="cross">
+                                     -
+                                </span>
+                                   <el-time-picker
+                                           v-model="end_time_finish"
+                                           placeholder="选择时间"
+                                           prefix-icon="el-icon-search"
+                                           @change="finishTime"
+                                           class="report_int"
+                                           value-format="HH:mm:ss"
+                                           clearable
+                                           :disabled="true"
+                                   >
+                                   </el-time-picker>
+                               </div>
+                           </div>
                         </div>
                     </div>
                     <div class="footer">
@@ -99,9 +127,6 @@
             seeLog() {
                 return this.$store.state.log.seeLog
             },
-            logSeeObject(){
-                return this.$store.state.log.logSeeObject
-            }
         },
     }
 </script>
@@ -186,30 +211,39 @@
         justify-content: center;
         padding: 20px 0;
     }
-    label{
+
+    label {
         display: block;
         padding: 20px 0;
     }
-    .See_int{
+
+    .See_int {
         width: 100%;
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
     }
-    .report_int{
+    .int {
+        margin-right: 15px;
+    }
+    .report_int {
         width: 450px;
     }
-    .com{
+
+    .com {
         width: 100%;
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
     }
-    .int_box{
-        margin-left: 50px;
+
+    .int_box {
         display: flex;
+        justify-content: center;
     }
-    .left{
+
+    .left {
         margin-left: 106px;
+    }
+    .dataTime {
+        display: flex;
+        justify-content: center;
     }
 </style>

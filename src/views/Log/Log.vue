@@ -55,7 +55,7 @@
                                     <el-button
                                             type="primary"
                                             size="mini"
-                                            @click="handleEdit(scope.row)">查看
+                                            @click="handleEdit(scope.row.id)">查看
                                     </el-button>
                                         <el-button
                                                 slot="reference"
@@ -108,10 +108,12 @@
             }
         },
         methods: {
-            handleEdit(row) {
+            handleEdit(id) {
                 this.$store.commit('logStatus', false);
                 this.$store.commit('seeLog', true);
-                this.$store.commit('logSeeObject',row)
+                Api.logDetail(id).then((res)=>{
+                    this.$store.commit('detailObject', res.data);
+                })
             },
             handleDelete(id){ //删除操作
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {

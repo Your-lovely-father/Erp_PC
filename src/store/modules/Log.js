@@ -3,12 +3,11 @@ export default {
     state: {
         logStatus: storage.get('logStatus'),
         seeLog: storage.get('seeLog').length === 0 ? 0 : 1,
-        logSeeObject:storage.get('logSeeObject') ||{},
         area_id:'',
         storefront_id:'',
         user_id:'',
         start_time:'',
-        end_time:''
+        end_time:'',
     },
     mutations: {
         logStatus: ((state, data) => {
@@ -24,10 +23,6 @@ export default {
             storage.set('seeLog', state.seeLog = data);
             storage.remove('seeLog')
         }),
-        //日志查看数据
-        logSeeObject:((state,data)=>{
-            storage.set('logSeeObject', state.logSeeObject = data);
-        }),
         area_id:((state,data)=>{
             state.area_id=data
         }),
@@ -42,6 +37,7 @@ export default {
         }),
         end_time:((state,data)=>{
             state.end_time=data
-        })
+        }),
+
     },
 }
