@@ -118,6 +118,7 @@
                                 <div class="int_box">
                                     <label>维护人</label>
                                     <el-select v-model="user_id" placeholder="请选择" class="report_int"
+                                               @change="userId"
                                     >
                                         <el-option
                                                 v-for="item in user_idOoptions"
@@ -431,6 +432,9 @@
             },
             clientValue(e){ //获取客户类别id
                 this.client_type=e
+            },
+            userId(e){ //维护人id
+                this.user_id=e
             },
             getData(e){ //起止日期处理 yyy-mm-dd
                 this.start_data_start=e;

@@ -195,9 +195,7 @@
             },
             getSelectList() {//员工列表查询
                 Api.getSlectList(this.queryInfo).then((res) => {
-                    if (res.code !== 200) {
-                        return this.$message.error('获取员工列表失败')
-                    }
+                    console.log(res)
                     this.tableData = res.data.user_data ; //员工列表数据
                     this.totalPage = res.data.count //分页总条数
 
