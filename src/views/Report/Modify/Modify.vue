@@ -193,28 +193,27 @@
                 this.onPage()
             },
             confirm() {
-                console.log(this.storefront_id)
-                // this.onPage()
-                // Api.clientUpd(
-                //     this.id,
-                //     this.client_name,
-                //     this.client_phone,
-                //     this.dataTiem,
-                //     this.user_id,
-                //     this.valueArea[0],
-                //     this.valueArea[1],
-                //     this.valueArea[2],
-                //     this.storefront_id,
-                //     this.remarks,
-                //     this.client_type,
-                // ).then((res) => {
-                //     if(res.code==="200003"){
-                //         this.$message.success('修改成功');
-                //         this.$emit('reportList')
-                //     }else{
-                //         this.$message.error('修改失败')
-                //     }
-                // });
+                this.onPage()
+                Api.clientUpd(
+                    this.id,
+                    this.client_name,
+                    this.client_phone,
+                    this.dataTiem,
+                    this.user_id,
+                    this.valueArea[0],
+                    this.valueArea[1],
+                    this.valueArea[2],
+                    this.storefront_id,
+                    this.remarks,
+                    this.client_type,
+                ).then((res) => {
+                    if(res.code==="200003"){
+                        this.$message.success('修改成功');
+                        this.$emit('reportList')
+                    }else{
+                        this.$message.error('修改失败')
+                    }
+                });
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {

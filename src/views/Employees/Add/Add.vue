@@ -146,20 +146,32 @@
                                                    on-success	文件上传成功时的钩子
                                                    on-error	文件上传失败时的钩子
                                          -->
+<!--                                        <el-upload-->
+<!--                                                :action="uploadUrl"-->
+<!--                                                list-type="picture-card"-->
+<!--                                                :on-preview="headHandlePictureCardPreview"-->
+<!--                                                :on-remove="headHandleRemove"-->
+<!--                                                :headers="headersObj"-->
+<!--                                                :on-success="headHandleSuccess"-->
+<!--                                                :on-error="headHandleError"-->
+<!--                                        >-->
+<!--                                            <i class="el-icon-plus"></i>-->
+<!--                                        </el-upload>-->
+<!--                                        <el-dialog :visible.sync="headDialogVisible">-->
+<!--                                            <img width="100%" :src="headDialogImageUrl" alt="">-->
+<!--                                        </el-dialog>-->
                                         <el-upload
-                                                :action="uploadUrl"
-                                                list-type="picture-card"
-                                                :on-preview="headHandlePictureCardPreview"
-                                                :on-remove="headHandleRemove"
-                                                :headers="headersObj"
-                                                :on-success="headHandleSuccess"
-                                                :on-error="headHandleError"
+                                                class="avatar-uploader"
+                                                action="https://jsonplaceholder.typicode.com/posts/"
+                                                :show-file-list="false"
+                                                :on-change="handleAvatarChange"
+                                                :before-upload="beforeAvatarUpload"
                                         >
-                                            <i class="el-icon-plus"></i>
+                                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                         </el-upload>
-                                        <el-dialog :visible.sync="headDialogVisible">
-                                            <img width="100%" :src="headDialogImageUrl" alt="">
-                                        </el-dialog>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -209,7 +221,8 @@
                     value: '20',
                     label: '女'
                 }],
-                uploadUrl:'https://erp-report-shenyang.oss-cn-beijing.aliyuncs.com/',//上传图片的url地址
+                imageUrl: '',
+                uploadUrl:'http://mockjs.docway.net/mock/1WTadR2NYmH/erp/upload_file',//上传图片的url地址
                 headersObj:{ //为upload组件设置请求头
                     Authorization:window.localStorage.getItem('token')
                 },
@@ -296,18 +309,38 @@
             genderValue(e) { //性别
                 this.gender = e
             },
-            headHandleRemove(file, fileList) { //处理移除图片的操作
-                console.log(file, fileList);
+            // headHandleRemove(file, fileList) { //处理移除图片的操作
+            //     console.log(file, fileList);
+            // },
+            // headHandlePictureCardPreview(file) { //处理图片预览效果
+            //     this.headDialogImageUrl = file.url;
+            //     this.headDialogVisible = true;
+            // },
+            // headHandleSuccess(response){ //文件上传成功时的钩子
+            //     if(response.code==='200005'){
+            //         this.$message.success('上传头像成功')
+            //     }
+            //     console.log(response)
+            // },
+            // headHandleError(response){ //文件上传失败时的钩子
+            //     console.log(response)
+            // },
+            handleAvatarChange(res, file) {
+                // this.imageUrl = URL.createObjectURL(file.raw);
+                console.log(res.name.split('.')[1])
+                console.log(file)
             },
-            headHandlePictureCardPreview(file) { //处理图片预览效果
-                this.headDialogImageUrl = file.url;
-                this.headDialogVisible = true;
-            },
-            headHandleSuccess(response){ //文件上传成功时的钩子
-                console.log(response)
-            },
-            headHandleError(response){ //文件上传失败时的钩子
-                console.log(response)
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
             },
             postRole() { // 查询角色管理
                 Api.postRole().then((res) => {
@@ -470,5 +503,32 @@
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
+    }
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .int_box>>>.el-upload{
+        border: 1px solid #8c939d;
+
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
     }
 </style>
