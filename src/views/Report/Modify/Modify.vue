@@ -194,6 +194,12 @@
             },
             confirm() {
                 this.onPage()
+                if(this.create_data !== null && this.create_time !==null){
+                    let create_data=this.create_time.substr(0,10);
+                    this.create_time = create_data+ " " +this.create_time
+                }else {
+                    this.create_time=''
+                }
                 Api.clientUpd(
                     this.id,
                     this.client_name,
@@ -327,16 +333,28 @@
             },
             finishDate(e) { //日期处理
                 this.create_data = e;
+                if(!e){
+                    this.create_data=''
+                }
             },
             finishTime(e) { //时间处理
                 this.create_time = e;
-                this.dataTiem = this.create_data + ' ' + this.create_time
+                this.dataTiem = this.create_data + ' ' + this.create_time;
+                if(!this.create_data && !this.create_time){
+                    this.dataTiem=''
+                }
+                if(!e){
+                    this.create_time=''
+                }
             },
             setData(data) { //设置vuex数据负值给data
                 this.client_name = data.client_name;
                 this.client_phone = data.client_phone;
                 this.create_data = data.create_time;
                 this.create_time = data.create_time;
+                if(typeof  data.create_time == 'string'){
+                    this.create_time=data.create_time.substr(10)
+                }
                 this.dataTiem=data.create_time;
                 this.remarks = data.remarks;
                 this.storefront_id = data.storefront_id;

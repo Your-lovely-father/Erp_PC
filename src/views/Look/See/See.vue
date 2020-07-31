@@ -24,25 +24,27 @@
                                 <el-input
                                         :disabled="true"
                                         class="report_int"
+                                        v-model="guide_look_content"
                                 >
                                 </el-input>
                             </div>
                             <div class="int_box_right">
                                 <label>时间</label>
                                 <el-date-picker
-                                        v-model="date"
-                                        type="date"
+                                        v-model="look_date"
                                         placeholder="选择日期"
                                         class="data"
                                         :disabled="true"
+                                        value-format="yyyy-MM-dd"
                                 >
                                 </el-date-picker>
                                 -
                                 <el-time-picker
-                                        v-model="time"
+                                        v-model="look_time"
                                         placeholder="选择时间"
                                         class="data"
                                         :disabled="true"
+                                        value-format="HH:mm:ss"
                                 >
                                 </el-time-picker>
                             </div>
@@ -62,9 +64,9 @@
     export default {
         data() {
             return {
-                type: [],
-                date: '',
-                time: '',
+              guide_look_content:'',
+              look_date:'',
+              look_time:'',
             };
         },
         methods: {
@@ -78,12 +80,27 @@
             confirm() {
                 this.onPage()
             },
+            parentMsg(){
+                this.detailList
+            },
+            setData(data){
+                this.guide_look_content=data.guide_look_content;
+                this.look_date=data.look_time;
+                this.look_time=data.look_time;
+            }
         },
         computed: {
             seeLook() {
                 return this.$store.state.look.seeLook
             },
+            detailList(){
+                this.setData(this.$store.state.look.detailList);
+                return this.$store.state.look.detailList
+            }
         },
+        mounted() {
+            this.detailList
+        }
     }
 </script>
 

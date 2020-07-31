@@ -1,65 +1,3 @@
-<!--<template>-->
-<!--    <div class="See">-->
-<!--        <el-dialog-->
-<!--                width="60%"-->
-<!--                :visible="isShowsUpd"-->
-<!--        >-->
-
-<!--            <span slot="footer" class="dialog-footer">-->
-<!--                <el-button @click="cancel">取 消</el-button>-->
-<!--                <el-button type="primary" @click="confirm">确 定</el-button>-->
-<!--           </span>-->
-<!--        </el-dialog>-->
-<!--    </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--    export default {-->
-<!--        name: "See",-->
-<!--        props: {-->
-<!--            isShowsUpd: {-->
-<!--                type: Boolean,-->
-<!--                default: false-->
-<!--            }-->
-<!--        },-->
-
-<!--        methods: {-->
-<!--            cancel() {-->
-<!--                this.$emit("update:isShowsUpd", false);-->
-<!--            },-->
-<!--            confirm() {-->
-<!--                this.$emit("update:isShowsUpd", false);-->
-<!--            }-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-
-<!--<style scoped>-->
-<!--    .See {-->
-<!--        width: 100%;-->
-
-<!--    }-->
-
-<!--    .See >>> .el-dialog__header {-->
-<!--        display: none !important;-->
-<!--    }-->
-
-<!--    .See_int {-->
-<!--        width: 100%;-->
-<!--        display: flex;-->
-<!--        flex-wrap: wrap;-->
-<!--        justify-content: space-between;-->
-<!--    }-->
-<!--    .report_int{-->
-<!--        width: 500px;-->
-<!--    }-->
-<!--    label {-->
-<!--        display: block;-->
-<!--        padding: 15px 0;-->
-<!--    }-->
-<!--</style>-->
-
-
 <template>
     <div class="reportAdd" v-show="updLook">
         <div class="add_box">
@@ -86,23 +24,30 @@
                                 <el-input
                                         placeholder="请输入带看记录"
                                         clearable
-                                        class="report_int">
+                                        class="report_int"
+                                        v-model="guide_look_content"
+                                >
                                 </el-input>
                             </div>
                             <div class="int_box">
                                 <label>时间</label>
                                 <el-date-picker
-                                        v-model="date"
-                                        type="date"
+                                        v-model="lookDate"
                                         placeholder="选择日期"
                                         class="data"
+                                        value-format="yyyy-MM-dd"
+                                        @change="date"
+                                        ref="getHours"
                                 >
                                 </el-date-picker>
                                 -
                                 <el-time-picker
-                                        v-model="time"
+                                        v-model="lookTime"
                                         placeholder="选择时间"
                                         class="data"
+                                        value-format="HH:mm:ss"
+                                        @change="time"
+                                        ref="getHours"
                                 >
                                 </el-time-picker>
                             </div>
@@ -120,24 +65,15 @@
 </template>
 
 <script>
+    import  Api from '../../../api/Look/Look'
     export default {
         data() {
             return {
-                type: [],
-                date: '',
-                time: '',
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
+                guide_look_content:'',
+                lookDate:'',
+                lookTime:'',
+                id:'',
+                dateTime:''
             }
         },
         methods: {
@@ -149,13 +85,53 @@
                 this.onPage()
             },
             confirm() {
-                this.onPage()
+                this.onPage();
+                if(this.lookDate !== null && this.lookTime !== null){
+                    let lookDate = this.lookDate.substr(0,10);
+                    this.dateTime= lookDate + ' '+ this.lookTime
+                }else{
+                    this.dateTime= ''
+                }
+                Api.lookUpd(this.id,this.dateTime,this.guide_look_content ).then((res)=>{
+                    if(res.code === "200003"){
+                        this.$message.success("修改成功");
+                        this.$emit('lookList')
+                    }
+
+                });
             },
+            parentMsg(){
+                this.detailList
+            },
+            date(e){
+               this.lookDate=e
+
+            },
+            time(e){
+                this.lookTime=e;
+            },
+            setData(data){
+                this.guide_look_content=data.guide_look_content;
+                this.lookDate=data.look_time;
+                this.lookTime=data.look_time;
+                this.id=data.id;
+                if(typeof data.look_time == 'string'){
+                    this.lookTime=data.look_time.substr(10);
+                }
+            }
+
         },
         computed: {
             updLook() {
                 return this.$store.state.look.updLook
             },
+            detailList(){
+                this.setData(this.$store.state.look.detailList);
+                return this.$store.state.look.detailList
+            }
+        },
+        mounted() {
+            this.detailList
         },
     }
 </script>

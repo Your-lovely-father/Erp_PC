@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="share">
-                        <myShare/>
+                        <myShare @lookList="lookList"/>
                     </div>
                 </el-card>
                 <!--    表格区域        -->
@@ -43,9 +43,9 @@
                                 <template slot-scope="scope">
                                     <el-button
                                             size="mini"
-                                            @click="handleEdit(scope.$index, scope.row)">查看
+                                            @click="handleEdit(scope.row.id)">查看
                                     </el-button>
-                                    <el-button type="primary" size="mini" @click="upd">修改</el-button>
+                                    <el-button type="primary" size="mini" @click="upd(scope.row.id)">修改</el-button>
                                     <el-button
                                             slot="reference"
                                             size="mini"
@@ -72,16 +72,16 @@
                 </el-card>
             </div>
         </div>
-        <myAdd/>
-        <mySee/>
-        <myModify/>
+        <myAdd @lookList="lookList"/>
+        <mySee ref="mySee"/>
+        <myModify ref="myModify" @lookList="lookList"/>
     </div>
 </template>
 
 <script>
     import mySee from '../../views/Look/See/See'
     import myModify from '../../views/Look/Modify/Modify'
-    import myShare from '../../components/Pub/share/share'
+    import myShare from '../../components/Pub/share/lookShare'
     import myAdd from '../../views/Look/Add/Add'
     import Api from '../../api/Look/Look'
 
@@ -108,13 +108,21 @@
                 this.$store.commit('lookStatus', false);
                 this.$store.commit('addLook', true)
             },
-            handleEdit() {
+            handleEdit(id) {
                 this.$store.commit('lookStatus', false);
-                this.$store.commit('seeLook', true)
+                this.$store.commit('seeLook', true);
+                Api.detailList(id).then((res)=>{
+                    this.$store.commit('detailList',res.data);
+                    this.$refs.mySee.parentMsg() //给子组件传方法，点击时触发
+                })
             },
-            upd() {
+            upd(id) {
                 this.$store.commit('lookStatus', false);
-                this.$store.commit('updLook', true)
+                this.$store.commit('updLook', true);
+                Api.detailList(id).then((res)=>{
+                    this.$store.commit('detailList',res.data);
+                    this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
+                })
             },
             handleDelete(id) { //删除操作
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -146,7 +154,8 @@
                 this.lookList()
             },
             lookList() { //列表数据
-                Api.lookList(this.queryInfo.pagenum, this.queryInfo.pagesize).then((res) => {
+                Api.lookList(this.queryInfo.pagenum, this.queryInfo.pagesize,this.$store.state.look.storefront_id,this.$store.state.look.area_id,this.$store.state.look.user_id,this.$store.state.look.client_id,this.$store.state.look.start_time,this.$store.state.look.end_time,
+                ).then((res) => {
                     this.tableData = res.data.data;
                     this.totalPage = res.data.count
                 })

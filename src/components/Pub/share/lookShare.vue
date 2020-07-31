@@ -43,13 +43,29 @@
                                 </el-option>
                             </el-select>
                         </div>
+                        <div class="int_box">
+                            <label>客户名称</label>
+                            <el-select v-model="client_id" placeholder="请选择" class="report_int"
+                                       clearable
+                                       @change="clientId"
+                                       @clear="clearClien"
+                            >
+                                <el-option
+                                        v-for="item in client_idOoptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
                         <div class="start">
                             <label class="">起止时间</label>
                             <el-date-picker
                                     v-model="start_data_start"
                                     type="date"
                                     placeholder="选择日期"
-                                    class="reportdata"
+                                    class="report_data"
                                     prefix-icon="el-icon-search"
                                     @change="getData"
                                     value-format="yyyy-MM-dd"
@@ -81,7 +97,7 @@
                                     placeholder="选择日期"
                                     prefix-icon="el-icon-search"
                                     @change="finishDate"
-                                    class="report_int reportdata"
+                                    class="report_data"
                                     value-format="yyyy-MM-dd"
                                     clearable
                                     @clear="clearFinishDate"
@@ -115,6 +131,7 @@
 <script>
     import Axios from '../../../api/pub/pub';
     import Api from '../../../api/Report/Report';
+    import LookApi from '../../../api/Look/Look'
     export default {
         name: "share",
         data() {
@@ -133,7 +150,8 @@
                 end_data_finish:'',
                 end_time_finish:'',
                 end_time:'',//结束时间
-                path:''
+                client_idOoptions:[],
+                client_id:''
             }
         },
         methods:{
@@ -200,6 +218,14 @@
                     this.user_idOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
                 })
             },
+            clientList(){ //获取所有客户名称
+                let page =1;
+                let pagesum =999;
+                LookApi.clientList(page,pagesum).then((res)=>{
+                    let cityData = JSON.stringify(res.data.data);
+                    this.client_idOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/client_name/g, "label"));
+                })
+            },
             getData(e){ //起止日期处理 yyy-mm-dd
                 this.start_data_start=e;
                 if(!e){
@@ -210,11 +236,12 @@
                 this.start_time_start=e;
                 this.start_time=this.start_data_start + ' ' +this.start_time_start;
                 if(!this.start_data_start && !this.start_time_start){
-                    this.start_time=''
+                    this.start_time = ''
                 }
                 if(!e){
                     this.start_time_start=''
                 }
+
             },
             finishDate(e){ //结束日期处理
                 this.end_data_finish=e;
@@ -226,23 +253,24 @@
                 this.end_time_finish=e;
                 this.end_time=this.end_data_finish + ' ' +this.end_time_finish;
                 if(!this.end_data_finish && !this.end_time_finish){
-                    this.end_time=''
-                }
-                if(!e){
-                    this.end_time_finish=''
+                    this.end_time = ''
                 }
             },
             userId (e) {//获取维护人id
                 this.user_Id=e;
             },
+            clientId(e){
+                this.client_id=e
+            },
             searchBtn(){//搜索
                 this.$store.commit('area_id',this.area_id);
                 this.$store.commit('storefront_id',this.storefront_id);
                 this.$store.commit('user_id',this.user_id);
+                this.$store.commit('client_id',this.client_id);
                 this.$store.commit('start_time',this.start_time);
                 this.$store.commit('end_time',this.end_time);
-                if(this.$route.path==='/Log'){
-                    this.$emit('logSee')
+                if(this.$route.path==='/look'){
+                    this.$emit('lookList')
                 }
             },
             //一下是搜索清空功能
@@ -253,10 +281,10 @@
                 this.user_id=''
             },
             clearData(){
-                this.start_data_start=''
+                this.start_data_start='';
             },
             clearTime(){
-                this.start_time_start=''
+                this.start_time_start= '';
             },
             clearFinishDate(){
                 this.end_data_finish=''
@@ -264,9 +292,13 @@
             clearFinishTime(){
                 this.end_time_finish=''
             },
+            clearClien(){
+                this.client_id=''
+            }
         },
         mounted(){
-            this.getSelect()
+            this.getSelect();
+            this.clientList()
         }
     }
 </script>
@@ -287,22 +319,25 @@
     .form {
         width: 100%;
         display: flex;
+        flex-wrap: wrap;
     }
 
     .report_int {
-        width: 200px;
+        width: 350px;
         margin-right: 20px;
     }
+    .report_data{
+        width: 350px;
+    }
     .btn_search{
-       margin-top: 39px;
+        margin-top: 39px;
     }
     .search_box {
         margin-right: 20px;
         padding: 10px 0;
     }
-    .reportdata{
-        width: 200px;
-        margin-right: 0;
+    .cross{
+        padding: 0 3px;
     }
     .btn {
         width: 100px;
