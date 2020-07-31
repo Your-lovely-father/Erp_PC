@@ -19,7 +19,6 @@ Vue.use(ElementUI);
 import {Message} from 'element-ui'
 Vue.prototype.$message=Message;
 
-
 //Vant
 // import Vant from 'vant'
 // import 'vant/lib/index.css'

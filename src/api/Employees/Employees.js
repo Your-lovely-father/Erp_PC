@@ -7,6 +7,7 @@ export default {
             user_age,
             user_sex,
             user_id_card,
+            user_image,
             user_password,
             user_role,
             province_id,
@@ -21,6 +22,7 @@ export default {
             user_age: user_age,
             user_sex: user_sex,
             user_id_card: user_id_card,
+            user_image:user_image,
             user_password: user_password,
             user_role: user_role,
             province_id: province_id,
@@ -66,8 +68,4 @@ export default {
         return Axios.post('/erp/user_edit',{id:id,user_name:user_name,user_sex:user_sex,user_phone:user_phone,user_age:user_age,user_id_card:user_id_card,
             user_status:user_status,user_role:user_role,area_id:area_id,storefront_id:storefront_id, mobile_terminal_status: mobile_terminal_status})
     },
-    // 上传头像
-    portraitFile(files,type){
-        return Axios.post('/erp/upload_file',{files:files,type:type})
-    }
 }

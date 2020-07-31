@@ -37,6 +37,9 @@ function endLoading() {
 // 请求拦截中，我们可以对请求头作处理，比如所有的请求都加一个token等
 axios.interceptors.request.use(config => {
     let token =store.state.access_token;
+    // if (config.url == '"/erp/upload_file"') {
+    //     config.headers['Content-Type'] = 'multipart/form-data'
+    // }
     if (token) {
         config.headers['Access-Token'] = token// 让每个请求携带自定义 token 请根据实际情况自行修改
     }

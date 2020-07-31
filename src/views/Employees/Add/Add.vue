@@ -145,33 +145,26 @@
                                                    on-remove 处理移除图片的操作
                                                    on-success	文件上传成功时的钩子
                                                    on-error	文件上传失败时的钩子
+                                                   limit 最多可上传1张
                                          -->
-<!--                                        <el-upload-->
-<!--                                                :action="uploadUrl"-->
-<!--                                                list-type="picture-card"-->
-<!--                                                :on-preview="headHandlePictureCardPreview"-->
-<!--                                                :on-remove="headHandleRemove"-->
-<!--                                                :headers="headersObj"-->
-<!--                                                :on-success="headHandleSuccess"-->
-<!--                                                :on-error="headHandleError"-->
-<!--                                        >-->
-<!--                                            <i class="el-icon-plus"></i>-->
-<!--                                        </el-upload>-->
-<!--                                        <el-dialog :visible.sync="headDialogVisible">-->
-<!--                                            <img width="100%" :src="headDialogImageUrl" alt="">-->
-<!--                                        </el-dialog>-->
-                                        <el-upload
-                                                class="avatar-uploader"
-                                                action="https://jsonplaceholder.typicode.com/posts/"
-                                                :show-file-list="false"
-                                                :on-change="handleAvatarChange"
-                                                :before-upload="beforeAvatarUpload"
+                                     <el-upload
+                                             class="avatar-uploader"
+                                             ref="upload_img"
+                                             action=""
+                                             accept="image/jpeg,image/jpg,image/png"
+                                             :name="upload_name"
+                                             list-type="picture-card"
+                                             :on-exceed="fileBeyond"
+                                             :on-remove="handleRemove"
+                                             :limit = "1"
+                                             :http-request="uploadSectionFile"
+                                             :on-preview="headHandlePictureCardPreview"
                                         >
-                                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                            <i class="el-icon-plus"></i>
                                         </el-upload>
-
-
+                                        <el-dialog  :modal='false' :visible.sync="headDialogVisible">
+                                            <img width="100%" :src="headDialogImageUrl" alt="">
+                                        </el-dialog>
                                     </div>
                                 </div>
                             </div>
@@ -191,7 +184,7 @@
 <script>
     import Axios from '../../../api/pub/pub'
     import Api from '../../../api/Employees/Employees'
-
+    import axios from 'axios'
     export default {
         data() {
             return {
@@ -221,11 +214,7 @@
                     value: '20',
                     label: '女'
                 }],
-                imageUrl: '',
-                uploadUrl:'http://mockjs.docway.net/mock/1WTadR2NYmH/erp/upload_file',//上传图片的url地址
-                headersObj:{ //为upload组件设置请求头
-                    Authorization:window.localStorage.getItem('token')
-                },
+                upload_name: 'files',//图片上传的后端接受图片文件的 key
             }
         },
         methods: {
@@ -242,10 +231,81 @@
             mobileStatus(e) { //手机
                 this.mobile_terminal_status = e
             },
-
+            uploadSectionFile(params){// 自定义上传方法
+                let   that = this;
+                let   file = params.file;  //获取上传的文件
+                let   fileType = file.type;   //获取文件类型
+                let   isImage = fileType.indexOf('image') != -1; // 判断是否是图片类型
+                let   file_url = that.$refs.upload_img.uploadFiles[0].url;
+                let  isLt2M = file.size / 1024 / 1024 < 2;
+                if (!isLt2M) {  // 判断大小
+                    that.$message.error('上传图片的大小不能超过 2MB!');
+                    that.$refs.upload_img.uploadFiles = [];  //不符合就清空已选择的图片
+                    return;
+                }
+                if(!isImage){  // 文件格式
+                    that.$message.error('请选择图片文件！');
+                    that.$refs.upload_img.uploadFiles = [];   //不符合就清空已选择的图片
+                    return;
+                }
+                if (isImage) {
+                    var img = new Image();
+                    img.src = file_url;
+                    img.onload = function () {
+                        //  一切验证通过后调用上传方法
+                        that.uploadFile(file);
+                    }
+                }
+            },
+            uploadFile(file){
+                var that = this;
+                var formData = new FormData();
+                formData.append('files', file);
+                formData.append('type','3');
+                let Authorization=window.localStorage.getItem('access_token');
+                let token =JSON.parse(Authorization);
+                const instance = axios.create({
+                    withCredentials:true
+                });
+                //上传头像
+                instance({
+                    method: 'post',
+                    url: 'http://localhost:8080/api/erp/upload_file',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'access-token':token
+                    },
+                    data:formData
+                }).then((res)=>{
+                    if(res.data.code ==="200005"){  //成功的话将数据插入data中
+                        that.user_image = res.data.data.url;
+                        that.$message.success('图片上传成功')
+                    }else{
+                        // 上传失败，清除已选择 内容 ，并提示失败原因
+                        that.$refs.upload_img.uploadFiles = [];
+                        that.$message.error('图片上传异常');
+                    }
+                })
+            },
+            //文件删除
+            handleRemove() {
+               this.user_image='';
+            },
+            headHandlePictureCardPreview(file) { //处理图片预览效果
+                this.headDialogImageUrl = file.url;
+                this.headDialogVisible = true;
+            },
+            //文件超限
+            fileBeyond(){
+                this.$message({
+                    type: 'info',
+                    message: '最多上传1张图片'
+                });
+            },
             confirm() {
                 Api.postAdd(
                     this.user_name, this.user_phone, this.user_age, this.gender, this.user_id_card,
+                    this.user_image,
                     this.user_password, this.user_role,
                     this.province_id,this.city_id, this.area_id,
                     this.storefront_id,
@@ -293,6 +353,8 @@
 
             handleChange() { //获取省市区id传给后台获取门店数据
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
+                this.province_id = pathvalue[0];
+                this.city_id = pathvalue[1];
                 this.area_id = pathvalue[2];
                 Axios.postStores(this.area_id).then(res => {
                     let cityData = JSON.stringify(res.data.data);
@@ -308,39 +370,6 @@
             },
             genderValue(e) { //性别
                 this.gender = e
-            },
-            // headHandleRemove(file, fileList) { //处理移除图片的操作
-            //     console.log(file, fileList);
-            // },
-            // headHandlePictureCardPreview(file) { //处理图片预览效果
-            //     this.headDialogImageUrl = file.url;
-            //     this.headDialogVisible = true;
-            // },
-            // headHandleSuccess(response){ //文件上传成功时的钩子
-            //     if(response.code==='200005'){
-            //         this.$message.success('上传头像成功')
-            //     }
-            //     console.log(response)
-            // },
-            // headHandleError(response){ //文件上传失败时的钩子
-            //     console.log(response)
-            // },
-            handleAvatarChange(res, file) {
-                // this.imageUrl = URL.createObjectURL(file.raw);
-                console.log(res.name.split('.')[1])
-                console.log(file)
-            },
-            beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
-
-                if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                return isJPG && isLt2M;
             },
             postRole() { // 查询角色管理
                 Api.postRole().then((res) => {
@@ -503,32 +532,5 @@
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
-    }
-    .avatar-uploader .el-upload {
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-    .avatar-uploader .el-upload:hover {
-        border-color: #409EFF;
-    }
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
-        text-align: center;
-    }
-    .int_box>>>.el-upload{
-        border: 1px solid #8c939d;
-
-    }
-    .avatar {
-        width: 178px;
-        height: 178px;
-        display: block;
     }
 </style>
