@@ -146,7 +146,7 @@
                 this.logSee()
             },
             logSee(){
-                Api.logSee(this.queryInfo.pagenum, this.queryInfo.pagesize,this.$store.state.log.area_id,this.$store.state.log.storefront_id,this.$store.state.log.user_id,this.$store.state.log.start_time,this.$store.state.log.end_time).then((res)=>{
+                Api.logSee(this.queryInfo.pagenum,this.queryInfo.pagesize,this.$store.state.log.area_id,this.$store.state.log.storefront_id,this.$store.state.log.user_id,this.$store.state.log.start_time,this.$store.state.log.end_time).then((res)=>{
                     this.tableData=res.data.data;
                     this.totalPage=res.data.count
                 })

@@ -24,23 +24,27 @@
                                 <el-input
                                         :disabled="true"
                                         class="report_int"
+                                        v-model="record_content"
                                 >
                                 </el-input>
                             </div>
                             <div class="int_box_right">
                                 <label>时间</label>
                                 <el-date-picker
-                                        v-model="date"
-                                        type="date"
+                                        v-model="followDate"
                                         placeholder="选择日期"
+                                        class="data"
                                         :disabled="true"
+                                        value-format="yyyy-MM-dd"
                                 >
                                 </el-date-picker>
                                 -
                                 <el-time-picker
-                                        v-model="time"
+                                        v-model="followTime"
                                         placeholder="选择时间"
+                                        class="data"
                                         :disabled="true"
+                                        value-format="HH:mm:ss"
                                 >
                                 </el-time-picker>
                             </div>
@@ -60,9 +64,9 @@
     export default {
         data() {
             return {
-                type: [],
-                date: '',
-                time: '',
+                record_content:'',
+                followDate:'',
+                followTime:'',
             };
         },
         methods: {
@@ -76,12 +80,27 @@
             confirm() {
                 this.onPage()
             },
+            parentMsg(){
+                this.detailList;
+            },
+            setData(data){
+                this.record_content=data.record_content;
+                this.followDate=data.follow_time;
+                this.followTime=data.follow_time;
+            }
         },
         computed: {
             seeTracking() {
                 return this.$store.state.tracking.seeTracking
             },
+            detailList(){
+                this.setData(this.$store.state.tracking.detailList);
+                return this.$store.state.tracking.detailList
+            }
         },
+        mounted() {
+            this.detailList
+        }
     }
 </script>
 

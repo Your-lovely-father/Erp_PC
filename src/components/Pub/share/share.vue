@@ -244,6 +244,9 @@
                 if(this.$route.path==='/Log'){
                     this.$emit('logSee')
                 }
+                if(this.$route.path==='/tracking'){
+                    this.$emit('trackingList')
+                }
             },
             //一下是搜索清空功能
             clearStorefront(){

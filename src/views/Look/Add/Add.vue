@@ -165,13 +165,13 @@
                 this.onPage()
             },
             confirm(){
+                this.onPage();
                 Api.lookAdd(this.guide_look_content,this.client_id,this.user_id,this.area_id,this.storefront_id,this.building_id,this.look_time).then((res)=>{
                     if(res.code==="200001"){
                         this.$message.success('添加成功');
                         this.$emit('lookList')
                     }
                 });
-                this.onPage();
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {

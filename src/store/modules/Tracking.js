@@ -5,6 +5,12 @@ export default {
         addTracking: storage.get('addTracking').length === 0 ? 0 : 1,
         seeTracking: storage.get('seeTracking').length === 0 ? 0 : 1,
         updTracking:storage.get('updTracking').length === 0 ? 0 : 1,
+        area_id:'',
+        storefront_id:'',
+        user_id:'',
+        start_time:'',
+        end_time:'',
+        detailList:storage.get('detailList')
     },
     mutations: {
         trackingStatus: ((state, data) => {
@@ -30,7 +36,8 @@ export default {
         }),
         isSeeTracking:((state,data)=>{
             storage.set('seeTracking',state.seeTracking=data);
-            storage.remove('seeTracking')
+            storage.remove('seeTracking');
+            storage.remove('detailList');
         }),
         updTracking: ((state, data) => {
             storage.set('updTracking', state.updTracking = data)
@@ -40,7 +47,26 @@ export default {
         }),
         isUpdStatusTracking:((state,data)=>{
             storage.set('updTracking',state.updTracking=data);
-            storage.remove('updTracking')
+            storage.remove('updTracking');
+            storage.remove('detailList');
         }),
+        area_id:((state,data)=>{
+            state.area_id=data
+        }),
+        storefront_id:((state,data)=>{
+            state.storefront_id=data
+        }),
+        user_id:((state,data)=>{
+            state.user_id=data
+        }),
+        start_time:((state,data)=>{
+            state.start_time=data
+        }),
+        end_time:((state,data)=>{
+            state.end_time=data
+        }),
+        detailList:((state,data)=>{
+            storage.set('detailList',state.detailList=data)
+        })
     },
 }

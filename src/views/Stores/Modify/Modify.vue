@@ -87,11 +87,13 @@
                 this.onPage()
             },
             confirm() {
-                this.onPage()
+                this.onPage();
                 Axios.storesUpd(this.id,this.storefront_name,this.areaValue[0],this.areaValue[1],this.areaValue[2]).then((res)=>{
                     if(res.code==="200003"){
                         this.$message.success('修改成功');
                         this.$emit('storesSee')
+                    }else {
+                        this.$message.error('修改失败')
                     }
                 })
             },

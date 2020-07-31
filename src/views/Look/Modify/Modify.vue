@@ -37,7 +37,6 @@
                                         class="data"
                                         value-format="yyyy-MM-dd"
                                         @change="date"
-                                        ref="getHours"
                                 >
                                 </el-date-picker>
                                 -
@@ -47,7 +46,6 @@
                                         class="data"
                                         value-format="HH:mm:ss"
                                         @change="time"
-                                        ref="getHours"
                                 >
                                 </el-time-picker>
                             </div>
@@ -96,6 +94,8 @@
                     if(res.code === "200003"){
                         this.$message.success("修改成功");
                         this.$emit('lookList')
+                    }else {
+                        this.$message.error('修改失败');
                     }
 
                 });

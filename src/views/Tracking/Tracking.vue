@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="share">
-                        <myShare/>
+                        <myShare @trackingList="trackingList"/>
                     </div>
                 </el-card>
                 <!--    表格区域        -->
@@ -43,8 +43,8 @@
                                 <template slot-scope="scope">
                                     <el-button
                                             size="mini"
-                                            @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-                                    <el-button type="primary"  size="mini" @click="upd">修改</el-button>
+                                            @click="handleEdit(scope.row.id)">查看</el-button>
+                                    <el-button type="primary"  size="mini" @click="upd(scope.row.id)">修改</el-button>
 
                                         <el-button
                                                 slot="reference"
@@ -71,9 +71,9 @@
                 </el-card>
             </div>
         </div>
-        <myAdd/>
-        <mySee/>
-        <myModify/>
+        <myAdd @trackingList="trackingList"/>
+        <mySee  ref="mySee"/>
+        <myModify ref="myModify" @trackingList="trackingList"/>
     </div>
 </template>
 
@@ -106,13 +106,22 @@
                 this.$store.commit('trackingStatus', false);
                 this.$store.commit('addTracking', true)
             },
-            handleEdit() {
+            handleEdit(id) {
                 this.$store.commit('trackingStatus', false);
-                this.$store.commit('seeTracking', true)
+                this.$store.commit('seeTracking', true);
+                Api.detailList(id).then((res)=>{
+                    this.$store.commit('detailList',res.data);
+                    this.$refs.mySee.parentMsg() //给子组件传方法，点击时触发
+                })
+
             },
-            upd() {
+            upd(id) {
                 this.$store.commit('trackingStatus', false);
-                this.$store.commit('updTracking', true)
+                this.$store.commit('updTracking', true);
+                Api.detailList(id).then((res)=>{
+                    this.$store.commit('detailList',res.data);
+                    this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
+                })
             },
             handleDelete(id){ //删除操作
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -143,8 +152,11 @@
                 this.queryInfo.pagenum = newPage;
                 this.trackingList()
             },
-            trackingList(){
-                Api.trackingList(this.queryInfo.pagenum ,this.queryInfo.pagesize).then((res)=>{
+            trackingList(){ //列表
+                Api.trackingList(this.queryInfo.pagenum ,this.queryInfo.pagesize,
+                    this.$store.state.log.area_id,this.$store.state.log.storefront_id,
+                    this.$store.state.log.user_id,this.$store.state.log.start_time,this.$store.state.log.end_time
+                ).then((res)=>{
                     this.tableData=res.data.data;
                     this.totalPage=res.data.count
                 })

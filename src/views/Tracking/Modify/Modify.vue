@@ -24,21 +24,27 @@
                                 <el-input
                                         placeholder="请输入跟进记录"
                                         clearable
-                                        class="report_int">
+                                        class="report_int"
+                                        v-model="record_content"
+                                >
                                 </el-input>
                             </div>
                             <div class="int_box">
                                 <label>时间</label>
                                 <el-date-picker
-                                        v-model="date"
+                                        v-model="followDate"
                                         type="date"
                                         placeholder="选择日期"
+                                        value-format="yyyy-MM-dd"
+                                        @change="date"
                                 >
                                 </el-date-picker>
                                 -
                                 <el-time-picker
-                                        v-model="time"
+                                        v-model="followTime"
                                         placeholder="选择时间"
+                                        value-format="HH:mm:ss"
+                                        @change="time"
                                 >
                                 </el-time-picker>
                             </div>
@@ -56,24 +62,15 @@
 </template>
 
 <script>
+    import  Api from '../../../api/Tracking/Tracking'
     export default {
         data() {
             return {
-                type: [],
-                date: '',
-                time: '',
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
+               record_content:'',
+               followDate:'',
+               followTime:'',
+               id:'',
+               dateTime:'',
             }
         },
         methods: {
@@ -85,13 +82,54 @@
                 this.onPage()
             },
             confirm() {
-                this.onPage()
+                this.onPage();
+                if(this.followDate !== null && this.followTime !== null){
+                    let lookDate = this.followDate.substr(0,10);
+                    this.dateTime= lookDate + ' '+ this.followTime
+                }else{
+                    this.dateTime= ''
+                }
+                Api.trackingUpd(this.id,this.record_content,this.dateTime).then((res)=>{
+                    if(res.code === "200003"){
+                        this.$message.success("修改成功");
+                        this.$emit('trackingList')
+                    }else {
+                        this.$message.error('修改失败')
+                    }
+
+                });
             },
+            parentMsg(){
+                this.detailList
+            },
+            date(e){
+                this.followDate=e
+
+            },
+            time(e){
+                this.followTime=e;
+            },
+            setData(data){
+                this.record_content=data.record_content;
+                this.followDate=data.follow_time;
+                this.followTime=data.follow_time;
+                this.id=data.id;
+                if(typeof data.follow_time == 'string'){
+                    this.followTime=data.follow_time.substr(10);
+                }
+            }
         },
         computed: {
             updTracking() {
                 return this.$store.state.tracking.updTracking
             },
+            detailList(){
+                this.setData(this.$store.state.tracking.detailList);
+                return this.$store.state.tracking.detailList
+            }
+        },
+        mounted() {
+            this.detailList
         },
     }
 </script>
