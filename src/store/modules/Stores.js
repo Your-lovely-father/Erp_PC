@@ -33,7 +33,8 @@ export default {
         }),
         isUpdStatusStores:((state,data)=>{
             storage.set('updstores',state.updstores=data);
-            storage.remove('updstores')
+            storage.remove('updstores');
+            storage.remove('modifySee')
         }),
         province_id:((state,data)=>{
             state.province_id=data

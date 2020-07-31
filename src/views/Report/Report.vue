@@ -18,6 +18,7 @@
                     </div>
                     <!--    搜索区域        -->
                     <div class="search">
+
                         <div class="box_form">
                             <div class="form">
                                 <div class="int_box">
@@ -28,6 +29,7 @@
                                             clearable
                                             class="report_int"
                                             prefix-icon="el-icon-search"
+                                            @clear="clearName"
                                     >
                                     </el-input>
                                 </div>
@@ -39,6 +41,7 @@
                                             clearable
                                             class="report_int"
                                             prefix-icon="el-icon-search"
+                                            @clear="clearPhone"
                                     >
                                     </el-input>
                                 </div>
@@ -53,6 +56,7 @@
                                                 prefix-icon="el-icon-search"
                                                 @change="getData"
                                                 value-format="yyyy-MM-dd"
+                                                @clear="clearStartDate"
                                         >
                                         </el-date-picker>
                                         <span class="cross">
@@ -65,6 +69,7 @@
                                                 prefix-icon="el-icon-search"
                                                 @change="getTime"
                                                 value-format="HH:mm:ss"
+                                                @clear="clearStartTime"
                                         >
                                         </el-time-picker>
                                     </div>
@@ -78,6 +83,7 @@
                                                 prefix-icon="el-icon-search"
                                                 @change="finishDate"
                                                 value-format="yyyy-MM-dd"
+                                                @clear="clearFinishDate"
                                         >
                                         </el-date-picker>
                                         <span class="cross">
@@ -90,21 +96,25 @@
                                                 prefix-icon="el-icon-search"
                                                 @change="finishTime"
                                                 value-format="HH:mm:ss"
+                                                @clear="clearFinishTime"
                                         >
                                         </el-time-picker>
                                     </div>
                                 </div>
                                 <div class="int_box">
                                     <label>区域</label>
-                                    <el-cascader :options="searchAreaOptions" clearable class="report_int"
+                                    <el-cascader :options="searchAreaOptions" clearable
+                                                 class="report_int"
                                                  @change="handleChange"
                                                  ref="cascaderAddr"
-                                    ></el-cascader>
+                                    >
+                                    </el-cascader>
                                 </div>
                                 <div class="int_box">
                                     <label>门店</label>
                                     <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
                                                @change="storefrontValue"
+                                               @clear="clearStorefront"
                                     >
                                         <el-option
                                                 v-for="item in searchStoresOptions"
@@ -119,6 +129,7 @@
                                     <label>维护人</label>
                                     <el-select v-model="user_id" placeholder="请选择" class="report_int"
                                                @change="userId"
+                                               @clear="clearUser"
                                     >
                                         <el-option
                                                 v-for="item in user_idOoptions"
@@ -133,6 +144,7 @@
                                     <label>意向楼盘</label>
                                     <el-select v-model="building_id" placeholder="请选择" class="report_int"
                                                @change="buildingId"
+                                               @clear="clearBuilding_id"
                                     >
                                         <el-option
                                                 v-for="item in building_idOoptions"
@@ -148,6 +160,7 @@
                                     <el-select v-model="client_type" placeholder="请选择" class="report_int"
                                                @change="clientValue"
                                                clearable
+                                               @clear="clearType"
                                     >
                                         <el-option
                                                 v-for="item in searchCustomerOoptions"
@@ -382,6 +395,12 @@
                 })
             },
             handleChange() { //获取省市区id传给后台获取门店数据
+                if(!this.$refs.cascaderAddr.getCheckedNodes()[0]){
+                    this.province_id = '';
+                    this.city_id = '';
+                    this.area_id = '';
+                    return false;
+                }
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
                 this.province_id = pathvalue[0];
                 this.city_id = pathvalue[1];
@@ -460,6 +479,37 @@
                     this.totalPage = res.data.count;
                 })
             },
+            //以下是清空搜索操作
+            clearName(){
+                this.client_name=''
+            },
+            clearPhone(){
+                this.client_phone=''
+            },
+            clearStartDate(){
+                this.start_data_start=''
+            },
+            clearStartTime(){
+                this.start_time_start=''
+            },
+            clearFinishDate(){
+                this.end_data_finish=''
+            },
+            clearFinishTime(){
+                this.end_time_finish=''
+            },
+            clearStorefront(){
+                this.storefront_id=''
+            },
+            clearUser(){
+                this.user_id=''
+            },
+            clearBuilding_id(){
+                this.building_id=''
+            },
+            clearType(){
+                this.client_type=''
+            },
         },
         computed: {
             reportStatus() {
@@ -470,17 +520,7 @@
             this.reportList();
             this.getSelect();
             this.category();
-        },
-        // watch:{
-        //     detailList(val){
-        //         if(val){
-        //             this.xiangqing()
-        //             // return false;
-        //         }
-        //         console.log(val+'++++++')
-        //         console.log(val===false)
-        //     }
-        // }
+        }
     }
 </script>
 

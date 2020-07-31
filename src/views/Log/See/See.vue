@@ -25,22 +25,19 @@
                                    <el-input
                                            :disabled="true"
                                            class="report_int"
-                                           v-model="a"
+                                           v-model="user_name"
                                    >
                                    </el-input>
                                </div>
                                <div class="int">
                                    <label>区域管理</label>
-                                   <el-cascader :options="searchAreaOptions" clearable class="report_int"
-                                                @change="handleChange"
-                                                ref="cascaderAddr"
+                                   <el-cascader v-model="valueArea" :options="searchAreaOptions" clearable class="report_int"
                                                 :disabled="true"
                                    ></el-cascader>
                                </div>
                                <div class="int">
                                    <label>门店管理</label>
-                                   <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
-                                              @change="storefrontValue"
+                                   <el-select v-model="storefront_name" placeholder="请选择" class="report_int"
                                               clearable
                                               :disabled="true"
                                    >
@@ -60,18 +57,17 @@
                                    <el-input
                                            :disabled="true"
                                            class="report_int"
-                                           v-model="a"
+                                           v-model="title"
                                    >
                                    </el-input>
                                </div>
                                <div class="int">
                                    <label>操作时间</label>
                                    <el-date-picker
-                                           v-model="end_data_finish"
+                                           v-model="createData"
                                            type="date"
                                            placeholder="选择日期"
                                            prefix-icon="el-icon-search"
-                                           @change="finishDate"
                                            class="report_int reportdata"
                                            value-format="yyyy-MM-dd"
                                            clearable
@@ -82,10 +78,9 @@
                                      -
                                 </span>
                                    <el-time-picker
-                                           v-model="end_time_finish"
+                                           v-model="createTime"
                                            placeholder="选择时间"
                                            prefix-icon="el-icon-search"
-                                           @change="finishTime"
                                            class="report_int"
                                            value-format="HH:mm:ss"
                                            clearable
@@ -107,9 +102,20 @@
 </template>
 
 <script>
+    import Axios from '../../../api/pub/pub'
     export default {
         data() {
-            return {};
+            return {
+                user_name:'',
+                storefront_id:'',
+                storefront_name:'',
+                title:'',
+                createData:'',
+                createTime:'',
+                searchAreaOptions:[],
+                searchStoresOptions:[],
+                valueArea: [], // 区域回显 v-model 绑定的是一个数组
+            };
         },
         methods: {
             onPage() {
@@ -122,12 +128,74 @@
             confirm() {
                 this.onPage()
             },
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.searchAreaOptions = JSON.parse(linkage)
+                })
+            },
+            // storesData() { //门店回显处理数据
+            //     Axios.postStores(this.valueArea[2]).then(res => {
+            //         let cityData = JSON.stringify(res.data.data);
+            //         let data = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+            //         data.map((item, index) => {
+            //             console.log(item)
+            //             if (item.value == this.storefront_id) {
+            //                 this.storefront_name = item.label;
+            //             }
+            //         })
+            //     });
+            // },
+            parentMsg() {
+                this.detailObject;
+                // this.storesData();
+            },
+            setData(data) { //设置vuex数据负值给data
+                this.user_name = data.user_name;
+                this.title = data.title;
+                this.storefront_name=data.storefront_name;
+                this.createData = data.create_time;
+                this.createTime = data.create_time;
+                this.valueArea = [data.province_id + '', data.city_id + '', data.area_id + '']
+            },
         },
         computed: {
             seeLog() {
                 return this.$store.state.log.seeLog
             },
+            detailObject(){
+                this.setData(this.$store.state.log.detailObject);
+                return this.$store.state.log.detailObject
+            }
         },
+        mounted() {
+            this.detailObject;
+            this.getSelect();
+            // this.storesData();
+        }
     }
 </script>
 

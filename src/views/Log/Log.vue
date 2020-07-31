@@ -83,14 +83,14 @@
                 </el-card>
             </div>
         </div>
-        <mySee/>
+        <mySee ref="myModify" />
     </div>
 </template>
 
 <script>
-    import mySee from '../../views/Log/See/See'
+    import  mySee from '../../views/Log/See/See'
     import  myShare from '../../components/Pub/share/share'
-    import Api from '../../api/Log/Log'
+    import  Api from '../../api/Log/Log'
     export default {
         components:{
             mySee,
@@ -113,6 +113,7 @@
                 this.$store.commit('seeLog', true);
                 Api.logDetail(id).then((res)=>{
                     this.$store.commit('detailObject', res.data);
+                    this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
                 })
             },
             handleDelete(id){ //删除操作

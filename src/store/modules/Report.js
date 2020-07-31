@@ -26,7 +26,6 @@ export default {
         }),
         isReport: ((state, data) => {
             storage.set('reportStatus',state.reportStatus=data)
-            storage.remove('detailList')
         }),
         isSee:((state,data)=>{
             storage.set('seeStatus',state.seeStatus=data);
@@ -38,7 +37,6 @@ export default {
         }),
         isUpd: ((state, data) => {
             storage.set('reportStatus',state.reportStatus=data);
-            storage.remove('detailList')
         }),
         isUpdStatus:((state,data)=>{
             storage.set('updStatus',state.updStatus=data);

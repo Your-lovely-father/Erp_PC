@@ -2,14 +2,14 @@
     <div>
         <div class="search">
             <div class="search_box">
-
                 <div class="box_form">
                     <div class="form">
                         <div class="int_box">
                             <label>区域</label>
-                            <el-cascader :options="searchAreaOptions" clearable class="report_int"
+                            <el-cascader v-model="areaValue" :options="searchAreaOptions" clearable class="report_int"
                                          @change="handleChange"
                                          ref="cascaderAddr"
+                                         @clear="clearArea"
                             ></el-cascader>
                         </div>
                         <div class="int_box">
@@ -17,6 +17,7 @@
                             <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
                                        @change="storefrontValue"
                                        clearable
+                                       @clear="clearStorefront"
                             >
                                 <el-option
                                         v-for="item in searchStoresOptions"
@@ -32,6 +33,7 @@
                             <el-select v-model="user_id" placeholder="请选择" class="report_int"
                                        clearable
                                        @change="userId"
+                                       @clear="clearUser"
                             >
                                 <el-option
                                         v-for="item in user_idOoptions"
@@ -53,6 +55,7 @@
                                     @change="getData"
                                     value-format="yyyy-MM-dd"
                                     clearable
+                                    @clear="clearData"
                             >
                             </el-date-picker>
                             <span class="cross">
@@ -66,6 +69,7 @@
                                     @change="getTime"
                                     value-format="HH:mm:ss"
                                     clearable
+                                    @clear="clearTime"
                             >
                             </el-time-picker>
                         </div>
@@ -81,6 +85,7 @@
                                     class="report_int reportdata"
                                     value-format="yyyy-MM-dd"
                                     clearable
+                                    @clear="clearFinishDate"
                             >
                             </el-date-picker>
                             <span class="cross">
@@ -94,6 +99,7 @@
                                     class="report_int"
                                     value-format="HH:mm:ss"
                                     clearable
+                                    @clear="clearFinishTime"
                             >
                             </el-time-picker>
                         </div>
@@ -128,6 +134,8 @@
                 end_data_finish:'',
                 end_time_finish:'',
                 end_time:'',//结束时间
+                areaValue:[],
+                path:''
             }
         },
         methods:{
@@ -161,6 +169,12 @@
                 })
             },
             handleChange() { //获取省市区id传给后台获取门店数据
+                if(!this.$refs.cascaderAddr.getCheckedNodes()[0]){
+                    this.province_id = '';
+                    this.city_id = '';
+                    this.area_id = '';
+                    return false;
+                }
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
                 this.province_id = pathvalue[0];
                 this.city_id = pathvalue[1];
@@ -212,6 +226,28 @@
                 this.$store.commit('start_time',this.start_time);
                 this.$store.commit('end_time',this.end_time);
                 this.$emit('logSee')
+            },
+            //一下是搜索清空功能
+            clearArea(){
+                this.areaValue=[]
+            },
+            clearStorefront(){
+                this.storefront_id=''
+            },
+            clearUser(){
+                this.user_id=''
+            },
+            clearData(){
+                this.start_data_start=''
+            },
+            clearTime(){
+                this.start_time_start=''
+            },
+            clearFinishDate(){
+                this.end_data_finish=''
+            },
+            clearFinishTime(){
+                this.end_time_finish=''
             },
         },
         mounted(){
