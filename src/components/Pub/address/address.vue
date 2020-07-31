@@ -5,32 +5,37 @@
                 <label>区域</label>
                 <el-select v-model="prov" clearable placeholder="请选择省"
                            @change="update"
+                           @clear="clearProve"
                 >
                     <el-option
                             v-for="item in options"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.label"
+                            :value="item.value"
                     >
                     </el-option>
                 </el-select>
                 <p v-show="isShowCity">-</p>
-                <el-select v-model="city" clearable placeholder="请选择市" v-show="isShowCity" @change="updateCity">
+                <el-select v-model="city" clearable placeholder="请选择市" v-show="isShowCity" @change="updateCity"
+                           @clear="clearCity"
+                >
                     <el-option
                             v-for="item in cityArr"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.label"
+                            :value="item.value"
                     >
                     </el-option>
                 </el-select>
                 <p v-show="isShowArea">-</p>
-                <el-select v-model="area" clearable placeholder="请选择区" v-show="isShowArea" @change="updateArea">
+                <el-select v-model="area" clearable placeholder="请选择区" v-show="isShowArea" @change="updateArea"
+                           @clear="clearArea"
+                >
                     <el-option
                             v-for="item in cityArea"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.label"
+                            :value="item.value"
                     >
                     </el-option>
                 </el-select>
@@ -44,6 +49,7 @@
 
 <script>
     import Axios from '../../../api/pub/pub'
+
     export default {
         data() {
             return {
@@ -55,63 +61,60 @@
                 area: '',
                 isShowCity: true,
                 isShowArea: true,
-                province_id:'',
-                city_id:'',
-                area_id:'',
+                province_id: '',
+                city_id: '',
+                area_id: '',
             }
         },
         methods: {
             getSelect() {
                 Axios.getSelect().then((res) => {
                     let cityData = JSON.stringify(res.data[0].son);
-                    this.options = JSON.parse(cityData.replace(/AREA_ID/g,"value").replace(/AREA_NAME/g,"label"));
+                    this.options = JSON.parse(cityData.replace(/AREA_ID/g, "value").replace(/AREA_NAME/g, "label"));
                 })
 
 
             },
             update(value) {
-                let obj = {};
-                obj = this.options.find((item) => { // 这里的options就是上面遍历的数据源
-                    return item.label === value;// 筛选出匹配数据
-                });
-              this.province_id=obj.value;
+                this.province_id = value;
                 this.options.forEach((item, index) => {
-                    if (item.label === this.prov) {
+                    if (item.value === value) {
                         this.cityArr = item.son;
                         return
                     }
                 });
                 this.city = '';
-                this.area = '';
-                // this.city = this.cityArr[0].label
+                this.area = ''
             },
             updateCity(value) {
-                let obj = {};
-                obj = this.cityArr.find((item) => { // 这里的cityArr就是上面遍历的数据源
-                    return item.label === value;// 筛选出匹配数据
-                });
-                this.city_id=obj.value;
-                // this.isShowArea = true;
+                this.city_id = value;
                 this.cityArr.forEach((item, index) => {
-                    if (item.label === this.city) {
+                    if (item.value === value) {
                         this.cityArea = item.son;
                         return
                     }
                 })
             },
-            updateArea(value){
-                let obj = {};
-                obj = this.cityArea.find((item) => { // 这里的cityArea就是上面遍历的数据源
-                    return item.label === value;// 筛选出匹配数据
-                });
-                this.area_id=obj.value;
+            updateArea(value) {
+                this.area_id = value
             },
-            search(){ //搜索
-                this.$store.commit('province_id',this.province_id);
-                this.$store.commit('city_id',this.city_id);
-                this.$store.commit('area_id',this.area_id);
+            search() { //搜索
+                this.$store.commit('province_id', this.province_id);
+                this.$store.commit('city_id', this.city_id);
+                this.$store.commit('area_id', this.area_id);
                 this.$emit("storesSee")
-            }
+            },
+            clearProve(){
+                this.province_id=''
+            },
+            clearCity(){
+                this.city_id=''
+            },
+            clearArea(){
+                this.area_id=''
+            },
+
+
         },
         mounted() {
             this.getSelect()
@@ -152,6 +155,7 @@
     .search_btn {
         margin-left: 20px;
     }
+
     .btn {
         width: 100px;
         background: linear-gradient(#28a9ea, #1981e4);

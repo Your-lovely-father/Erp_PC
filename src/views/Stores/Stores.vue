@@ -75,8 +75,8 @@
                 </el-card>
             </div>
         </div>
-        <myAdd />
-        <myModify :getDate="modifyDate"/>
+        <myAdd  @storesSee="storesSee"/>
+        <myModify @storesSee="storesSee" ref="myModify" />
     </div>
 </template>
 
@@ -113,7 +113,7 @@
             handleEdit(id) { //编辑
                 Api.storesDetails(id).then((res) => {
                     this.$store.commit('modifySee',res.data);
-                    this.modifyDate = [res.data.province_id+'',res.data.city_id+'',res.data.area_id+'']
+                    this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
                 });
                 this.$store.commit('storesStatus', false);
                 this.$store.commit('updStores', true)

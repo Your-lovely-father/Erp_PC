@@ -23,7 +23,7 @@
                                 <label>门店名称</label>
                                 <el-input
                                         placeholder="请输入门店名称"
-                                        v-model="modifySee.storefront_name"
+                                        v-model="storefront_name"
                                         clearable
                                         class="report_int"
                                 >
@@ -31,7 +31,10 @@
                             </div>
                             <div class="int_box">
                             <label>区域</label>
-                            <el-cascader v-model="value[0]==''?getDate:value" @change="acquireValue" :options="areaOptions" clearable class="report_int"></el-cascader>
+                            <el-cascader v-model="areaValue" :options="areaOptions" clearable class="report_int"
+                                         @change="handleChange"
+                                         ref="cascaderAddr"
+                            ></el-cascader>
                             </div>
                             <!--<div class="int_box">-->
                                 <!--<label>时间</label>-->
@@ -65,17 +68,16 @@
 
 <script>
     import  Api from '../../../api/pub/pub'
+    import  Axios from '../../../api/Stores/Stores'
     export default {
         data() {
             return {
-                // type: [],
-                // date: '',
-                // time: '',
-                areaOptions: [],
-                value:['','',''],
+                storefront_name:'',//门店名称
+                areaOptions: [], //区域
+                areaValue:[], //区域回显数据以组形势显示
+                id:'',  //门店id
             }
         },
-        props:['getDate'],
         methods: {
             onPage() {
                 this.$store.commit('isUpdStores', true);
@@ -86,10 +88,15 @@
             },
             confirm() {
                 this.onPage()
+                Axios.storesUpd(this.id,this.storefront_name,this.areaValue[0],this.areaValue[1],this.areaValue[2]).then((res)=>{
+                    if(res.code==="200003"){
+                        this.$message.success('修改成功');
+                        this.$emit('storesSee')
+                    }
+                })
             },
             getSelect(){  //这块是接口的三级联动数据
                 Api.getSelect().then((res)=>{
-                    this.value = [ this.$store.state.stores.modifySee.province_id+'', this.$store.state.stores.modifySee.city_id+'', this.$store.state.stores.modifySee.area_id+'']
                     const data = res.data[0].son;
                     data.map((item) => {
                         item.label = item.AREA_NAME;
@@ -116,22 +123,35 @@
                     this.areaOptions = JSON.parse(linkage)
                 })
             },
-            acquireValue(value){
-                console.log(value)
-            }
+            handleChange() { //获取省市区id
+                var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
+                this.areaValue[0]= pathvalue[0];
+                this.areaValue[1]  = pathvalue[1];
+                this.areaValue[2] = pathvalue[2];
+            },
+            storesDate(data){
+                this.id=data.id;
+                this.storefront_name=data.storefront_name;
+                this.areaValue=[data.province_id + '', data.city_id + '', data.area_id + '']
+            },
+            parentMsg(){
+                this.modifySee;
+            },
         },
         computed: {
             updstores() {
                 return this.$store.state.stores.updstores
             },
-
             modifySee(){
+                this.storesDate(this.$store.state.stores.modifySee);
                 return this.$store.state.stores.modifySee
             }
         },
         mounted(){
+            this.modifySee;
             this.getSelect();
-        }
+        },
+
     }
 </script>
 
