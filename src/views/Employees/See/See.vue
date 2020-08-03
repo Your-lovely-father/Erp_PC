@@ -81,6 +81,8 @@
                                                  :disabled="true"
                                     ></el-cascader>
                                 </div>
+                            </div>
+                            <div class="tow">
                                 <div class="int_box">
                                     <label>门店</label>
                                     <el-select v-model="storefront" placeholder="请选择" class="report_int"
@@ -94,11 +96,6 @@
                                         >
                                         </el-option>
                                     </el-select>
-                                </div>
-                                <div class="int_box ">
-                                    <label>角色管理</label>
-                                    <el-cascader v-model="user_role" :options="roleOptions" clearable   :disabled="true" class="report_int"
-                                    ></el-cascader>
                                 </div>
                                 <div class="state">
                                     <div class="int_box">
@@ -124,6 +121,21 @@
                                 </div>
                             </div>
                             <div class="upload">
+                                <div class="prmi_box ">
+                                    <label>角色管理</label>
+                                    <el-tree
+                                            :data="managementList"
+                                            show-checkbox
+                                            node-key="id"
+                                            default-expand-all
+                                            :props="defaultProps"
+                                            :check-strictly="true"
+                                            :default-checked-keys="rule"
+                                            @check-change="management"
+                                            ref="tree1"
+                                    >
+                                    </el-tree>
+                                </div>
                                 <div class="int_box">
                                     <label>头像</label>
                                     <el-upload
@@ -155,7 +167,7 @@
 
 <script>
     import Axios from '../../../api/pub/pub'
-    import Api from '../../../api/Employees/Employees'
+    import roleApi from '../../../api/Role/Role'
     export default {
         data() {
             return {
@@ -170,15 +182,20 @@
                 valueArea: [], //区域回显
                 storeList: [], //门店列表
                 storefront: '', //门店回显
-                roleOptions: [], //角色列表
-                user_role:[],
                 user_status: '', //状态
                 mobile_terminal_status: '' ,//开通手状态
                 picture_list: [],//回显图片
                 userImage:'https://erp-report-shenyang.oss-cn-beijing.aliyuncs.com/',
                 headDialogVisible:false,
                 headDialogImageUrl:'',
-                imageUrl:''
+                imageUrl:'',
+                managementList: [],//权限管理
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
+                rule:[]
+
             };
         },
         methods: {
@@ -228,25 +245,66 @@
                     this.areaOptions = JSON.parse(linkage);
                 })
             },
-            postRole() { // 查询角色管理
-                Api.postRole().then((res) => {
-                    const roleData = res.data;
-                    roleData.map((item) => {
+            getSelectList() {
+                roleApi.roleList().then((res) => {
+                    const jsonData = res.data;
+                    jsonData.map((item) => {
                         item.label = item.group_name;
-                        item.value = item.id+'';
-                        item.children = item.children;
-                        if (item.children) {
-                            item.children.map(el => {
+                        item.value = item.id;
+                        item.children = item.son;
+                        item.disabled=true;
+                        if (item.son) {
+                            item.son.map(el => {
                                 el.label = el.group_name;
                                 el.value = el.id;
+                                el.children = el.son;
+                                el.disabled=true;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.group_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                        key.disabled=true;
+                                        if (key.son) {
+                                            key.son.map(area => {
+                                                area.label = area.group_name;
+                                                area.value = area.id;
+                                                area.children = area.son;
+                                                area.disabled=true;
+                                                if (area.son) {
+                                                    area.son.map(stores => {
+                                                        stores.label = stores.group_name;
+                                                        stores.value = stores.id;
+                                                        stores.children = stores.son;
+                                                        stores.disabled=true;
+                                                        if (stores.son) {
+                                                            stores.son.map(people => {
+                                                                people.label = people.group_name;
+                                                                people.value = people.id;
+                                                                people.children = people.son;
+                                                                people.disabled=true;
+                                                            })
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
                             })
                         }
+                        this.managementList=jsonData
                     });
-                    this.roleOptions=roleData;
                 })
+            },
+            management(){
+                let res = this.$refs.tree1.getCheckedKeys().concat(this.$refs.tree1.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.user_role=value
             },
             parentMsg() {
                 this.detailsObj
+                this.getSelectList()
             },
             setData(data) {
                 this.user_name = data.user_name;
@@ -258,7 +316,10 @@
                 this.user_status = data.user_status  === 1 ? true : false;
                 this.mobile_terminal_status = data.mobile_terminal_status  === 1 ? true : false;
                 this.valueArea = [data.province_id + '', data.city_id + '', data.area_id + ''];
-                this.user_role=[data.user_role];
+                let role =data.user_role;
+                if(role !== undefined){
+                    this.rule=data.user_role.split(',');
+                }
                 this.imageUrl = data.user_image;
                 this.picture_list.push({
                     url:this.userImage+this.imageUrl
@@ -280,7 +341,7 @@
         mounted() {
             this.detailsObj
             this.getSelect();
-            this.postRole()
+            this.getSelectList()
         }
     }
 </script>
@@ -400,11 +461,17 @@
         width: 100%;
     }
 
-
     .com {
         width: 100%;
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
+    }
+    .tow{
+        display: flex;
+        margin-left: 42px;
+    }
+    .state{
+        margin-left: 83px;
     }
 </style>

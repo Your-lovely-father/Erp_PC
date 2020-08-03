@@ -5,6 +5,7 @@ export default {
         addSRole: storage.get('addSRole').length === 0 ? 0 : 1,
         seeRole: storage.get('seeRole').length === 0 ? 0 : 1,
         updRole:storage.get('updRole').length === 0 ? 0 : 1,
+        detailObj:storage.get('detailObj'),
     },
     mutations: {
         roleStatus: ((state, data) => {
@@ -29,7 +30,8 @@ export default {
         }),
         isSeeRole:((state,data)=>{
             storage.set('seeRole',state.seeRole=data);
-            storage.remove('seeRole')
+            storage.remove('seeRole');
+            storage.remove('detailObj')
         }),
 
         updRole: ((state, data) => {
@@ -40,7 +42,11 @@ export default {
         }),
         isUpdStatusRole:((state,data)=>{
             storage.set('updRole',state.updRole=data);
-            storage.remove('updRole')
+            storage.remove('updRole');
+            storage.remove('detailObj')
         }),
+        detailObj:((state,data)=>{
+            storage.set('detailObj',state.detailObj=data);
+        })
     },
 }

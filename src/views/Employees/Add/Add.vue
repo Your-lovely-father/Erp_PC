@@ -79,14 +79,6 @@
                                             class="report_int">
                                     </el-input>
                                 </div>
-
-                                <div class="int_box">
-                                    <label>角色管理</label>
-                                    <el-cascader :options="roleOptions" clearable class="report_int"
-                                                 @change="roleChange"
-                                                 ref="roleAdd"
-                                    ></el-cascader>
-                                </div>
                                 <div class="int_box">
                                     <label>区域</label>
                                     <el-cascader :options="areaOptions" clearable class="report_int"
@@ -109,8 +101,6 @@
                                         </el-option>
                                     </el-select>
                                 </div>
-                            </div>
-                            <div class="status_upload_box">
                                 <div class="state">
                                     <div class="int_box">
                                         <label>状态</label>
@@ -136,6 +126,23 @@
                                         >
                                         </el-switch>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="status_upload_box">
+                                <div class="prmi_box">
+                                    <label>角色管理</label>
+                                    <el-tree
+                                            :data="managementList"
+                                            show-checkbox
+                                            node-key="id"
+                                            default-expand-all
+                                            :props="defaultProps"
+                                            :check-strictly="true"
+                                            :current-node-key="currentArr"
+                                            @check-change="management"
+                                            ref="tree1"
+                                    >
+                                    </el-tree>
                                 </div>
                                 <div class="upload">
                                     <div class="int_box">
@@ -185,7 +192,7 @@
     import Axios from '../../../api/pub/pub'
     import Api from '../../../api/Employees/Employees'
     import axios from 'axios'
-
+    import roleApi from '../../../api/Role/Role'
     export default {
         data() {
             return {
@@ -207,7 +214,7 @@
                 headDialogImageUrl: '',//图片
                 areaOptions: [],//区域三级联动数据
                 storesOptions: [],//门店数据
-                roleOptions: [],//角色数据
+                managementList: [],//权限管理
                 genderOptions: [{ //性别
                     value: '10',
                     label: '男'
@@ -215,7 +222,12 @@
                     value: '20',
                     label: '女'
                 }],
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
                 upload_name: 'files',//图片上传的后端接受图片文件的 key
+                currentArr:''
             }
         },
         methods: {
@@ -351,7 +363,57 @@
                     this.areaOptions = JSON.parse(linkage)
                 })
             },
-
+            getSelectList() {
+                roleApi.roleList().then((res) => {
+                    const jsonData = res.data;
+                    jsonData.map((item) => {
+                        item.label = item.group_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.group_name;
+                                el.value = el.id;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.group_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                        if (key.son) {
+                                            key.son.map(area => {
+                                                area.label = area.group_name;
+                                                area.value = area.id;
+                                                area.children = area.son;
+                                                if (area.son) {
+                                                    area.son.map(stores => {
+                                                        stores.label = stores.group_name;
+                                                        stores.value = stores.id;
+                                                        stores.children = stores.son;
+                                                        if (stores.son) {
+                                                            stores.son.map(people => {
+                                                                people.label = people.group_name;
+                                                                people.value = people.id;
+                                                                people.children = people.son;
+                                                            })
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        this.managementList=jsonData
+                    });
+                })
+            },
+            management(){
+                let res = this.$refs.tree1.getCheckedKeys().concat(this.$refs.tree1.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.user_role=value
+            },
             handleChange() { //获取省市区id传给后台获取门店数据
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
                 this.province_id = pathvalue[0];
@@ -362,39 +424,17 @@
                     this.storesOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 })
             },
-            roleChange() { //获取角色id
-                var rolevalue = this.$refs.roleAdd.getCheckedNodes()[0].data.id;
-                this.user_role = rolevalue
-            },
             obtain(e) { //门店id
                 this.storefront_id = e
             },
             genderValue(e) { //性别
                 this.gender = e
             },
-            postRole() { // 查询角色管理
-                Api.postRole().then((res) => {
-                    const roleData = res.data;
-                    roleData.map((item) => {
-                        item.label = item.group_name;
-                        item.value = item.id;
-                        item.children = item.children;
-                        if (item.children) {
-                            item.children.map(el => {
-                                el.label = el.group_name;
-                                el.value = el.id;
-                            })
-                        }
-                    });
-                    this.roleOptions = roleData
-                })
-            },
 
         },
-
         mounted() {
             this.getSelect();
-            this.postRole()
+            this.getSelectList()
         },
         computed: {
             addEmployees() {
@@ -515,7 +555,6 @@
         width: 480px;
         display: flex;
         justify-content: space-between;
-        margin-left: 35px;
     }
 
     .upload {
@@ -532,5 +571,11 @@
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
+    }
+    .prmi_box{
+        margin-left: 35px;
+    }
+    .state{
+        padding-top: 13px;
     }
 </style>

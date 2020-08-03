@@ -18,24 +18,31 @@
                         <p>查看角色</p>
                     </div>
                     <div class="content_box">
-                        <div class="See_int">
-                            <div class="form">
-                                <div class="int_box">
-                                    <label>角色名称</label>
-                                    <el-input
-                                            placeholder="请输角色名称"
-                                            v-model="name"
-                                            clearable
-                                            class="report_int"
-                                            :disabled="true"
+                        <div class="form_box">
+                            <div class="permi_box">
+                                <label>权限设置</label>
+                                <el-tree
+                                        :data="permissionsList"
+                                        show-checkbox
+                                        node-key="id"
+                                        :props="defaultProps"
+                                        @check-change="permissions"
+                                        default-expand-all
+                                        ref="tree"
+                                        :default-checked-keys="rule"
                                     >
-                                    </el-input>
-                                </div>
-                                <div class="int_box_right">
-                                    <label>权限管理</label>
-                                    <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"
-                                             default-expand-all></el-tree>
-                                </div>
+                                </el-tree>
+                            </div>
+                            <div class="int_box">
+                                <label>角色名称</label>
+                                <el-input
+                                        placeholder="请输角色名称"
+                                        v-model="group_name"
+                                        clearable
+                                        class="report_int"
+                                        :disabled="true"
+                                >
+                                </el-input>
                             </div>
                         </div>
                     </div>
@@ -50,25 +57,20 @@
 </template>
 
 <script>
+    import adminApi from '../../../api/Admin/Admin'
     export default {
+        components:{
+        },
         data() {
             return {
-                name: '',
-                data: [{
-                    label: '超级管理员',
-                    children: [
-                        {
-                            label: '客户报备',
-                        },
-                        {
-                            label: '楼盘管理',
-                        }
-                    ]
-                }],
+                group_name:'',
                 defaultProps: {
                     children: 'children',
                     label: 'label'
-                }
+                },
+                permissionsList:[],
+                rule:[],
+                rule_ids:''
             };
         },
         methods: {
@@ -82,15 +84,75 @@
             confirm() {
                 this.onPage()
             },
-            handleNodeClick(data) {
-                console.log(data);
-            }
+            setData(data){
+                this.group_name=data.group_name;
+                if(data.rule instanceof Array){
+                    let arrs = [];
+                    function setrule(arr) { //递归
+                        arr.forEach(item=>{
+                            arrs.push(item.id);
+                            if(item.son){
+                                if(item.son !== ''){
+                                    setrule(item.son)
+                                }
+                            }
+                        })
+                    }
+                    setrule(data.rule);
+                    this.rule=arrs;
+                }
+
+            },
+            getRple(){
+                this.detailObj
+            },
+            getAdminSelect(){
+                adminApi.adminList().then((res)=>{
+                    const data = res.data;
+                    data.map(item=>{
+                        item.label = item.rule_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        item.disabled=true;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.rule_name;
+                                el.value = el.id;
+                                el.children = el.son;
+                                el.disabled=true;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.rule_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                        key.disabled=true;
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    this.permissionsList=data
+                })
+            },
+            permissions(){
+                let res = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.rule_ids=value
+            },
         },
         computed: {
             seeRole() {
                 return this.$store.state.role.seeRole
             },
+            detailObj(){
+                this.setData(this.$store.state.role.detailObj);
+                return this.$store.state.role.detailObj
+            }
         },
+        mounted() {
+            this.detailObj;
+            this.getAdminSelect()
+        }
     }
 </script>
 
@@ -180,16 +242,13 @@
         overflow-x: hidden;
         overflow-y: scroll;
     }
-    .See_int{
-        width: 100%;
+    .permi_box>>>.el-tree-node__children{
+        display: flex;
     }
-    .form {
-        width: 400px;
-        margin-left: 30px;
-    }
-
     .report_int {
         width: 400px;
     }
-
+    .form_box{
+        margin-left: 20px;
+    }
 </style>

@@ -121,7 +121,7 @@
                 </el-card>
             </div>
         </div>
-        <myAdd  @getSelectList="getSelectList"/>
+        <myAdd  @getSelectList="getSelectList" ref="myAdd"/>
         <mySee ref="mySee"/>
         <myModify ref="myModify" @getSelectList="getSelectList"/>
     </div>
@@ -159,7 +159,8 @@
             },
             reportAdd() {
                 this.$store.commit('employeesStatus', false);
-                this.$store.commit('addEmployees', true)
+                this.$store.commit('addEmployees', true);
+                this.$refs.myAdd.getSelectList()
             },
             handleClick(id) { //查看
                 this.$store.commit('employeesStatus', false);

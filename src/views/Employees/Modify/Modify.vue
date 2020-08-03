@@ -94,11 +94,6 @@
                                         </el-option>
                                     </el-select>
                                 </div>
-                                <div class="int_box ">
-                                    <label>角色管理</label>
-                                    <el-cascader v-model="user_role" :options="roleOptions" clearable class="report_int"
-                                    ></el-cascader>
-                                </div>
                                 <div class="int_box">
                                     <label>密码</label>
                                     <el-input
@@ -109,34 +104,49 @@
                                     >
                                     </el-input>
                                 </div>
-                            </div>
-                            <div class="state">
-                                <div class="int_box">
-                                    <label>状态</label>
-                                    <el-switch
-                                            v-model="user_status"
-                                            active-color="#13ce66"
-                                            inactive-color="#ff4949"
-                                            active-value="1"
-                                            inactive-value="2"
-                                            @change="status"
-                                    >
-                                    </el-switch>
-                                </div>
-                                <div class="int_box">
-                                    <label>开通手机端</label>
-                                    <el-switch
-                                            v-model="mobile_terminal_status"
-                                            active-color="#13ce66"
-                                            inactive-color="#ff4949"
-                                            active-value="1"
-                                            inactive-value="2"
-                                            @change="mobile"
-                                    >
-                                    </el-switch>
+                                <div class="state">
+                                    <div class="int_box">
+                                        <label>状态</label>
+                                        <el-switch
+                                                v-model="user_status"
+                                                active-color="#13ce66"
+                                                inactive-color="#ff4949"
+                                                active-value="1"
+                                                inactive-value="2"
+                                                @change="status"
+                                        >
+                                        </el-switch>
+                                    </div>
+                                    <div class="int_box">
+                                        <label>开通手机端</label>
+                                        <el-switch
+                                                v-model="mobile_terminal_status"
+                                                active-color="#13ce66"
+                                                inactive-color="#ff4949"
+                                                active-value="1"
+                                                inactive-value="2"
+                                                @change="mobile"
+                                        >
+                                        </el-switch>
+                                    </div>
                                 </div>
                             </div>
                             <div class="upload">
+                                <div class="prmi_box ">
+                                    <label>角色管理</label>
+                                    <el-tree
+                                            :data="managementList"
+                                            show-checkbox
+                                            node-key="id"
+                                            default-expand-all
+                                            :props="defaultProps"
+                                            :check-strictly="true"
+                                            :default-checked-keys="rule"
+                                            @check-change="management"
+                                            ref="tree1"
+                                    >
+                                    </el-tree>
+                                </div>
                                 <div class="int_box">
                                     <label>头像</label>
                                     <el-upload
@@ -176,7 +186,7 @@
     import Axios from '../../../api/pub/pub'
     import Api from '../../../api/Employees/Employees'
     import axios from 'axios'
-
+    import roleApi from '../../../api/Role/Role'
     export default {
         data() {
             return {
@@ -192,8 +202,6 @@
                 storeList: [], //门店列表
                 storefront: '', //门店回显
                 storefront_id:'',
-                roleOptions: [], //角色列表
-                user_role: [], //权限
                 user_image: '',//员工头像
                 user_status: '', //状态
                 mobile_terminal_status: '', //开通手状态
@@ -209,7 +217,13 @@
                 picture_list: [],//回显图片
                 flag:true ,//控制点击后清除回显图片且在不执行该方法
                 id:'', //此数据唯一id
-                user_password:''//密码
+                user_password:'',//密码
+                managementList: [],//权限管理
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
+                rule:[]
             };
         },
         methods: {
@@ -227,6 +241,12 @@
                 }else {
                     imgage=this.user_image
                 }
+                let user_role = '';
+                if(!this.user_role){
+                    user_role=this.rule.join(',');
+                }else {
+                    user_role=this.user_role
+                }
                 Api.postUpd(
                     this.id,
                     this.user_name,
@@ -237,7 +257,7 @@
                     this.user_id_card,
                     this.user_password,
                     this.user_status,
-                    this.user_role[0],
+                    user_role,
                     this.valueArea[0],
                     this.valueArea[1],
                     this.valueArea[2],
@@ -359,22 +379,56 @@
                     this.areaOptions = JSON.parse(linkage);
                 })
             },
-            postRole() { // 查询角色管理
-                Api.postRole().then((res) => {
-                    const roleData = res.data;
-                    roleData.map((item) => {
+            getSelectList() {
+                roleApi.roleList().then((res) => {
+                    const jsonData = res.data;
+                    jsonData.map((item) => {
                         item.label = item.group_name;
-                        item.value = item.id+'';
-                        item.children = item.children;
-                        if (item.children) {
-                            item.children.map(el => {
+                        item.value = item.id;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
                                 el.label = el.group_name;
                                 el.value = el.id;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.group_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                        if (key.son) {
+                                            key.son.map(area => {
+                                                area.label = area.group_name;
+                                                area.value = area.id;
+                                                area.children = area.son;
+                                                if (area.son) {
+                                                    area.son.map(stores => {
+                                                        stores.label = stores.group_name;
+                                                        stores.value = stores.id;
+                                                        stores.children = stores.son;
+                                                        if (stores.son) {
+                                                            stores.son.map(people => {
+                                                                people.label = people.group_name;
+                                                                people.value = people.id;
+                                                                people.children = people.son;
+                                                            })
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
                             })
                         }
+                        this.managementList=jsonData
                     });
-                    this.roleOptions = roleData;
                 })
+            },
+            management(){
+                let res = this.$refs.tree1.getCheckedKeys().concat(this.$refs.tree1.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.user_role=value
             },
             userSex(){ //性别回显
                this.genderOptions.forEach((item,index)=>{
@@ -433,7 +487,10 @@
                 this.user_status = data.user_status+'';
                 this.mobile_terminal_status = data.mobile_terminal_status+'';
                 this.valueArea = [data.province_id + '', data.city_id + '', data.area_id + ''];
-                this.user_role = [data.user_role];
+                let role =data.user_role;
+                if(role !== undefined){
+                    this.rule=data.user_role.split(',');
+                }
                 this.imageUrl = data.user_image;
                 this.id=data.id;
                 this.picture_list.push({
@@ -456,9 +513,9 @@
         mounted() {
             this.detailsObj
             this.getSelect();
-            this.postRole();
             this.userSex();
             this.storesData();
+            this.getSelectList();
             this.$refs.upload_img.$children[this.$refs.upload_img.$children.length-1].$el.addEventListener('click',()=>{
                 this.logoutHandle()
             })
@@ -569,7 +626,7 @@
         width: 480px;
         display: flex;
         justify-content: space-between;
-        margin-left: 35px;
+        margin-top: 13px;
     }
 
     .upload {

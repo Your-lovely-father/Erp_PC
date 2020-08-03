@@ -20,33 +20,46 @@
                         <!--      表单添加区域      -->
                         <div class="form_box">
                             <div class="form">
-                                <div class="int_box">
-                                    <label>角色名称</label>
-                                    <el-input
-                                            placeholder="请输角色名称"
-                                            v-model="name"
-                                            clearable
-                                            class="report_int"
+                                <div class="permi_box">
+                                    <label>权限选择</label>
+                                    <el-tree
+                                            :data="permissionsList"
+                                            show-checkbox
+                                            node-key="id"
+                                            :props="props"
+                                            @check-change="permissions"
+                                            default-expand-all
+                                            ref="tree"
                                     >
-                                    </el-input>
+                                    </el-tree>
                                 </div>
-                                <div class="int_box_right">
-                                    <label>时间</label>
-                                    <el-date-picker
-                                            v-model="date"
-                                            type="date"
-                                            placeholder="选择日期"
-                                            class="data"
-                                    >
-                                    </el-date-picker>
-                                    -
-                                    <el-time-picker
-                                            v-model="time"
-                                            placeholder="选择时间"
-                                            class="data"
-                                    >
-                                    </el-time-picker>
-                                </div>
+                              <div class="box">
+                                  <div class="mage_box">
+                                      <label>职位设置</label>
+                                      <el-tree
+                                              :data="managementList"
+                                              show-checkbox
+                                              node-key="id"
+                                              default-expand-all
+                                              :props="defaultProps"
+                                              :check-strictly="true"
+                                              :current-node-key="currentArr"
+                                              @check-change="management"
+                                              ref="tree1"
+                                      >
+                                      </el-tree>
+                                  </div>
+                                  <div class="group">
+                                      <label>角色名称</label>
+                                      <el-input
+                                              placeholder="请输角色名称"
+                                              clearable
+                                              class="report_int"
+                                              v-model="group_name"
+                                      >
+                                      </el-input>
+                                  </div>
+                              </div>
                             </div>
                         </div>
                     </div>
@@ -62,14 +75,26 @@
 </template>
 
 <script>
+    import Api from '../../../api/Role/Role'
+    import adminApi from '../../../api/Admin/Admin'
     export default {
         data() {
             return {
-                name: '',
-                type: [],
-                date: '',
-                time: '',
-            }
+                managementList: [],
+                permissionsList:[],
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
+                props:{
+                    children: 'children',
+                    label: 'label'
+                },
+                pid:'',
+                group_name:'',
+                rule_ids:'',
+                currentArr:''
+            };
         },
         methods: {
             onPage() {
@@ -80,14 +105,109 @@
                 this.onPage()
             },
             confirm() {
-                this.onPage()
+                this.onPage();
+                Api.releAdd(this.pid,this.group_name,this.rule_ids).then((res)=>{
+                    if(res.code==="200001"){
+                        this.$message.success('添加成功');
+                        this.$emit('roleList');
+                    }else {
+                        this.$message.error('添加失败')
+                    }
+                })
             },
+            getSelect() {
+                Api.roleList().then((res) => {
+                    // console.log(res)
+                    const jsonData = res.data;
+                    jsonData.map((item) => {
+                        item.label = item.group_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.group_name;
+                                el.value = el.id;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.group_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                        if (key.son) {
+                                            key.son.map(area => {
+                                                area.label = area.group_name;
+                                                area.value = area.id;
+                                                area.children = area.son;
+                                                if (area.son) {
+                                                    area.son.map(stores => {
+                                                        stores.label = stores.group_name;
+                                                        stores.value = stores.id;
+                                                        stores.children = stores.son;
+                                                        if (stores.son) {
+                                                            stores.son.map(people => {
+                                                                people.label = people.group_name;
+                                                                people.value = people.id;
+                                                                people.children = people.son;
+                                                            })
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        this.managementList=jsonData
+                    });
+                })
+            },
+            getAdminSelect(){
+                adminApi.adminList().then((res)=>{
+                    const data = res.data;
+                    data.map(item=>{
+                        item.label = item.rule_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.rule_name;
+                                el.value = el.id;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.rule_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    this.permissionsList=data
+                })
+            },
+            management(){
+                let res = this.$refs.tree1.getCheckedKeys().concat(this.$refs.tree1.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.pid=value
+            },
+            permissions(){
+                let res = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.rule_ids=value
+            },
+
         },
         computed: {
             addSRole() {
                 return this.$store.state.role.addSRole
             },
         },
+        mounted() {
+            this.getSelect();
+            this.getAdminSelect()
+        }
     }
 </script>
 
@@ -97,12 +217,14 @@
         height: 100%;
         position: relative;
     }
-    .com{
+
+    .com {
         width: 100%;
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
     }
+
     .add_box {
         width: 300px;
         height: 300px;
@@ -115,6 +237,7 @@
         -webkit-animation-fill-mode: forwards;
 
     }
+
     @keyframes change {
         from {
             width: 300px;
@@ -127,6 +250,7 @@
         }
 
     }
+
     .poor {
         width: 98.2%;
         height: 40px;
@@ -174,20 +298,34 @@
         justify-content: center;
         padding: 20px 0;
     }
-    .form_box{
+
+    .form_box {
         width: 100%;
     }
+
     .form {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
     }
+
     .report_int {
         width: 300px;
-        margin-right: 20px;
     }
+
     label {
         display: block;
         padding: 20px 0;
+    }
+    .permi_box>>>.el-tree-node__children{
+        display: flex;
+    }
+    .permi_box{
+        width: 100%;
+    }
+    .box{
+        width: 741px;
+        display: flex;
+        justify-content: space-between;
     }
 </style>

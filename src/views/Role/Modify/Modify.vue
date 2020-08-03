@@ -19,45 +19,29 @@
                     </div>
                     <div class="content_box">
                         <div class="form_box">
+                            <div class="permi_box">
+                                <label>权限设置</label>
+                                <el-tree
+                                        :data="permissionsList"
+                                        show-checkbox
+                                        node-key="id"
+                                        :props="defaultProps"
+                                        @check-change="permissions"
+                                        default-expand-all
+                                        ref="tree"
+                                        :default-checked-keys="rule"
+                                >
+                                </el-tree>
+                            </div>
                             <div class="int_box">
                                 <label>角色名称</label>
                                 <el-input
                                         placeholder="请输角色名称"
-                                        v-model="name"
+                                        v-model="group_name"
                                         clearable
                                         class="report_int"
                                 >
                                 </el-input>
-                            </div>
-                            <div class="int_box">
-                                <label>时间</label>
-                                <el-date-picker
-                                        v-model="date"
-                                        type="date"
-                                        placeholder="选择日期"
-                                        class="date"
-                                >
-                                </el-date-picker>
-                                -
-                                <el-time-picker
-                                        v-model="time"
-                                        placeholder="选择时间"
-                                        class="date"
-                                >
-                                </el-time-picker>
-                            </div>
-                            <div class="int_box">
-                                <label>权限设置</label>
-                                <el-tree
-                                        :data="data"
-                                        show-checkbox
-                                        node-key="id"
-                                        :default-expanded-keys="[2, 3]"
-                                        :default-checked-keys="[5]"
-                                        :props="defaultProps"
-                                        default-expand-all
-                                >
-                                </el-tree>
                             </div>
                         </div>
                     </div>
@@ -73,43 +57,21 @@
 </template>
 
 <script>
+    import adminApi from '../../../api/Admin/Admin'
+    import Api from '../../../api/Role/Role'
     export default {
         data() {
             return {
-                type: [],
-                date: '',
-                time: '',
-                name:'',
-                data: [{
-                    id: 1,
-                    label: '权限设置',
-                    children: [{
-                        id: 4,
-                        label: '权限管理',
-                        children: [
-                            {
-                                id: 9,
-                                label: '权限删除'
-                            },
-                            {
-                                id: 10,
-                                label: '权限修改'
-                            },
-                            {
-                                id: 11,
-                                label: '权限查询'
-                            },
-                            {
-                                id: 12,
-                                label: '权限添加'
-                            },
-                        ]
-                    }]
-                }],
+                group_name:'',
                 defaultProps: {
                     children: 'children',
                     label: 'label'
-                }
+                },
+                permissionsList:[],
+                rule:[],
+                id:'',
+                rule_ids:'',
+                pid:''
             }
         },
         methods: {
@@ -121,14 +83,84 @@
                 this.onPage()
             },
             confirm() {
-                this.onPage()
+                this.onPage();
+                Api.releUpd(this.id,this.pid,this.group_name,this.rule_ids).then((res)=>{
+                    if(res.code === '200003'){
+                        this.$message.success('修改成功');
+                        this.$emit('roleList')
+                    }else {
+                        this.$message.error('修改失败')
+                    }
+                })
+            },
+            setData(data){
+                this.group_name=data.group_name;
+                this.id=data.id;
+                this.pid=data.pid;
+                if(data.rule instanceof Array){
+                    let arrs = [];
+                    function setrule(arr) { //递归
+                        arr.forEach(item=>{
+                            arrs.push(item.id);
+                            if(item.son){
+                                if(item.son !== ''){
+                                    setrule(item.son)
+                                }
+                            }
+                        })
+                    }
+                    setrule(data.rule);
+                    this.rule=arrs;
+                }
+
+            },
+            getRple(){
+                this.detailObj
+            },
+            getAdminSelect(){
+                adminApi.adminList().then((res)=>{
+                    const data = res.data;
+                    data.map(item=>{
+                        item.label = item.rule_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.rule_name;
+                                el.value = el.id;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.rule_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    this.permissionsList=data
+                })
+            },
+            permissions(){
+                let res = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.rule_ids=value
             },
         },
         computed: {
             updRole() {
                 return this.$store.state.role.updRole
             },
+            detailObj(){
+                this.setData(this.$store.state.role.detailObj);
+                return this.$store.state.role.detailObj
+            }
         },
+        mounted() {
+            this.detailObj;
+            this.getAdminSelect()
+        }
     }
 </script>
 
@@ -220,8 +252,7 @@
         overflow-y: scroll;
     }
     .form_box{
-        width: 400px;
-        margin-left: 20px;
+        width: 100%;
     }
     .report_int{
         width: 400px;
@@ -230,8 +261,8 @@
         padding: 20px 0;
         display: block;
     }
-    .date{
-        width: 192px;
+    .permi_box>>>.el-tree-node__children{
+        display: flex;
     }
 
 </style>

@@ -10,7 +10,7 @@
                         </p>
                     </div>
                     <div class="content_btn" style="cursor:pointer">
-                        <p @click="reportAdd()">
+                        <p @click="reportAdd" >
                             <span class="el-icon-plus"></span>
                             <span>角色添加</span>
                         </p>
@@ -21,38 +21,12 @@
                     <div class="tab">
                         <el-table
                                 :data="tableData"
-                                style="width: 100%"
+                                style="width: 100%;margin-bottom: 20px;"
+                                row-key="id"
                                 border
+                                accordion
                                 :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-                        >
-                            <el-table-column type="expand">
-                                <template slot-scope="scope">
-                                    <el-row v-for="(item1,i1) in scope.row.son" :key="item1.id"
-                                            :class="['dbbottom',i1 === 0 ? 'dbtop' : '']">
-                                        <!--       一级权限      -->
-                                        <el-col :span="5">
-                                            <el-tag class="btn"> {{item1.group_name}}</el-tag>
-                                            <i class="el-icon-caret-right"></i>
-                                        </el-col>
-                                        <!--       二级权限 和三级权限     -->
-                                        <el-col :span="19">
-                                            <!--       通过for循环嵌套渲染二级权限     -->
-                                            <el-row :class="[i2=== 0 ? '' : 'dbtop']" v-for="(item2,i2) in item1.son"
-                                                    :key="item2.id">
-                                                <el-col :span="6">
-                                                    <el-tag class="btn" type="success"> {{item1.group_name}}</el-tag>
-                                                    <i class="el-icon-caret-right"></i>
-                                                </el-col>
-                                                <el-col :span="18">
-                                                    <el-tag class="btn" type="warning" v-for="(item3,i3) in item2.son"
-                                                            :key="item3.id"> {{item3.group_name}}
-                                                    </el-tag>
-                                                </el-col>
-                                            </el-row>
-                                        </el-col>
-                                    </el-row>
-                                </template>
-                            </el-table-column>
+                                :tree-props="{children: 'son'}">
                             <el-table-column
                                     label='角色名称'
                                     prop="group_name">
@@ -68,12 +42,12 @@
                                 <template slot-scope="scope">
                                     <el-button
                                             size="mini"
-                                            @click="handleEdit(scope.$index, scope.row)">查看
+                                            @click="handleEdit(scope.row.id)">查看
                                     </el-button>
                                     <el-button
                                             type="primary"
                                             size="mini"
-                                            @click="upd()">修改
+                                            @click="upd(scope.row.id)">修改
                                     </el-button>
                                     <el-button
                                             slot="reference"
@@ -101,9 +75,9 @@
                 </el-card>
             </div>
         </div>
-        <myAdd/>
-        <mySee/>
-        <myModify/>
+        <myAdd @roleList="roleList" ref="reportAdd"/>
+        <mySee ref="mySee"/>
+        <myModify @roleList="roleList" ref="myModify"/>
     </div>
 </template>
 
@@ -133,16 +107,27 @@
         },
         methods: {
             reportAdd() {
+                this.$refs.reportAdd.getSelect();
+                this.$refs.reportAdd.getAdminSelect();
                 this.$store.commit('roleStatus', false);
                 this.$store.commit('addSRole', true)
+
             },
-            handleEdit() {
+            handleEdit(id) {
                 this.$store.commit('roleStatus', false);
-                this.$store.commit('seeRole', true)
+                this.$store.commit('seeRole', true);
+                Api.detailObj(id).then((res)=>{
+                    this.$store.commit('detailObj',res.data);
+                    this.$refs.mySee.getRple()
+                })
             },
-            upd() {
+            upd(id) {
                 this.$store.commit('roleStatus', false);
-                this.$store.commit('updRole', true)
+                this.$store.commit('updRole', true);
+                Api.detailObj(id).then((res)=>{
+                    this.$store.commit('detailObj',res.data);
+                    this.$refs.myModify.getRple()
+                })
             },
             handleDelete(id) { //删除操作
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -173,7 +158,7 @@
             //     this.queryInfo.pagenum = newPage;
             //     this.roleList()
             // },
-            roleList() {
+            roleList() { //列表
                 Api.roleList().then((res) => {
                     this.tableData = res.data;
                 })
@@ -282,15 +267,4 @@
     /*    text-align: center;*/
     /*    margin-top: 30px;*/
     /*}*/
-    .dbtop {
-        border-top: 1px #eee solid;
-    }
-
-    .dbbottom {
-        border-bottom: 1px #eee solid;
-    }
-
-    .btn {
-        margin: 10px 0;
-    }
 </style>
