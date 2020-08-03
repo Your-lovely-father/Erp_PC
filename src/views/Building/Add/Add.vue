@@ -251,7 +251,6 @@
         transform: translate(-50%, -50%);
         animation: change 1s;
         -webkit-animation-fill-mode: forwards;
-        overflow: hidden;
     }
     @keyframes change {
         from {

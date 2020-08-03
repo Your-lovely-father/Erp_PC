@@ -18,53 +18,57 @@
                         <p>查看日志</p>
                     </div>
                     <div class="content_box">
-                        <div class="See_int">
-                            <div class="int">
-                                <label>操作人</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="user_name"
-                                >
-                                </el-input>
-                            </div>
-                            <div class="int">
-                                <label>操作时间</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="create_time"
-                                >
-                                </el-input>
-                            </div>
-                            <div class="int">
-                                <label>操作内容</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="title"
-                                >
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="int_box">
-                            <div class="int">
-                                <label>区域管理</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="province_name"
-                                >
-                                </el-input>
-                            </div>
-                            <div class="int left">
-                                <label>门店管理</label>
-                                <el-input
-                                        :disabled="true"
-                                        class="report_int"
-                                        v-model="storefront_name"
-                                >
-                                </el-input>
+                        <div class="form_box">
+                            <div class="form">
+                                <div class="int_box">
+                                    <label>区域</label>
+                                    <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
+                                </div>
+                                <div class="int_box">
+                                    <label>客户名称</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
+                                    >
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>维护人</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
+                                    >
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>意向楼盘</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
+                                    >
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -120,7 +124,6 @@
         transform: translate(-50%, -50%);
         animation: change 1s;
         -webkit-animation-fill-mode: forwards;
-        overflow: hidden;
     }
 
     @keyframes change {
@@ -187,12 +190,6 @@
         display: block;
         padding: 20px 0;
     }
-    .See_int{
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-    }
     .report_int{
         width: 450px;
     }
@@ -205,8 +202,5 @@
     .int_box{
         margin-left: 50px;
         display: flex;
-    }
-    .left{
-        margin-left: 106px;
     }
 </style>

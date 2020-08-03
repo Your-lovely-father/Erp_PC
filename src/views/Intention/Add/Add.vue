@@ -22,24 +22,55 @@
                             <div class="form">
                                 <div class="int_box">
                                     <label>区域</label>
-                                    <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
+                                    <el-cascader :options="searchAreaOptions" clearable class="report_int"
+                                                 @change="handleChange"
+                                                 ref="cascaderAddr"
+                                    ></el-cascader>
                                 </div>
-                                <div class="int_box_right">
-                                    <label>时间</label>
-                                    <el-date-picker
-                                            v-model="date"
-                                            type="date"
-                                            placeholder="选择日期"
-                                            class="data"
+                                <div class="int_box">
+                                    <label>客户名称</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
                                     >
-                                    </el-date-picker>
-                                    -
-                                    <el-time-picker
-                                            v-model="time"
-                                            placeholder="选择时间"
-                                            class="data"
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>维护人</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
                                     >
-                                    </el-time-picker>
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>意向楼盘</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
+                                    >
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
                                 </div>
                             </div>
                         </div>
@@ -56,24 +87,11 @@
 </template>
 
 <script>
+    import Axios from '../../../api/pub/pub'
     export default {
         data() {
             return {
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-                type: [],
-                date: '',
-                time: '',
+                searchAreaOptions:[] , //区域
             }
         },
         methods: {
@@ -87,12 +105,50 @@
             confirm() {
                 this.onPage()
             },
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.searchAreaOptions = JSON.parse(linkage)
+                })
+            },
+            handleChange() { //获取省市区id传给后台获取门店数据
+                var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
+                this.province_id = pathvalue[0];
+                this.city_id = pathvalue[1];
+                this.area_id = pathvalue[2];
+            },
         },
         computed: {
             addisIntention() {
                 return this.$store.state.intention.addisIntention
             },
         },
+        mounted() {
+            this.getSelect()
+        }
     }
 </script>
 
@@ -113,7 +169,6 @@
         transform: translate(-50%, -50%);
         animation: change 1s;
         -webkit-animation-fill-mode: forwards;
-        overflow: hidden;
     }
 
     @keyframes change {

@@ -193,7 +193,7 @@
                 this.onPage()
             },
             confirm() {
-                this.onPage()
+                this.onPage();
                 if(this.create_data !== null && this.create_time !==null){
                     let create_data=this.create_time.substr(0,10);
                     this.create_time = create_data+ " " +this.create_time
@@ -259,6 +259,7 @@
                     let cityData = JSON.stringify(res.data.data);
                     this.storefrontOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 });
+                this.storefront_name='' //清空门店
             },
             getSlectList() { //获取员工列表拿到维护人id
                 let page = 1;
@@ -323,7 +324,8 @@
             },
             storefrontValue(e) { //获取门店id
                 this.storefront_id = e;
-                this.getSlectList()
+                this.getSlectList();
+                this.user_Id=''
             },
             userId(e) {
                 this.user_id = e
@@ -409,7 +411,6 @@
         transform: translate(-50%, -50%);
         animation: change 1s;
         -webkit-animation-fill-mode: forwards;
-        overflow: hidden;
     }
 
     @keyframes change {

@@ -24,7 +24,7 @@
                                     <label>姓名</label>
                                     <el-input
                                             placeholder="请输入姓名"
-                                            v-model="selectSee.user_name"
+                                            v-model="user_name"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -35,7 +35,7 @@
                                     <label>电话</label>
                                     <el-input
                                             placeholder="请输入电话"
-                                            v-model="selectSee.user_phone"
+                                            v-model="user_phone"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -46,7 +46,7 @@
                                     <label>年龄</label>
                                     <el-input
                                             placeholder="请输入年龄"
-                                            v-model="selectSee.user_age"
+                                            v-model="user_age"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -57,7 +57,7 @@
                                     <label>性别</label>
                                     <el-input
                                             placeholder="请输入性别"
-                                            v-model="selectSee.user_sex === 10 ? '男': '女'"
+                                            v-model="user_sex"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -68,7 +68,7 @@
                                     <label>身份证号</label>
                                     <el-input
                                             placeholder="请输入身份证号"
-                                            v-model="selectSee.user_id_card"
+                                            v-model="user_id_card"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -76,8 +76,15 @@
                                     </el-input>
                                 </div>
                                 <div class="int_box">
+                                    <label>区域</label>
+                                    <el-cascader v-model="valueArea" :options="areaOptions" clearable class="report_int"
+                                                 :disabled="true"
+                                    ></el-cascader>
+                                </div>
+                                <div class="int_box">
                                     <label>门店</label>
-                                    <el-select v-model="value" placeholder="请选择"  class="report_int"
+                                    <el-select v-model="storefront" placeholder="请选择" class="report_int"
+                                               :disabled="true"
                                     >
                                         <el-option
                                                 v-for="item in storeList"
@@ -88,35 +95,32 @@
                                         </el-option>
                                     </el-select>
                                 </div>
-                            </div>
-                            <div class="role_left">
                                 <div class="int_box ">
                                     <label>角色管理</label>
-                                    <el-cascader :options="roleOptions" clearable class="report_int"
-                                                 :disabled="true"
+                                    <el-cascader v-model="user_role" :options="roleOptions" clearable class="report_int"
                                     ></el-cascader>
                                 </div>
-                            </div>
-                            <div class="state">
-                                <div class="int_box">
-                                    <label>状态</label>
-                                    <el-switch
-                                            v-model="selectSee.user_status === 1 ? true : false"
-                                            active-color="#13ce66"
-                                            inactive-color="#ff4949"
-                                            :disabled="true"
-                                    >
-                                    </el-switch>
-                                </div>
-                                <div class="int_box">
-                                    <label>开通手机端</label>
-                                    <el-switch
-                                            v-model="selectSee.mobile_terminal_status === 1 ? true : false"
-                                            active-color="#13ce66"
-                                            inactive-color="#ff4949"
-                                            :disabled="true"
-                                    >
-                                    </el-switch>
+                                <div class="state">
+                                    <div class="int_box">
+                                        <label>状态</label>
+                                        <el-switch
+                                                v-model="user_status"
+                                                active-color="#13ce66"
+                                                inactive-color="#ff4949"
+                                                :disabled="true"
+                                        >
+                                        </el-switch>
+                                    </div>
+                                    <div class="int_box">
+                                        <label>开通手机端</label>
+                                        <el-switch
+                                                v-model="mobile_terminal_status"
+                                                active-color="#13ce66"
+                                                inactive-color="#ff4949"
+                                                :disabled="true"
+                                        >
+                                        </el-switch>
+                                    </div>
                                 </div>
                             </div>
                             <div class="upload">
@@ -149,17 +153,26 @@
 </template>
 
 <script>
+    import Axios from '../../../api/pub/pub'
     import Api from '../../../api/Employees/Employees'
-    import StoreApi from '../../../api/pub/pub'
     export default {
         data() {
             return {
                 headDialogImageUrl: '',
                 headDialogVisible: false,
-                role:'',
-                value:'',
-                storeList:[],
-                roleOptions:[],
+                user_name: '', //姓名
+                user_phone: '', //手机号
+                user_age: '', //年龄
+                user_sex: '', //性别
+                user_id_card: '', //身份证
+                areaOptions: [], //区域列表
+                valueArea: [], //区域回显
+                storeList: [], //门店列表
+                storefront: '', //门店回显
+                roleOptions: [], //角色列表
+                user_role:[],
+                user_status: '', //状态
+                mobile_terminal_status: '' //开通手状态
             };
         },
         methods: {
@@ -180,33 +193,83 @@
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
             },
-            store(){ //门店回显处理
-                StoreApi.postStores().then((res)=>{
-                    let cityData = JSON.stringify(res.data);
-                    this.storeList = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
-                    // console.log(this.storeList)
-                });
-                this.storeList.map((item)=>{
-                    console.log(item)
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.areaOptions = JSON.parse(linkage);
                 })
             },
-            // role() { //角色管理回显处理
-            //     Api.postRole().then((res)=>{})
-            // }
-        },
-
-        mounted() {
-            this.store()
-            // this.role()
+            postRole() { // 查询角色管理
+                Api.postRole().then((res) => {
+                    const roleData = res.data;
+                    roleData.map((item) => {
+                        item.label = item.group_name;
+                        item.value = item.id;
+                        item.children = item.children;
+                        if (item.children) {
+                            item.children.map(el => {
+                                el.label = el.group_name;
+                                el.value = el.id;
+                            })
+                        }
+                    });
+                    this.roleOptions=roleData;
+                })
+            },
+            parentMsg() {
+                this.detailsObj
+            },
+            setData(data) {
+                this.user_name = data.user_name;
+                this.user_phone = data.user_phone;
+                this.user_age = data.user_age;
+                this.user_sex = data.user_sex === 10 ? '男' : '女';
+                this.user_id_card = data.user_id_card;
+                this.storefront = data.storefront;
+                this.user_status = data.user_status  === 1 ? true : false;
+                this.mobile_terminal_status = data.mobile_terminal_status  === 1 ? true : false;
+                this.valueArea = [data.province_id + '', data.city_id + '', data.area_id + ''];
+                this.user_role=[data.user_role];
+                this.headDialogImageUrl=data.user_image;
+            }
         },
         computed: {
             seeEmployees() {
                 return this.$store.state.employees.seeEmployees
             },
-            selectSee() {
-                return this.$store.state.employees.selectSee
+            detailsObj() {
+                this.setData(this.$store.state.employees.detailsObj);
+                return this.$store.state.employees.detailsObj
             }
         },
+        mounted() {
+            this.detailsObj
+            this.getSelect();
+            this.postRole()
+        }
     }
 </script>
 
@@ -227,7 +290,6 @@
         transform: translate(-50%, -50%);
         animation: change 1s;
         -webkit-animation-fill-mode: forwards;
-        overflow: hidden;
     }
 
     @keyframes change {
@@ -310,11 +372,7 @@
         width: 480px;
         display: flex;
         justify-content: space-between;
-        margin-left: 46px;
-    }
-
-    .role_left {
-        margin-left: 46px;
+        padding-top: 15px;
     }
 
     .upload {

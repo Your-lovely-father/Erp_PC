@@ -147,22 +147,22 @@
                                                    on-error	文件上传失败时的钩子
                                                    limit 最多可上传1张
                                          -->
-                                     <el-upload
-                                             class="avatar-uploader"
-                                             ref="upload_img"
-                                             action=""
-                                             accept="image/jpeg,image/jpg,image/png"
-                                             :name="upload_name"
-                                             list-type="picture-card"
-                                             :on-exceed="fileBeyond"
-                                             :on-remove="handleRemove"
-                                             :limit = "1"
-                                             :http-request="uploadSectionFile"
-                                             :on-preview="headHandlePictureCardPreview"
+                                        <el-upload
+                                                class="avatar-uploader"
+                                                ref="upload_img"
+                                                action=""
+                                                accept="image/jpeg,image/jpg,image/png"
+                                                :name="upload_name"
+                                                list-type="picture-card"
+                                                :on-exceed="fileBeyond"
+                                                :on-remove="handleRemove"
+                                                :limit="1"
+                                                :http-request="uploadSectionFile"
+                                                :on-preview="headHandlePictureCardPreview"
                                         >
                                             <i class="el-icon-plus"></i>
                                         </el-upload>
-                                        <el-dialog  :modal='false' :visible.sync="headDialogVisible">
+                                        <el-dialog :modal='false' :visible.sync="headDialogVisible">
                                             <img width="100%" :src="headDialogImageUrl" alt="">
                                         </el-dialog>
                                     </div>
@@ -185,6 +185,7 @@
     import Axios from '../../../api/pub/pub'
     import Api from '../../../api/Employees/Employees'
     import axios from 'axios'
+
     export default {
         data() {
             return {
@@ -231,19 +232,19 @@
             mobileStatus(e) { //手机
                 this.mobile_terminal_status = e
             },
-            uploadSectionFile(params){// 自定义上传方法
-                let   that = this;
-                let   file = params.file;  //获取上传的文件
-                let   fileType = file.type;   //获取文件类型
-                let   isImage = fileType.indexOf('image') != -1; // 判断是否是图片类型
-                let   file_url = that.$refs.upload_img.uploadFiles[0].url;
-                let  isLt2M = file.size / 1024 / 1024 < 2;
+            uploadSectionFile(params) {// 自定义上传方法
+                let that = this;
+                let file = params.file;  //获取上传的文件
+                let fileType = file.type;   //获取文件类型
+                let isImage = fileType.indexOf('image') != -1; // 判断是否是图片类型
+                let file_url = that.$refs.upload_img.uploadFiles[0].url;
+                let isLt2M = file.size / 1024 / 1024 < 2;
                 if (!isLt2M) {  // 判断大小
                     that.$message.error('上传图片的大小不能超过 2MB!');
                     that.$refs.upload_img.uploadFiles = [];  //不符合就清空已选择的图片
                     return;
                 }
-                if(!isImage){  // 文件格式
+                if (!isImage) {  // 文件格式
                     that.$message.error('请选择图片文件！');
                     that.$refs.upload_img.uploadFiles = [];   //不符合就清空已选择的图片
                     return;
@@ -257,15 +258,15 @@
                     }
                 }
             },
-            uploadFile(file){
+            uploadFile(file) {
                 var that = this;
                 var formData = new FormData();
                 formData.append('files', file);
-                formData.append('type','3');
-                let Authorization=window.localStorage.getItem('access_token');
-                let token =JSON.parse(Authorization);
+                formData.append('type', '3');
+                let Authorization = window.localStorage.getItem('access_token');
+                let token = JSON.parse(Authorization);
                 const instance = axios.create({
-                    withCredentials:true
+                    withCredentials: true
                 });
                 //上传头像
                 instance({
@@ -273,14 +274,14 @@
                     url: 'http://localhost:8080/api/erp/upload_file',
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        'access-token':token
+                        'access-token': token
                     },
-                    data:formData
-                }).then((res)=>{
-                    if(res.data.code ==="200005"){  //成功的话将数据插入data中
+                    data: formData
+                }).then((res) => {
+                    if (res.data.code === "200005") {  //成功的话将数据插入data中
                         that.user_image = res.data.data.url;
                         that.$message.success('图片上传成功')
-                    }else{
+                    } else {
                         // 上传失败，清除已选择 内容 ，并提示失败原因
                         that.$refs.upload_img.uploadFiles = [];
                         that.$message.error('图片上传异常');
@@ -289,14 +290,14 @@
             },
             //文件删除
             handleRemove() {
-               this.user_image='';
+                this.user_image = '';
             },
             headHandlePictureCardPreview(file) { //处理图片预览效果
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
             },
             //文件超限
-            fileBeyond(){
+            fileBeyond() {
                 this.$message({
                     type: 'info',
                     message: '最多上传1张图片'
@@ -307,7 +308,7 @@
                     this.user_name, this.user_phone, this.user_age, this.gender, this.user_id_card,
                     this.user_image,
                     this.user_password, this.user_role,
-                    this.province_id,this.city_id, this.area_id,
+                    this.province_id, this.city_id, this.area_id,
                     this.storefront_id,
                     this.user_status, this.mobile_terminal_status,
                 ).then((res) => {
@@ -361,9 +362,9 @@
                     this.storesOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 })
             },
-            roleChange(){ //获取角色id
+            roleChange() { //获取角色id
                 var rolevalue = this.$refs.roleAdd.getCheckedNodes()[0].data.id;
-                this.user_role=rolevalue
+                this.user_role = rolevalue
             },
             obtain(e) { //门店id
                 this.storefront_id = e
@@ -377,15 +378,16 @@
                     roleData.map((item) => {
                         item.label = item.group_name;
                         item.value = item.id;
-                        item.children = item.son;
-                        if (item.son) {
-                            item.son.map(el => {
+                        console.log(item.children === undefined);
+                        item.children = item.children;
+                        if (item.children) {
+                            item.children.map(el => {
                                 el.label = el.group_name;
                                 el.value = el.id;
                             })
                         }
                     });
-                    this.roleOptions=roleData
+                    this.roleOptions = roleData
                 })
             },
 
@@ -400,10 +402,10 @@
                 return this.$store.state.employees.addEmployees
             },
         },
-        watch:{ //三级联动切换区域清空门店内容
-            area_id(val){
-                if(val){
-                   this.storefront_id=''
+        watch: { //三级联动切换区域清空门店内容
+            area_id(val) {
+                if (val) {
+                    this.storefront_id = ''
                 }
             }
         }
@@ -427,7 +429,6 @@
         transform: translate(-50%, -50%);
         animation: change 1s;
         -webkit-animation-fill-mode: forwards;
-        overflow: hidden;
     }
 
     @keyframes change {

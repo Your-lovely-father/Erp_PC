@@ -18,30 +18,59 @@
                         <p>修改区域</p>
                     </div>
                     <div class="content_box">
-                     <div class="form_box">
-                         <div class="int_box">
-                             <label>区域</label>
-                             <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
-                         </div>
-
-                         <div class="int_box">
-                             <label>时间</label>
-                             <el-date-picker
-                                     v-model="date"
-                                     type="date"
-                                     placeholder="选择日期"
-                                     class="report_int"
-                             >
-                             </el-date-picker>
-                             -
-                             <el-time-picker
-                                     v-model="time"
-                                     placeholder="选择时间"
-                                     class="report_int"
-                             >
-                             </el-time-picker>
-                         </div>
-                     </div>
+                        <div class="form_box">
+                            <div class="form">
+                                <div class="int_box">
+                                    <label>区域</label>
+                                    <el-cascader :options="areaOptions" clearable class="report_int"></el-cascader>
+                                </div>
+                                <div class="int_box">
+                                    <label>客户名称</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
+                                    >
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>维护人</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
+                                    >
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>意向楼盘</label>
+                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                               @change="storefrontValue"
+                                               @clear="clearStorefront"
+                                    >
+                                        <el-option
+                                                v-for="item in searchStoresOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="footer">
                         <el-button @click="cancel" size="medium">取消</el-button>
@@ -112,7 +141,6 @@
         transform: translate(-50%, -50%);
         animation: change 1s;
         -webkit-animation-fill-mode: forwards;
-        overflow: hidden;
     }
 
     @keyframes change {
@@ -185,15 +213,6 @@
     }
     .content_box{
         width: 100%;
-    }
-    .date{
-        width: 295px;
-    }
-    .See_int{
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
     }
     .com{
         width: 100%;

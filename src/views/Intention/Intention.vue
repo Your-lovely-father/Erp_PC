@@ -26,40 +26,43 @@
                                 :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                         >
                             <el-table-column
-                                    label='客户'
-                                    prop="address">
+                                    label='客户名称'
+                                    prop="client_name">
                             </el-table-column>
                             <el-table-column
                                     label='维护人'
-                                    prop="address">
+                                    prop="user_name">
                             </el-table-column>
                             <el-table-column
                                     label='区域'
-                                    prop="address">
+                                    prop="area_name">
                             </el-table-column>
                             <el-table-column
                                     label='意向楼盘'
-                                    prop="address">
+                                    prop="building_name">
+                            </el-table-column>
+                            <el-table-column
+                                    label='时间'
+                                    prop="update_time">
                             </el-table-column>
                             <el-table-column
                                     align="right"
                                     label="操作"
                             >
                                 <template slot-scope="scope">
-                                    <el-button @click="intentionSee(scope.row)"
+                                    <el-button @click="intentionSee(scope.row.id)"
                                                size="mini">查看</el-button>
                                     <el-button
                                             type="primary"
                                             size="mini"
-                                            @click="handleEdit(scope.$index, scope.row)">修改
+                                            @click="handleEdit(scope.row.id)">修改
                                     </el-button>
-
                                         <el-button
                                                 slot="reference"
                                                 size="mini"
                                                 type="danger"
                                                 class="left_btn"
-                                                @click="handleDelete(scope.$index, scope.row)">删除
+                                                @click="handleDelete(scope.row.id)">删除
                                         </el-button>
                                 </template>
                             </el-table-column>
@@ -90,6 +93,7 @@
     import myModify from './Modify/Modify'
     import myAdd from './Add/Add'
     import mySee from './See/See'
+    import  Api from '../../api/Intention/Intention'
     export default {
         components: {
             myModify,
@@ -112,13 +116,31 @@
                 this.$store.commit('isIntentionStatus', false);
                 this.$store.commit('addisIntention', true)
             },
-            intentionSee(index, row) {
+            intentionSee(id) {
                 console.log(index, row);
                 this.$store.commit('isIntentionStatus', false);
                 this.$store.commit('seeisIntention', true)
             },
-            handleDelete(index, row) {
-                console.log(index, row);
+            handleDelete(id) {
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    Api.intentionDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.intentionList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             handleEdit(){
                 this.$store.commit('isIntentionStatus', false);
@@ -126,17 +148,26 @@
             },
             handleSizeChange(newSize) { //当前显示多少条操作
                 this.queryInfo.pagesize = newSize;
-                // this.trackingList()
+                this.intentionList()
             },
             handleCurrentChange(newPage) { //当前页数操作
                 this.queryInfo.pagenum = newPage;
-                // this.trackingList()
+                this.intentionList()
             },
+            intentionList(){ //楼盘列表
+                Api.intentionList(this.queryInfo.pagenum,this.queryInfo.pagesize).then((res)=>{
+                    this.tableData=res.data.data;
+                    this.totalPage=res.data.count;
+                })
+            }
         },
         computed: {
             isIntentionStatus() {
                 return this.$store.state.intention.isIntentionStatus
             },
+        },
+        mounted() {
+            this.intentionList()
         }
     }
 </script>

@@ -55,7 +55,7 @@
                                     label="性别"
                                     width="180">
                                 <template slot-scope="scope">
-                                    <span>{{scope.row.user_sex === 20 ? '男' : '女'}}</span>
+                                    <span>{{scope.row.user_sex === 10 ? '男' : '女'}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -100,7 +100,7 @@
                                     width="200">
                                 <template slot-scope="scope">
                                     <el-button @click="handleClick(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button type="text" size="small" @click="upd(scope.row)">编辑</el-button>
+                                    <el-button type="text" size="small" @click="upd(scope.row.id)">编辑</el-button>
                                     <el-button type="text" size="small" @click="del(scope.row.id)">删除</el-button>
                                 </template>
                             </el-table-column>
@@ -122,8 +122,8 @@
             </div>
         </div>
         <myAdd  @getSelectList="getSelectList"/>
-        <mySee/>
-        <myModify/>
+        <mySee ref="mySee"/>
+        <myModify ref="myModify"/>
     </div>
 </template>
 
@@ -162,19 +162,22 @@
                 this.$store.commit('addEmployees', true)
             },
             handleClick(id) { //查看
-                Api.postSee(id).then((res)=>{
-                    if (res.code !== 200) {
-                        return this.$message.error('获取详情失败')
-                    }
-                    this.$store.commit('selectSee',res.data)
-                });
                 this.$store.commit('employeesStatus', false);
                 this.$store.commit('seeEmployees', true);
+                //获取详情
+                Api.postSee(id).then((res)=>{
+                    this.$store.commit('detailsObj',res.data);
+                    this.$refs.mySee.parentMsg() //给子组件传方法，点击时触发
+                });
             },
-            upd(val) {
-                this.$store.commit('selectUpd',val);
+            upd(id) {
                 this.$store.commit('employeesStatus', false);
                 this.$store.commit('updEmployees', true);
+                //获取详情
+                Api.postSee(id).then((res)=>{
+                    this.$store.commit('detailsObj',res.data);
+                    this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
+                });
             },
             del(id) { //删除操作
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {

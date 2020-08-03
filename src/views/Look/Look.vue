@@ -39,6 +39,14 @@
                                     prop="guide_look_content">
                             </el-table-column>
                             <el-table-column
+                                    label="客户名称"
+                                    prop="client_name">
+                            </el-table-column>
+                            <el-table-column
+                                    label="维护人"
+                                    prop="user_name">
+                            </el-table-column>
+                            <el-table-column
                                     align="right" label="操作">
                                 <template slot-scope="scope">
                                     <el-button
