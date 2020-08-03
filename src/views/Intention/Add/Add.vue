@@ -28,43 +28,26 @@
                                     ></el-cascader>
                                 </div>
                                 <div class="int_box">
-                                    <label>客户名称</label>
-                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
-                                               @change="storefrontValue"
-                                               @clear="clearStorefront"
-                                    >
-                                        <el-option
-                                                v-for="item in searchStoresOptions"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value"
-                                        >
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                                <div class="int_box">
-                                    <label>维护人</label>
-                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
-                                               @change="storefrontValue"
-                                               @clear="clearStorefront"
-                                    >
-                                        <el-option
-                                                v-for="item in searchStoresOptions"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value"
-                                        >
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                                <div class="int_box">
                                     <label>意向楼盘</label>
-                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
-                                               @change="storefrontValue"
-                                               @clear="clearStorefront"
+                                    <el-select v-model="building_id" placeholder="请选择" class="report_int"
+                                               @change="buildingId"
                                     >
                                         <el-option
-                                                v-for="item in searchStoresOptions"
+                                                v-for="item in buildingOptions"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                        >
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="int_box">
+                                    <label>客户-手机号-维护人</label>
+                                    <el-select v-model="client_name" placeholder="请选择" class="int"
+                                               @change="obtainId"
+                                    >
+                                        <el-option
+                                                v-for="item in customerList"
                                                 :key="item.value"
                                                 :label="item.label"
                                                 :value="item.value"
@@ -89,6 +72,7 @@
 <script>
     import Axios from '../../../api/pub/pub'
     import Api from '../../../api/Intention/Intention'
+    import repApi from '../../../api/Report/Report'
     export default {
         data() {
             return {
@@ -96,11 +80,12 @@
                 province_id:'',//省
                 city_id:'',//市
                 area_id:'',//区
-                customerList:[], //客户
-                employeesList:[] //维护人
-
-
-
+                customerList:[], //客户-手机号-维护人
+                buildingOptions:[],//楼盘
+                client_name:'',//客户id
+                client_id:'',//客户id
+                user_id:'',//维护人id
+                building_id:'',//楼盘id
             }
         },
         methods: {
@@ -112,7 +97,15 @@
                 this.onPage()
             },
             confirm() {
-                this.onPage()
+                this.onPage();
+                Api.intentionAdd(this.client_id,this.user_id,this.building_id,this.province_id,this.city_id,this.area_id).then((res)=>{
+                    if(res.code === "200001"){
+                        this.$message.success('添加成功');
+                        this.$emit('intentionList')
+                    }else {
+                        this.$message.error('添加失败')
+                    }
+                })
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {
@@ -151,19 +144,34 @@
                 Api.intentionSelect(this.area_id).then((res)=>{
                     res.data.forEach(item => {
                         this.customerList.push({
-                            client_name:item.client_name,
+                            label:'名称 : '+item.client_name + ' ; 手机号 : '+item.client_phone + ' ; 维护人 : '+item.user_name,
                             client_phone:item.client_phone,
-                            id:item.id
-                        })
-                        this.employeesList.push({
-                            user_id:item.user_id,
-                            user_name:item.user_name
-                        })
-                    })
-                    console.log(this.customerList)
-                    console.log(this.employeesList)
+                            value:item.id +','+item.user_id
+                        });
+                    });
+                });
+                this.buildingList()
+            },
+            buildingList(){ //楼盘字典列表获取意向楼盘
+                let page =1 ;
+                let pagesum = 999;
+                let province_id =this.province_id;
+                let city_id = this.city_id;
+                let area_id = this.area_id;
+                repApi.buildingList(page,pagesum,province_id,city_id,area_id).then((res)=>{
+                    let cityData = JSON.stringify(res.data.data);
+                    this.buildingOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/building_name/g, "label"))
                 })
             },
+            obtainId(e){ //获取客户 / 维护人id
+                let data =e.split(',');
+                this.client_id=data[0];
+                this.user_id=data[1];
+            },
+            buildingId(e){ //获取楼盘id
+                this.building_id=e
+            },
+
         },
         computed: {
             addisIntention() {
@@ -276,5 +284,8 @@
         height: 100%;
         overflow-x: hidden;
         overflow-y: scroll;
+    }
+    .int{
+        width: 500px;
     }
 </style>

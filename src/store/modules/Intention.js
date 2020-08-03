@@ -5,6 +5,7 @@ export default {
         addisIntention: storage.get('addisIntention').length === 0 ? 0 : 1,
         seeisIntention:storage.get('seeisIntention').length === 0 ? 0 : 1,
         updisIntention:storage.get('updisIntention').length === 0 ? 0 : 1,
+        detailObj:storage.get('detailObj')
     },
     mutations: {
         isIntentionStatus: ((state, data) => {
@@ -29,7 +30,8 @@ export default {
         }),
         isSeeIntention:((state,data)=>{
             storage.set('seeisIntention',state.seeisIntention=data);
-            storage.remove('seeisIntention')
+            storage.remove('seeisIntention');
+            storage.remove('detailObj')
         }),
 
         updisIntention: ((state, data) => {
@@ -40,8 +42,11 @@ export default {
         }),
         isUpdStatusupdisIntention:((state,data)=>{
             storage.set('updisIntention',state.updisIntention=data);
-            storage.remove('updisIntention')
+            storage.remove('updisIntention');
+            storage.remove('detailObj')
         }),
-
+        detailObj:((state,data)=>{
+            storage.set('detailObj',state.detailObj=data);
+        })
     },
 }

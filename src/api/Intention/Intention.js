@@ -10,16 +10,16 @@ export default {
         return Axios.post('/erp/intention_del',{id:id})
     },
     //楼盘添加
-    intentionAdd(client_id,user_id,building_id,area_id){
-        return Axios.post('/erp/intention_add',{client_id:client_id,user_id:user_id,building_id:building_id,area_id:area_id})
+    intentionAdd(client_id,user_id,building_id,province_id,city_id,area_id){
+        return Axios.post('/erp/intention_add',{client_id:client_id,user_id:user_id,building_id:building_id,province_id:province_id,city_id:city_id,area_id:area_id})
     },
     //楼盘详情
-    detailList(){
+    detailList(id){
         return Axios.post('/erp/intention_detail',{id:id})
     },
     //楼盘修该
-    intentionUpd(id,building_id,area_id){
-        return Axios.post('/erp/intention_edit',{id:id,building_id:building_id,area_id:area_id})
+    intentionUpd(id,building_id,province_id,city_id,area_id){
+        return Axios.post('/erp/intention_edit',{id:id,building_id:building_id,province_id,city_id,area_id})
     },
     //添加意向楼盘客户信息
     intentionSelect(area_id){

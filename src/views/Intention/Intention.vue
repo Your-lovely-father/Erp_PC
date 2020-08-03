@@ -83,9 +83,9 @@
                 </el-card>
             </div>
         </div>
-        <myAdd/>
-        <mySee/>
-        <myModify/>
+        <myAdd @intentionList="intentionList"/>
+        <mySee ref="mySee"/>
+        <myModify ref="myModify" @intentionList="intentionList"/>
     </div>
 </template>
 
@@ -117,9 +117,12 @@
                 this.$store.commit('addisIntention', true)
             },
             intentionSee(id) {
-                console.log(index, row);
                 this.$store.commit('isIntentionStatus', false);
-                this.$store.commit('seeisIntention', true)
+                this.$store.commit('seeisIntention', true);
+                Api.detailList(id).then((res)=>{
+                    this.$store.commit('detailObj',res.data);
+                    this.$refs.mySee.createSet()
+                })
             },
             handleDelete(id) {
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -142,9 +145,13 @@
                     });
                 });
             },
-            handleEdit(){
+            handleEdit(id){
                 this.$store.commit('isIntentionStatus', false);
-                this.$store.commit('updisIntention', true)
+                this.$store.commit('updisIntention', true);
+                Api.detailList(id).then((res)=>{
+                    this.$store.commit('detailObj',res.data);
+                    this.$refs.myModify.createSet()
+                })
             },
             handleSizeChange(newSize) { //当前显示多少条操作
                 this.queryInfo.pagesize = newSize;
