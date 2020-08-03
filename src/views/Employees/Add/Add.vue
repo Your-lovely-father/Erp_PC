@@ -162,7 +162,7 @@
                                         >
                                             <i class="el-icon-plus"></i>
                                         </el-upload>
-                                        <el-dialog :modal='false' :visible.sync="headDialogVisible">
+                                        <el-dialog :append-to-body="true" :visible.sync="headDialogVisible">
                                             <img width="100%" :src="headDialogImageUrl" alt="">
                                         </el-dialog>
                                     </div>

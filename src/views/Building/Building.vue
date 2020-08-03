@@ -71,14 +71,14 @@
                                     label="楼盘图片"
                                     width="180">
                                 <template slot-scope="scope">
-                                    <img :src="scope.row.buildingDialogImageUrl" style="height: 50px"/>
+                                    <img :src="$Tool.formatImg(scope.row.building_img_url)" style="height: 50px"/>
                                 </template>
                             </el-table-column>
-                            <el-table-column
-                                    prop="management"
-                                    label="区域管理"
-                                    width="180">
-                            </el-table-column>
+<!--                            <el-table-column-->
+<!--                                    prop="management"-->
+<!--                                    label="区域管理"-->
+<!--                                    width="180">-->
+<!--                            </el-table-column>-->
                             <el-table-column
                                     prop="opening_time"
                                     label="时间"
@@ -89,7 +89,7 @@
                                     label="户型图片"
                                     width="180">
                                 <template slot-scope="scope">
-                                    <img :src="scope.row.modelDialogImageUrl" style="height: 50px"/>
+                                    <img :src="$Tool.formatImg(scope.row.floor_img_url)" style="height: 50px"/>
                                 </template>
                             </el-table-column>
                             <el-table-column
@@ -97,8 +97,8 @@
                                     label="操作"
                                     width="200">
                                 <template slot-scope="scope">
-                                    <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                                    <el-button type="text" size="small" @click="upd()">编辑</el-button>
+                                    <el-button @click="handleClick(scope.row.id)" type="text" size="small">查看</el-button>
+                                    <el-button type="text" size="small" @click="upd(scope.row.id)">编辑</el-button>
                                         <el-button type="text" size="small" slot="reference" class="el-popconfirm" @click="del(scope.row.id)">删除
                                         </el-button>
                                 </template>
@@ -120,9 +120,9 @@
                 </el-card>
             </div>
         </div>
-        <myAdd/>
-        <mySee/>
-        <myModify/>
+        <myAdd @buildingList="buildingList"/>
+        <mySee ref="mySee"/>
+        <myModify ref="myModify" @buildingList="buildingList"/>
     </div>
 </template>
 
@@ -154,13 +154,21 @@
                 this.$store.commit('buildingStatus', false);
                 this.$store.commit('addBuiding', true)
             },
-            handleClick() {
+            handleClick(id) {
                 this.$store.commit('buildingStatus', false);
-                this.$store.commit('seeStatusBuilding', true)
+                this.$store.commit('seeStatusBuilding', true);
+                Api.detailObject(id).then((res)=>{
+                    this.$store.commit('detailObj',res.data);
+                    this.$refs.mySee.parentMsg() //给子组件传方法，点击时触发
+                })
             },
-            upd() {
+            upd(id) {
                 this.$store.commit('buildingStatus', false);
-                this.$store.commit('updStatusBuilding', true)
+                this.$store.commit('updStatusBuilding', true);
+                Api.detailObject(id).then((res)=>{
+                    this.$store.commit('detailObj',res.data);
+                    this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
+                })
             },
             handleSizeChange(newSize) { //当前显示多少条操作
                 this.queryInfo.pagesize = newSize;
@@ -191,10 +199,17 @@
                     });
                 });
             },
-            buildingList(){
+            buildingList(){ //列表
                 Api.buildingList(this.queryInfo.pagenum,this.queryInfo.pagesize).then((res)=>{
-                    this.tableData=res.data.data;
-                    console.log(this.tableData)
+                    let data =res.data.data;
+                    data.map(item => {
+                        return {
+                            ...item,
+                            building_img_url:this.$Tool.formatImg(item.building_img_url),
+                            floor_img_url:this.$Tool.formatImg(item.floor_img_url)
+                        };
+                    });
+                    this.tableData=data;
                     this.totalPage=res.data.count
                 })
             }

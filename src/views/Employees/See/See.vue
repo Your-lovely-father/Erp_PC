@@ -132,10 +132,11 @@
                                             :on-preview="headHandlePictureCardPreview"
                                             :on-remove="headHandleRemove"
                                             :disabled="true"
+                                            :file-list="picture_list"
                                     >
                                         <i class="el-icon-plus"></i>
                                     </el-upload>
-                                    <el-dialog :visible.sync="headDialogVisible">
+                                    <el-dialog :append-to-body="true" :visible.sync="headDialogVisible">
                                         <img width="100%" :src="headDialogImageUrl" alt="">
                                     </el-dialog>
                                 </div>
@@ -172,7 +173,12 @@
                 roleOptions: [], //角色列表
                 user_role:[],
                 user_status: '', //状态
-                mobile_terminal_status: '' //开通手状态
+                mobile_terminal_status: '' ,//开通手状态
+                picture_list: [],//回显图片
+                userImage:'https://erp-report-shenyang.oss-cn-beijing.aliyuncs.com/',
+                headDialogVisible:false,
+                headDialogImageUrl:'',
+                imageUrl:''
             };
         },
         methods: {
@@ -253,7 +259,13 @@
                 this.mobile_terminal_status = data.mobile_terminal_status  === 1 ? true : false;
                 this.valueArea = [data.province_id + '', data.city_id + '', data.area_id + ''];
                 this.user_role=[data.user_role];
-                this.headDialogImageUrl=data.user_image;
+                this.imageUrl = data.user_image;
+                this.picture_list.push({
+                    url:this.userImage+this.imageUrl
+                });
+                if (this.picture_list.length === 2){
+                    this.picture_list.shift()
+                }
             }
         },
         computed: {

@@ -151,11 +151,10 @@
                                             :limit="1"
                                             :http-request="uploadSectionFile"
                                             :on-preview="headHandlePictureCardPreview"
-                                            @click.native="logoutHandle"
                                     >
                                         <i class="el-icon-plus"></i>
                                     </el-upload>
-                                    <el-dialog :modal='false' :visible.sync="headDialogVisible">
+                                    <el-dialog :append-to-body="true" :visible.sync="headDialogVisible">
                                         <img width="100%" :src="headDialogImageUrl" alt="">
                                     </el-dialog>
                                 </div>
@@ -205,7 +204,6 @@
                     value: '20',
                     label: '女'
                 }],
-                user_image:'', //传给后台的图片
                 userImage:'https://erp-report-shenyang.oss-cn-beijing.aliyuncs.com/',
                 imageUrl:'', //详情图片
                 picture_list: [],//回显图片
@@ -460,7 +458,10 @@
             this.getSelect();
             this.postRole();
             this.userSex();
-            this.storesData()
+            this.storesData();
+            this.$refs.upload_img.$children[this.$refs.upload_img.$children.length-1].$el.addEventListener('click',()=>{
+                this.logoutHandle()
+            })
         }
     }
 </script>

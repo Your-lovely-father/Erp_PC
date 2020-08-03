@@ -24,7 +24,7 @@
                                     <label>楼盘名称</label>
                                     <el-input
                                             placeholder="请输入楼盘名称"
-                                            v-model="name"
+                                            v-model="building_name"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -35,74 +35,67 @@
                                     <label>楼盘别称</label>
                                     <el-input
                                             placeholder="请输入楼盘别称"
-                                            v-model="nickname"
+                                            v-model="building_nickname"
+                                            :disabled="true"
                                             clearable
-                                            class="report_int"
-                                            :disabled="true"
-                                    >
+                                            class="report_int">
                                     </el-input>
-                                </div>
-                                <div class="int_box">
-                                    <label>时间</label>
-                                    <el-date-picker
-                                            v-model="date"
-                                            type="date"
-                                            placeholder="选择日期"
-                                            class="date"
-                                            :disabled="true"
-                                    >
-                                    </el-date-picker>
-                                    -
-                                    <el-time-picker
-                                            v-model="time"
-                                            placeholder="选择时间"
-                                            class="date"
-                                            :disabled="true"
-                                    >
-                                    </el-time-picker>
                                 </div>
                                 <div class="int_box">
                                     <label>楼盘缩写</label>
                                     <el-input
                                             placeholder="请输入楼盘缩写"
-                                            v-model="abbreviations"
-                                            clearable
-                                            class="report_int"
+                                            v-model="building_abbreviation"
                                             :disabled="true"
-                                    >
+                                            clearable
+                                            class="report_int">
                                     </el-input>
                                 </div>
                                 <div class="int_box">
-                                    <label>楼盘地址</label>
-                                    <el-cascader :options="areaOptions" clearable class="report_int"
-                                                 :disabled="true"></el-cascader>
+                                    <label>区域管理</label>
+                                    <el-cascader :disabled="true" v-model="areaValue" :options="areaOptions" clearable class="report_int"
+                                    ></el-cascader>
                                 </div>
-                                <div class="int_box">
-                                    <label>平均单价</label>
-                                    <el-input
-                                            placeholder="请输入平均单价"
-                                            v-model="price"
-                                            clearable
-                                            class="report_int"
-                                            :disabled="true"
-                                    >
-                                    </el-input>
+                                <div class="price_box">
+                                    <div>
+                                        <label>平均单价起</label>
+                                        <el-input
+                                                placeholder="请输入平均单价起"
+                                                v-model="average_unit_price_begin"
+                                                :disabled="true"
+                                                clearable
+                                                class="reportInt">
+                                        </el-input>
+                                    </div>
+                                    <span class="span1"> - </span>
+                                    <div>
+                                        <label>平均单价结束</label>
+                                        <el-input
+                                                placeholder="请输入平均单价结束"
+                                                v-model="average_unit_price_end"
+                                                :disabled="true"
+                                                clearable
+                                                class="reportInt">
+                                        </el-input>
+                                    </div>
                                 </div>
                                 <div class="int_box">
                                     <label>开盘时间</label>
                                     <el-date-picker
-                                            v-model="openDate"
+                                            v-model="openingData"
                                             type="date"
                                             placeholder="选择日期"
                                             class="date"
+                                            value-format="yyyy-MM-dd"
                                             :disabled="true"
                                     >
                                     </el-date-picker>
                                     -
                                     <el-time-picker
-                                            v-model="openTime"
+                                            v-model="openingTime"
                                             placeholder="选择时间"
                                             class="date"
+                                            value-format="HH:mm:ss"
                                             :disabled="true"
                                     >
                                     </el-time-picker>
@@ -111,7 +104,7 @@
                                     <label>总建筑面积</label>
                                     <el-input
                                             placeholder="请输入总建筑面积"
-                                            v-model="area"
+                                            v-model="overall_floorage"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -122,7 +115,7 @@
                                     <label>绿化面积</label>
                                     <el-input
                                             placeholder="请输入绿化面积"
-                                            v-model="greening"
+                                            v-model="green_area"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -130,10 +123,10 @@
                                     </el-input>
                                 </div>
                                 <div class="int_box">
-                                    <label>区域管理</label>
+                                    <label>楼盘地址</label>
                                     <el-input
-                                            placeholder="请输入区域管理"
-                                            v-model="management"
+                                            placeholder="请输入楼盘地址"
+                                            v-model="building_address"
                                             clearable
                                             class="report_int"
                                             :disabled="true"
@@ -143,32 +136,32 @@
                             </div>
                             <div class="upload">
                                 <div class="int_box">
-                                    <label>楼盘图片</label>
                                     <el-upload
-                                            :disabled="true"
                                             class="upload-demo"
-                                            action="https://jsonplaceholder.typicode.com/posts/"
-                                            :on-preview="handlePreview"
-                                            :on-remove="handleRemove"
-                                            :file-list="fileList"
-                                            list-type="picture">
-                                        <el-button size="small" type="primary">点击上传</el-button>
-                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            action="123"
+                                            :file-list="fileHousesList"
+                                            list-type="picture"
+                                            :on-preview="headHandlePictureCardPreviewHouses"
+                                    >
+                                        <el-button size="small" type="primary" class="btn_upload" :disabled="true">点击上传楼盘图片</el-button>
                                     </el-upload>
+                                    <el-dialog :append-to-body="true" :visible.sync="headDialogVisibleHouses">
+                                        <img width="100%" :src="headDialogImageUrlHouses" alt="">
+                                    </el-dialog>
                                 </div>
-                                <div class="int_box">
-                                    <label>户型图片</label>
+                                <div class="int_box_upload">
                                     <el-upload
-                                            :disabled="true"
                                             class="upload-demo"
-                                            action="https://jsonplaceholder.typicode.com/posts/"
-                                            :on-preview="handlePreview"
-                                            :on-remove="handleRemove"
-                                            :file-list="fileList"
-                                            list-type="picture">
-                                        <el-button size="small" type="primary">点击上传</el-button>
-                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                            action="123"
+                                            :file-list="doorModelList"
+                                            list-type="picture"
+                                            :on-preview="headHandlePictureCardPreviewModel"
+                                    >
+                                        <el-button size="small" type="primary" class="btn_upload" :disabled="true">点击上传户型图片</el-button>
                                     </el-upload>
+                                    <el-dialog :append-to-body="true" :visible.sync="headDialogVisibleModel">
+                                        <img width="100%" :src="headDialogImageUrlModel" alt="">
+                                    </el-dialog>
                                 </div>
                             </div>
                         </div>
@@ -184,48 +177,33 @@
 </template>
 
 <script>
+    import Axios from '../../../api/pub/pub'
     export default {
         name: "See",
         data() {
             return {
-                name: '',
-                nickname: '',
-                type: [],
-                date: '',
-                time: '',
-                abbreviations: '',
-                areaOptions: [{
-                    value: 'province',
-                    label: '辽宁省',
-                    children: [{
-                        value: ' city',
-                        label: '沈阳市',
-                        children: [{
-                            value: 'area',
-                            label: '铁西区'
-                        }],
-                    }],
-                }],
-                price: '',
-                type: [],
-                openDate: '',
-                openTime: '',
-                area: '',
-                greening: '',
-                management: '',
-                customer: '',
-                buildingDialogImageUrl: '',
-                buildingDialogVisible: false,
-                modelDialogImageUrl: '',
-                modelDialogVisible: false,
-                fileList: [{
-                    name: 'food.jpeg',
-                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                }, {
-                    name: 'food2.jpeg',
-                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                }]
-            };
+                building_name:'',//楼盘名称
+                building_nickname:'',//楼盘别称
+                building_abbreviation:'',//楼盘缩写
+                building_address:'',//楼盘地址
+                average_unit_price_begin:'',//平均单价起
+                average_unit_price_end:'',//平均单价结束
+                opening_time:'',//开盘时间
+                overall_floorage:'',//总建筑面积
+                green_area:'',//绿化面积
+                openingData:'',//时间
+                openingTime:'',//时间
+                building_image:'',//楼盘图
+                building_floor:'',//户型图
+                areaOptions:[],//区域管理列表
+                fileHousesList: [], //楼盘图片列表
+                doorModelList:[], //户型图片列表
+                areaValue:[],//省市区回显数据
+                headDialogVisibleHouses:false,
+                headDialogImageUrlHouses:'',
+                headDialogVisibleModel:false,
+                headDialogImageUrlModel:'',
+            }
         },
         methods: {
             onPage() {
@@ -238,18 +216,97 @@
             confirm() {
                 this.onPage()
             },
-            handleRemove(file, fileList) {
-                console.log(file, fileList);
+            parentMsg(){
+                this.detailObj;
             },
-            handlePreview(file) {
-                console.log(file);
+            setData(data){
+            if(data.data) {
+                this.building_name = data.data.building_name,
+                    this.building_nickname = data.data.building_nickname,
+                    this.building_abbreviation = data.data.building_abbreviation,
+                    this.building_address = data.data.building_address,
+                    this.average_unit_price_begin = data.data.average_unit_price_begin,
+                    this.average_unit_price_end = data.data.average_unit_price_end,
+                    this.opening_time = data.data.opening_time,
+                    this.overall_floorage = data.data.overall_floorage,
+                    this.green_area = data.data.green_area,
+                    this.openingData = data.data.opening_time,
+                    this.openingTime = data.data.opening_time,
+                    this.areaValue = [data.data.province_id + '', data.data.city_id + '', data.data.area_id + '']
+
             }
+                if(data.building_img instanceof Array){
+                this.fileHousesList = data.building_img.map((item) => {
+                    return {
+                        ...item,
+                        name: item.table_name,
+                        url: this.$Tool.formatImg(item.url),
+                    };
+                });
+            }
+                if(data.building_img instanceof Array){
+                    this.doorModelList = data.floor_img.map((item) => {
+                        return {
+                            ...item,
+                            name: item.table_name,
+                            url: this.$Tool.formatImg(item.url),
+                        };
+                    });
+                }
+
+
+            },
+            getSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.areaOptions = JSON.parse(linkage)
+                })
+            },
+            headHandlePictureCardPreviewHouses(file) { //处理图片预览效果
+                this.headDialogImageUrlHouses = file.url;
+                this.headDialogVisibleHouses = true;
+            },
+            headHandlePictureCardPreviewModel(file){//处理图片预览效果
+                this.headDialogImageUrlModel = file.url;
+                this.headDialogVisibleModel = true;
+            },
         },
         computed: {
             seeBuiding() {
                 return this.$store.state.building.seeBuiding
             },
+            detailObj(){
+                this.setData(this.$store.state.building.detailObj);
+                return this.$store.state.building.detailObj
+            }
         },
+        mounted() {
+            this.detailObj;
+            this.getSelect();
+        }
     }
 </script>
 
@@ -327,39 +384,54 @@
         justify-content: center;
         padding: 20px 0;
     }
-
-    label {
-        display: block;
-        padding: 20px 0;
-    }
-
-    .com {
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: scroll;
-    }
     .box_form{
         width: 100%;
     }
-    .form{
+    .form {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
     }
-    .report_int{
-        width: 610px;
+    .report_int {
+        width: 500px;
     }
     .date{
-        width: 299px;
+        width: 242px;
+    }
+    label {
+        display: block;
+        padding: 20px 0;
+    }
+    .btn_upload{
+        margin: 20px 0 10px 0;
     }
     .upload{
         width: 100%;
         display: flex;
-        justify-content: space-around;
+        margin-left: 31px;
+    }
+    .int_box_upload{
+        margin-left: 63px;
     }
     .upload-demo{
-        width: 610px;
+        width: 500px;
+    }
+    .price_box{
+        width: 500px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .reportInt{
+        width: 242px;
+    }
+    .span1{
+        margin-top: 68px;
+    }
+   .int_box >>> .el-icon-close{
+        display: none;
+    }
+    .int_box_upload>>> .el-icon-close{
+        display: none;
     }
 </style>
