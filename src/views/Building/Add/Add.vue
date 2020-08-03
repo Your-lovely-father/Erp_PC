@@ -285,7 +285,7 @@
                 //上传楼盘
                 instance({
                     method: 'post',
-                    url: 'http://localhost:8080/api/erp/upload_file',
+                    url: 'http://localhost:8081/api/erp/upload_file',
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'access-token': token
@@ -366,7 +366,7 @@
                 });
                 instance({
                     method: 'post',
-                    url: 'http://localhost:8080/api/erp/upload_file',
+                    url: 'http://localhost:8081/api/erp/upload_file',
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'access-token': token

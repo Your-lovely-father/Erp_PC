@@ -7,7 +7,7 @@ import store from '../store/index'
 import router from '../router/index'
 // 全局的 axios 默认值
 axios.defaults.baseURL = '/api';
-//axios.defaults.baseURL = 'http://39.96.31.216';
+// axios.defaults.baseURL = 'http://39.96.31.216';
 // axios.defaults.timeout= 6000;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';

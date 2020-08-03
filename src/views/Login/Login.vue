@@ -79,6 +79,7 @@
                             this.$store.commit('imgAge', res.data.user_image);
                             this.$router.push('/body');
                             Api.navList().then((res)=>{
+                                console.log(res)
                                 this.$store.commit('navigation',res.data);
                                 initDynamicRoutes()
                             });
