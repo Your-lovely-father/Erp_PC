@@ -83,8 +83,13 @@
                 this.onPage()
             },
             confirm() {
-                this.onPage();
-                Api.releUpd(this.id,this.pid,this.group_name,this.rule_ids).then((res)=>{
+                let rule_ids='';
+                if(this.rule_ids === ''){
+                    rule_ids=this.rule.join(',')
+                }else {
+                    rule_ids=this.rule_ids
+                }
+                Api.releUpd(this.id,this.pid,this.group_name,rule_ids).then((res)=>{
                     if(res.code === '200003'){
                         this.$message.success('修改成功');
                         this.$emit('roleList')
@@ -92,6 +97,7 @@
                         this.$message.error('修改失败')
                     }
                 })
+                this.onPage();
             },
             setData(data){
                 this.group_name=data.group_name;
@@ -145,7 +151,8 @@
             permissions(){
                 let res = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
                 let value =res.join(',');
-                this.rule_ids=value
+                this.rule_ids=value;
+                this.rule=[]
             },
         },
         computed: {

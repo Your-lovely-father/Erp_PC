@@ -93,12 +93,12 @@
                                     <template slot-scope="scope">
                                         <el-button
                                                 size="mini"
-                                                @click="handleEdit(scope.$index, scope.row)">查看
+                                                @click="handleEdit(scope.row.id)">查看
                                         </el-button>
                                         <el-button
                                                 type="primary"
                                                 size="mini"
-                                                @click="upd()">修改
+                                                @click="upd(scope.row.id)">修改
                                         </el-button>
                                         <el-button
                                                 slot="reference"
@@ -127,9 +127,9 @@
                 </el-card>
             </div>
         </div>
-        <myAdd/>
-        <mySee/>
-        <myModify/>
+        <myAdd @adminList="adminList"/>
+        <mySee ref="mySee"/>
+        <myModify ref="myModify" @adminList="adminList"/>
     </div>
 </template>
 
@@ -172,13 +172,21 @@
                 this.$store.commit('adminStatus', false);
                 this.$store.commit('addAdmin', true)
             },
-            handleEdit() {
+            handleEdit(id) {
                 this.$store.commit('adminStatus', false);
-                this.$store.commit('seeAdmin', true)
+                this.$store.commit('seeAdmin', true);
+                Api.detailObj(id).then((res)=>{
+                    this.$store.commit('detailObj',res.data);
+                    this.$refs.mySee.setAdmin()
+                })
             },
-            upd() {
+            upd(id) {
                 this.$store.commit('adminStatus', false);
-                this.$store.commit('updAdmin', true)
+                this.$store.commit('updAdmin', true);
+                Api.detailObj(id).then((res)=>{
+                    this.$store.commit('detailObj',res.data);
+                    this.$refs.myModify.setAdmin()
+                })
             },
             handleDelete(id) { //删除操作
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -189,7 +197,7 @@
                     Api.adminDel(id).then(res => {
                         if (res.code === "100006") {
                             this.$message.success(res.msg);
-                            this.getSelectList()
+                            this.adminList()
                         } else {
                             this.$message.error(res.msg);
                         }

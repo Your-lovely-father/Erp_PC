@@ -18,23 +18,55 @@
                         <p>查看权限</p>
                     </div>
                     <div class="content_box">
-                        <div class="See_int">
-                            <div class="form">
+                        <div class="form_box">
+                            <div class="permi_box">
+                                <label>权限选择</label>
+                                <el-tree
+                                        :data="permissionsList"
+                                        show-checkbox
+                                        node-key="id"
+                                        :props="props"
+                                        @check-change="permissions"
+                                        default-expand-all
+                                        ref="tree"
+                                        :check-strictly="true"
+                                        :default-checked-keys="rule"
+                                >
+                                </el-tree>
+                            </div>
+                            <div class="form-inline">
                                 <div class="int_box">
-                                    <label>角色</label>
+                                    <label>权限名称</label>
                                     <el-input
-                                            placeholder="请输角色"
-                                            v-model="name"
+                                            placeholder="请输权限名称"
+                                            v-model="rule_name"
                                             clearable
                                             class="report_int"
-                                            :disabled="true"
+                                            disabled
                                     >
                                     </el-input>
                                 </div>
-                                <div class="int_box_right">
-                                    <label>权限管理</label>
-                                    <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"
-                                             default-expand-all></el-tree>
+                                <div class="int_box">
+                                    <label>权限路径</label>
+                                    <el-input
+                                            placeholder="请输入权限路径"
+                                            v-model="rule_url"
+                                            clearable
+                                            class="report_int"
+                                            disabled
+                                    >
+                                    </el-input>
+                                </div>
+                                <div class="int_box">
+                                    <label>权重</label>
+                                    <el-input
+                                            placeholder="请输入权重1-10000"
+                                            v-model="weight"
+                                            clearable
+                                            class="report_int"
+                                            disabled
+                                    >
+                                    </el-input>
                                 </div>
                             </div>
                         </div>
@@ -50,25 +82,20 @@
 </template>
 
 <script>
+    import Api from '../../../api/Admin/Admin'
     export default {
         data() {
             return {
-                name: '',
-                data: [{
-                    label: '超级管理员',
-                    children: [
-                        {
-                            label: '客户报备',
-                        },
-                        {
-                            label: '楼盘管理',
-                        }
-                    ]
-                }],
-                defaultProps: {
+                permissionsList:[],
+                pid:'',
+                rule_name:'',
+                rule_url:'',
+                weight:'',
+                props: {
                     children: 'children',
                     label: 'label'
-                }
+                },
+                rule:[]
             };
         },
         methods: {
@@ -82,15 +109,65 @@
             confirm() {
                 this.onPage()
             },
-            handleNodeClick(data) {
-                console.log(data);
+            getAdminSelect(){
+                Api.adminList().then((res)=>{
+                    const data = res.data;
+                    data.map(item=>{
+                        item.label = item.rule_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        item.disabled=true;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.rule_name;
+                                el.value = el.id;
+                                el.children = el.son;
+                                el.disabled=true;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.rule_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                        key.disabled=true;
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    this.permissionsList=data
+                })
+            },
+            permissions(){
+                let res = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.pid=value
+            },
+            setAdmin(){
+                this.detailObj
+            },
+            setData(data){
+                this.rule_name=data.rule_name;
+                this.rule_url=data.rule_url;
+                this.weight=data.weight;
+                let role =data.pid+'';
+                if(typeof(role) == 'string'){
+                    this.rule=role.split(',');
+                }
             }
         },
         computed: {
             seeAdmin() {
                 return this.$store.state.admin.seeAdmin
             },
+            detailObj() {
+                this.setData(this.$store.state.admin.detailObj);
+                return this.$store.state.admin.detailObj;
+            },
         },
+        mounted() {
+            this.getAdminSelect();
+            this.detailObj
+        }
     }
 </script>
 
@@ -181,16 +258,18 @@
         overflow-y: scroll;
     }
 
-    .See_int {
-        width: 100%;
+    .permi_box>>>.el-tree-node__children{
+        display: flex;
     }
-
-    .form {
-        width: 400px;
-        margin-left: 30px;
+    .form-inline{
+        width: 84%;
+        display: flex;
+        justify-content: space-between;
     }
-
     .report_int {
         width: 400px;
+    }
+    .form_box{
+        padding-left: 20px;
     }
 </style>

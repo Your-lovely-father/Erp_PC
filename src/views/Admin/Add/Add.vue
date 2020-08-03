@@ -19,45 +19,51 @@
                     <div class="content_box">
                         <!--      表单添加区域      -->
                     <div class="form_box">
-                        <div class="int_box">
-                            <label>角色</label>
-                            <el-input
-                                    placeholder="请输角色"
-                                    v-model="name"
-                                    clearable
-                                    class="report_int"
-                            >
-                            </el-input>
-                        </div>
-                        <div class="int_box">
-                            <label>时间</label>
-                            <el-date-picker
-                                    v-model="date"
-                                    type="date"
-                                    placeholder="选择日期"
-                                    class="date"
-                            >
-                            </el-date-picker>
-                            -
-                            <el-time-picker
-                                    v-model="time"
-                                    placeholder="选择时间"
-                                    class="date"
-                            >
-                            </el-time-picker>
-                        </div>
-                        <div class="int_box">
-                            <label>权限设置</label>
+                        <div class="permi_box">
+                            <label>权限选择</label>
                             <el-tree
-                                    :data="data"
+                                    :data="permissionsList"
                                     show-checkbox
                                     node-key="id"
-                                    :default-expanded-keys="[2, 3]"
-                                    :default-checked-keys="[5]"
-                                    :props="defaultProps"
+                                    :props="props"
+                                    @check-change="permissions"
                                     default-expand-all
+                                    ref="tree"
+                                    :check-strictly="true"
                             >
                             </el-tree>
+                        </div>
+                        <div class="form-inline">
+                            <div class="int_box">
+                                <label>权限名称</label>
+                                <el-input
+                                        placeholder="请输权限名称"
+                                        v-model="rule_name"
+                                        clearable
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int_box">
+                                <label>权限路径</label>
+                                <el-input
+                                        placeholder="请输入权限路径"
+                                        v-model="rule_url"
+                                        clearable
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="int_box">
+                                <label>权重</label>
+                                <el-input
+                                        placeholder="请输入权重1-10000"
+                                        v-model="weight"
+                                        clearable
+                                        class="report_int"
+                                >
+                                </el-input>
+                            </div>
                         </div>
                     </div>
                     </div>
@@ -73,40 +79,16 @@
 </template>
 
 <script>
+    import Api from '../../../api/Admin/Admin'
     export default {
         data() {
             return {
-                type: [],
-                date: '',
-                time: '',
-                name: '',
-                data: [{
-                    id: 1,
-                    label: '权限设置',
-                    children: [{
-                        id: 4,
-                        label: '权限管理',
-                        children: [
-                            {
-                                id: 9,
-                                label: '权限删除'
-                            },
-                            {
-                                id: 10,
-                                label: '权限修改'
-                            },
-                            {
-                                id: 11,
-                                label: '权限查询'
-                            },
-                            {
-                                id: 12,
-                                label: '权限添加'
-                            },
-                        ]
-                    }]
-                }],
-                defaultProps: {
+                permissionsList:[],
+                pid:'',
+                rule_name:'',
+                rule_url:'',
+                weight:'',
+                props: {
                     children: 'children',
                     label: 'label'
                 }
@@ -121,7 +103,45 @@
                 this.onPage()
             },
             confirm() {
+                Api.adminAdd(this.pid,this.rule_name,this.rule_url,this.weight).then((res)=>{
+                    if(res.code === '200001'){
+                        this.$message.success('添加成功');
+                        this.$emit('adminList')
+                    }else {
+                        this.$message.error('添加失败')
+                    }
+                });
                 this.onPage()
+            },
+            getAdminSelect(){
+                Api.adminList().then((res)=>{
+                    const data = res.data;
+                    data.map(item=>{
+                        item.label = item.rule_name;
+                        item.value = item.id;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.rule_name;
+                                el.value = el.id;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.rule_name;
+                                        key.value = key.id;
+                                        key.children = key.son;
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    this.permissionsList=data
+                })
+            },
+            permissions(){
+                let res = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+                let value =res.join(',');
+                this.pid=value
             },
         },
         computed: {
@@ -129,6 +149,9 @@
                 return this.$store.state.admin.addAdmin
             },
         },
+        mounted() {
+            this.getAdminSelect()
+        }
     }
 </script>
 
@@ -215,8 +238,7 @@
         padding: 20px 0;
     }
     .form_box{
-        width: 400px;
-        margin-left: 30px;
+      width: 100%;
     }
     .report_int {
         width: 400px;
@@ -225,7 +247,12 @@
         display: block;
         padding: 20px 0;
     }
-    .date{
-        width: 192px;
+    .permi_box>>>.el-tree-node__children{
+        display: flex;
+    }
+    .form-inline{
+        width: 84%;
+        display: flex;
+        justify-content: space-between;
     }
 </style>

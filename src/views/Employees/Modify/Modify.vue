@@ -428,7 +428,8 @@
             management(){
                 let res = this.$refs.tree1.getCheckedKeys().concat(this.$refs.tree1.getHalfCheckedKeys());
                 let value =res.join(',');
-                this.user_role=value
+                this.user_role=value;
+                this.rule=[]
             },
             userSex(){ //性别回显
                this.genderOptions.forEach((item,index)=>{

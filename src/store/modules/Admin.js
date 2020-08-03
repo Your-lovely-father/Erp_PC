@@ -5,6 +5,7 @@ export default {
         addAdmin: storage.get('addAdmin').length === 0 ? 0 : 1,
         seeAdmin: storage.get('seeAdmin').length === 0 ? 0 : 1,
         updAdmin:storage.get('updAdmin').length === 0 ? 0 : 1,
+        detailObj:storage.get('detailObj')
     },
     mutations: {
         adminStatus: ((state, data) => {
@@ -29,7 +30,8 @@ export default {
         }),
         isSeeAdmin:((state,data)=>{
             storage.set('seeAdmin',state.seeAdmin=data);
-            storage.remove('seeAdmin')
+            storage.remove('seeAdmin');
+            storage.remove('detailObj')
         }),
 
         updAdmin: ((state, data) => {
@@ -40,7 +42,11 @@ export default {
         }),
         isUpdStatusAdmin:((state,data)=>{
             storage.set('updAdmin',state.updAdmin=data);
-            storage.remove('updAdmin')
+            storage.remove('updAdmin');
+            storage.remove('detailObj')
         }),
+        detailObj:((state,data)=>{
+            storage.set('detailObj',state.detailObj=data);
+        })
     },
 }
