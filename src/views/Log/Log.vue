@@ -14,7 +14,7 @@
                     <myShare @logSee="logSee"/>
                 </el-card>
                 <!--    表格区域        -->
-                <el-card class="top">
+                <el-card class="top" v-permission="{action:'list'}">
                     <div class="tab">
                         <el-table
                                 :data="tableData"
@@ -55,14 +55,18 @@
                                     <el-button
                                             type="primary"
                                             size="mini"
-                                            @click="handleEdit(scope.row.id)">查看
+                                            @click="handleEdit(scope.row.id)"
+                                            v-permission="{action:'detail',effect:'disabled'}"
+                                    >查看
                                     </el-button>
                                         <el-button
                                                 slot="reference"
                                                 size="mini"
                                                 type="danger"
                                                 class="left_btn"
-                                                @click="handleDelete( scope.row.id)">删除
+                                                @click="handleDelete( scope.row.id)"
+                                                v-permission="{action:'del',effect:'disabled'}"
+                                        >删除
                                         </el-button>
                                 </template>
                             </el-table-column>
@@ -91,6 +95,7 @@
     import  mySee from '../../views/Log/See/See'
     import  myShare from '../../components/Pub/share/share'
     import  Api from '../../api/Log/Log'
+    import  { initDynamicRoutes } from '../../router/index'
     export default {
         components:{
             mySee,
@@ -158,7 +163,8 @@
             },
         },
         mounted() {
-            this.logSee()
+            this.logSee();
+            initDynamicRoutes()
         }
     }
 </script>

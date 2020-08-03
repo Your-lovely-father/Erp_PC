@@ -10,14 +10,14 @@
                         </p>
                     </div>
                     <div class="content_btn" style="cursor:pointer">
-                        <p @click="reportAdd" >
+                        <p @click="reportAdd" v-permission="{action:'add'}">
                             <span class="el-icon-plus"></span>
                             <span>角色添加</span>
                         </p>
                     </div>
                 </div>
                 <!--    表格区域        -->
-                <el-card class="top">
+                <el-card class="top" v-permission="{action:'list'}">
                     <div class="tab">
                         <el-table
                                 :data="tableData"
@@ -42,19 +42,25 @@
                                 <template slot-scope="scope">
                                     <el-button
                                             size="mini"
-                                            @click="handleEdit(scope.row.id)">查看
+                                            @click="handleEdit(scope.row.id)"
+                                            v-permission="{action:'detail',effect:'disabled'}"
+                                    >查看
                                     </el-button>
                                     <el-button
                                             type="primary"
                                             size="mini"
-                                            @click="upd(scope.row.id)">修改
+                                            @click="upd(scope.row.id)"
+                                            v-permission="{action:'edit',effect:'disabled'}"
+                                    >修改
                                     </el-button>
                                     <el-button
                                             slot="reference"
                                             size="mini"
                                             type="danger"
                                             class="left_btn"
-                                            @click="handleDelete(scope.row.id)">删除
+                                            @click="handleDelete(scope.row.id)"
+                                            v-permission="{action:'del',effect:'disabled'}"
+                                    >删除
                                     </el-button>
                                 </template>
                             </el-table-column>
@@ -86,7 +92,7 @@
     import myModify from '../../views/Role/Modify/Modify'
     import myAdd from '../../views/Role/Add/Add'
     import Api from '../../api/Role/Role'
-
+    import  { initDynamicRoutes } from '../../router/index'
     export default {
         name: "Report",
         components: {
@@ -170,7 +176,8 @@
             },
         },
         mounted() {
-            this.roleList()
+            this.roleList();
+            initDynamicRoutes()
         }
     }
 </script>

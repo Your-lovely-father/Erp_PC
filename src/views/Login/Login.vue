@@ -28,7 +28,7 @@
 
 <script>
     import Api from '../../api/Login/Login'
-
+    import {initDynamicRoutes} from '../../router/index'
     export default {
         name: "Login",
         data() {
@@ -76,7 +76,12 @@
                         if (res.code === 200) {
                             this.$message.success('登陆' + res.msg);
                             this.$store.commit('token', res.data.access_token);
+                            this.$store.commit('imgAge', res.data.user_image);
                             this.$router.push('/body');
+                            Api.navList().then((res)=>{
+                                this.$store.commit('navigation',res.data);
+                                initDynamicRoutes()
+                            });
                             return;
                         } else {
                             this.$message.error(res.msg);

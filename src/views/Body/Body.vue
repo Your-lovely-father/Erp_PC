@@ -22,27 +22,27 @@
                         :collapse-transition="false"
                         :router="true"
                 >
-                    <!--        主菜单           -->
-                    <el-menu-item :index="'/'+ item.path" v-for="item in list" :key="item.id">
+<!--                    &lt;!&ndash;        主菜单           &ndash;&gt;-->
+                    <el-menu-item :index="'/'+ item.path" v-for="item in list" :key="item.id" @click="geinId(item.id)">
                         <i :class="icon[item.id]" id="icon"></i>
                         <span class="text">{{item.name}}</span>
                     </el-menu-item>
 
-                    <el-submenu :index="'/'+ item.path" v-for="item in navList" :key="item.id">
-                        <!--     一级菜单模板区-->
-                        <template slot="title">
-                            <i :class="icon[item.id]" id="icon"></i>
-                            <span class="text">{{item.name}}</span>
-                        </template>
+                    <el-submenu :index="'/'+ item.path" v-for="item in navList" :key="item.id" @click="geinId(item.id)">
+                    <!--     一级菜单模板区-->
+                    <template slot="title">
+                        <i :class="icon[item.id]" id="icon"></i>
+                        <span class="text">{{item.name}}</span>
+                    </template>
 
-                        <!--       二级菜单区域        -->
-                        <el-menu-item :index=" '/'+ item1.path" v-for="item1 in item.children" :key="item1.id">
-                            <template slot="title">
-                                <i :class="childrenIcon[item1.id]" id="icon"></i>
-                                <span class="text">{{item1.user}}</span>
-                            </template>
-                        </el-menu-item>
-                    </el-submenu>
+                    <!--       二级菜单区域        -->
+                    <el-menu-item :index=" '/'+ item1.path" v-for="item1 in item.children" :key="item1.id" @click="geinId(item1.id)">
+                        <template slot="title">
+                            <i :class="childrenIcon[item1.id]" id="icon"></i>
+                            <span class="text">{{item1.user}}</span>
+                        </template>
+                    </el-menu-item>
+                </el-submenu>
                 </el-menu>
 
             </el-aside>
@@ -57,10 +57,10 @@
                         </div>
                         <div class="header-right" @mousemove="move" @mouseleave="leave">
                             <el-dropdown>
-                                <ul class="exit">
+                                <ul class="exit" @click="details">
                                     <li>
                                         <p class="p_img">
-                                            <img src="http://gss0.baidu.com/7Po3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/267f9e2f07082838685c484ab999a9014c08f11f.jpg"
+                                            <img :src="'https://erp-report-shenyang.oss-cn-beijing.aliyuncs.com/'+imgAge"
                                                  alt="">
                                         </p>
                                         <p class="name_title">
@@ -134,11 +134,13 @@
 <script>
     import  myPassword from './Password/Password'
     import myExit from './Exit/Exit'
+    import Api from '../../api/Login/Login'
+    import  {initDynamicRoutes} from '../../router/index'
     export default {
         name: "Home",
         components:{
             myPassword,
-            myExit
+            myExit,
 
         },
         data() {
@@ -158,80 +160,81 @@
                 isShowPassword: false,//修改密码
                 isExit:false,//退出
                 list: [
-                    {
-                        id: '0',
-                        name: '客户报备',
-                        path: 'report'
-                    },
-                    {
-                        id: '1',
-                        name: '楼盘管理',
-                        path: 'building'
-                    },
-                    {
-                        id: '3',
-                        name: '意向楼盘',
-                        path: 'intention'
-                    },
-                    {
-                        id: '4',
-                        name: '门店管理',
-                        path: 'stores'
-                    },
-                    {
-                        id: '5',
-                        name: '日志管理',
-                        path: 'Log'
-                    },
-                    {
-                        id: '6',
-                        name: '带看管理',
-                        path: 'look'
-                    },
-                    {
-                        id: '7',
-                        name: '跟进管理',
-                        path: 'tracking'
-                    },
+                    // {
+                    //     id: '0',
+                    //     name: '客户报备',
+                    //     path: 'report',
+                    // },
+                    // {
+                    //     id: '1',
+                    //     name: '楼盘管理',
+                    //     path: 'building'
+                    // },
+                    // {
+                    //     id: '3',
+                    //     name: '意向楼盘',
+                    //     path: 'intention'
+                    // },
+                    // {
+                    //     id: '4',
+                    //     name: '门店管理',
+                    //     path: 'stores'
+                    // },
+                    // {
+                    //     id: '5',
+                    //     name: '日志管理',
+                    //     path: 'Log'
+                    // },
+                    // {
+                    //     id: '6',
+                    //     name: '带看管理',
+                    //     path: 'look'
+                    // },
+                    // {
+                    //     id: '7',
+                    //     name: '跟进管理',
+                    //     path: 'tracking'
+                    // },
                 ],
                 navList: [
-                    {
-                        id: '2',
-                        name: '组织架构',
-                        path: 'architecture',
-                        children: [
-                            {
-                                id: '0',
-                                user: '员工管理',
-                                path: 'employees'
-                            }
-                        ]
-                    },
-                    {
-                        id: '8',
-                        name: '权限设置',
-                        path: 'permissions',
-                        children: [
-                            {
-                                id: '1',
-                                user: '角色设置',
-                                path: 'role'
-                            },
-                            {
-                                id: '2',
-                                user: '权限管理',
-                                path: 'admin'
-                            }
-                        ]
-                    }
+                    // {
+                    //     id: '2',
+                    //     name: '组织架构',
+                    //     path: 'architecture',
+                    //     children: [
+                    //         {
+                    //             id: '0',
+                    //             user: '员工管理',
+                    //             path: 'employees'
+                    //         }
+                    //     ]
+                    // },
+                    // {
+                    //     id: '8',
+                    //     name: '权限设置',
+                    //     path: 'permissions',
+                    //     children: [
+                    //         {
+                    //             id: '1',
+                    //             user: '角色设置',
+                    //             path: 'role'
+                    //         },
+                    //         {
+                    //             id: '2',
+                    //             user: '权限管理',
+                    //             path: 'admin'
+                    //         }
+                    //     ]
+                    // }
                 ],
                 //一级侧边栏字体图标
                 icon: {
-                    '0': 'iconfont icon-kehubaobei',
-                    '1': 'iconfont icon-loupanguanli',
-                    '2': 'iconfont icon-zuzhi',
-                    '3': 'iconfont icon-ccgl-yundandayinquyu-3',
-                    '4': 'iconfont icon-mendian',
+                    //
+                    '1': 'iconfont icon-kehubaobei',
+                    '2': 'iconfont icon-loupanguanli',
+                    '3': 'iconfont icon-zuzhi',
+                    '4': 'iconfont icon-ccgl-yundandayinquyu-3',
+                    '57': 'iconfont icon-mendian',
                     '5': 'iconfont icon-rizhiguanli',
                     '6': 'iconfont icon-jingjiren_daikanguanli',
                     '7': 'iconfont icon-genjinguanli',
@@ -239,9 +242,9 @@
                 },
                 //二级侧边栏菜单
                 childrenIcon: {
-                    '0': 'iconfont icon-menu-pass-Emp',
-                    '1': 'iconfont icon-quanxianshezhi',
-                    '2': 'iconfont icon-xitongquanxianshezhi'
+                    '9': 'iconfont icon-menu-pass-Emp',
+                    '10': 'iconfont icon-quanxianshezhi',
+                    '11': 'iconfont icon-xitongquanxianshezhi'
                 },
                 tags: [
                     {
@@ -354,23 +357,80 @@
             },
             refresh(){
                 this.$router.go(0)
+            },
+            details(){
+               this.$router.push('/browse')
+            },
+            geinId(id){
+                Api.reluAdus(id).then((res)=>{
+                    let reluData=[];
+                    res.data.forEach((item)=>{
+                        var index = item.rule_url .lastIndexOf("_");
+                        var str  = item.rule_url .substring(index + 1,  item.rule_url .length);
+                        reluData.push(str);
+                    });
+                    this.$store.commit('reluAdus',reluData);
+                    initDynamicRoutes(this.$route.path);
+                })
+            },
+            rightList(){
+                let arr = [];
+                let arrs = [];
+                function setObj(item,value){
+                    if(value=='name') {
+                        return {
+                            id: item.id,
+                            name: item.rule_name,
+                            path: item.rule_url,
+                        }
+                    }else{
+                        return {
+                            id: item.id,
+                            user: item.rule_name,
+                            path: item.rule_url,
+                        }
+                    }
+                }
+                let navAge= this.navigation;
+                navAge.map((item,index)=>{
+                    // 8 3
+                    let a = setObj(item,'name');
+                   if(item.id === 3 || item.id === 8){
+                       let arrays=[];
+                       item.son.forEach(items =>{
+                          arrays.push(setObj(items,'user'))
+                       });
+                       a.children = arrays;
+                       arrs.push(a);
+                   }else {
+                       arr.push(setObj(item,'name'))
+                   }
+                });
+                this.list = arr;
+                this.navList = arrs;
             }
         },
         computed: {
-            //上一张
-            prevIndex() {
-                if (this.currentIndex == 1595) {
-                    return this.tags.length - 1;
-                } else {
-                    return this.currentIndex - 1;
+            navigation(){
+                return this.$store.state.navigation
+            },
+            imgAge(){
+                return this.$store.state.imgAge
+            }
+        },
+        mounted() {
+            this.navigation;
+            this.imgAge;
+            this.rightList()
+
+        },
+        watch: { //坚挺vuex数据
+            navigation(val) {
+                if (val.length > 0) {
+                    this.navigation;
+                    this.rightList()
                 }
             },
-            //下一张
-            nextIndex() {
-                // if(this.currentIndex == 1595) {
-                this.left = this.currentIndex * 2
-                // }
-            }
         }
     }
 </script>

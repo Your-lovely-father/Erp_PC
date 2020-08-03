@@ -14,11 +14,23 @@ import storage from "../utils/localStorage";
 Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
-        access_token:storage.get('access_token').length === 0 ? '': storage.get('access_token')
+        access_token:storage.get('access_token').length === 0 ? '': storage.get('access_token'),
+        navigation:storage.get('navigation'),
+        reluAdus:storage.get('reluAdus'),
+        imgAge:storage.get('imgAge')
     },
     mutations: {
         token: ((state, data) => {
             storage.set('access_token',state.access_token=data)
+        }),
+        navigation:((state,data)=>{
+            storage.set('navigation',state.navigation=data)
+        }),
+        reluAdus:((state,data)=>{
+            storage.set('reluAdus',state.reluAdus=data)
+        }),
+        imgAge:((state,data)=>{
+            storage.set('imgAge',state.imgAge=data)
         })
     },
     actions: {},

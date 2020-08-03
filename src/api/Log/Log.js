@@ -7,7 +7,7 @@ export  default {
     },
     //日志删除
     logDel(id){
-        return Axios.post('/erp/del_log',{ id:id})
+        return Axios.post('/erp/log_del',{ id:id})
     },
     //日志详情
     logDetail(id) {

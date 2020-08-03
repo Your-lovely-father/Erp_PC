@@ -10,15 +10,14 @@
                             </p>
                         </div>
                         <div class="content_btn" style="cursor:pointer">
-                            <p @click="reportAdd()">
+                            <p @click="reportAdd()" v-permission="{action:'add'}">
                                 <span class="el-icon-plus"></span>
-                                <span>报备添加</span>
+                                <span >报备添加</span>
                             </p>
                         </div>
                     </div>
                     <!--    搜索区域        -->
                     <div class="search">
-
                         <div class="box_form">
                             <div class="form">
                                 <div class="int_box">
@@ -179,7 +178,7 @@
                     </div>
                 </el-card>
                 <!--    表格区域        -->
-                <el-card class="top">
+                <el-card class="top" v-permission="{action:'list'}">
                     <div class="tab">
                         <el-table
                                 :data="tableData"
@@ -237,10 +236,16 @@
                                     label="操作"
                                     width="200">
                                 <template slot-scope="scope">
-                                    <el-button @click="handleClick(scope.row.id)" type="text" size="small">查看</el-button>
-                                    <el-button type="text" size="small" @click="upd(scope.row.id)">编辑</el-button>
+                                    <el-button @click="handleClick(scope.row.id)" type="text" size="small"
+                                               v-permission="{action:'detail',effect:'disabled'}"
+                                    >查看</el-button>
+                                    <el-button type="text" size="small" @click="upd(scope.row.id)"
+                                               v-permission="{action:'edit',effect:'disabled'}"
+                                    >编辑</el-button>
                                     <el-button type="text" size="small" slot="reference" class="el-popconfirm"
-                                               @click="del(scope.row.id)">删除
+                                               @click="del(scope.row.id)"
+                                               v-permission="{action:'del',effect:'disabled'}"
+                                    >删除
                                     </el-button>
                                 </template>
                             </el-table-column>
@@ -273,6 +278,7 @@
     import myAdd from '../../views/Report/Add/Add'
     import Api from '../../api/Report/Report'
     import Axios from '../../api/pub/pub'
+    import  { initDynamicRoutes } from '../../router/index'
     export default {
         name: "Report",
         components: {
@@ -533,12 +539,16 @@
             reportStatus() {
                 return this.$store.state.report.reportStatus
             },
+            reluAdus(){
+                return this.$store.state.report.reluAdus
+            }
         },
         mounted() {
             this.reportList();
             this.getSelect();
             this.category();
-        }
+            initDynamicRoutes()
+        },
     }
 </script>
 

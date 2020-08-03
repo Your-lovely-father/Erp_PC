@@ -9,11 +9,15 @@
   </div>
 </template>
 <script>
+import  { initDynamicRoutes } from './router/index'
 export default {
   name: 'app',
 
   components: {
   },
+  mounted() {
+    initDynamicRoutes()
+  }
 
 
 }

@@ -7,7 +7,7 @@
                         <p>跟进管理</p>
                     </div>
                     <div class="tracking_content">
-
+                        <p style="width: 100% ;text-align: center;font-size: 28px;font-weight: bold;line-height: 160px">此模块尚未开发仅提供参考</p>
                     </div>
                 </div>
                 <div class="tracking top">
@@ -15,7 +15,7 @@
                         <p>报表</p>
                     </div>
                     <div class="tracking_content">
-
+                        <p style="width: 100% ;text-align: center;font-size: 28px;font-weight: bold;line-height: 100px">此模块尚未开发仅提供参考</p>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                         <p>报表</p>
                     </div>
                     <div class="tracking_content">
-
+                        <p style="width: 100% ;text-align: center;font-size: 28px;font-weight: bold;line-height: 160px">此模块尚未开发仅提供参考</p>
                     </div>
                 </div>
             </div>

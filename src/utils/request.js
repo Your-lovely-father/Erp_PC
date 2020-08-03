@@ -36,8 +36,13 @@ const err = (error) => {
 //     loading.close();
 // }
 
+
+
 // 请求拦截中，我们可以对请求头作处理，比如所有的请求都加一个token等
 axios.interceptors.request.use(config => {
+        // var index = config.url.lastIndexOf("_");
+        // var str  = config.url .substring(index + 1, config.url .length);
+        // console.log(str);
     let token =store.state.access_token;
     if (token) {
         config.headers['Access-Token'] = token// 让每个请求携带自定义 token 请根据实际情况自行修改

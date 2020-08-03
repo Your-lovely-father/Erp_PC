@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './utils/custom'
 //清楚默认样式
 import './assets/css/reset.css'
 //字体图标
@@ -18,6 +19,7 @@ Vue.use(ElementUI);
 //全局弹框
 import {Message} from 'element-ui'
 Vue.prototype.$message=Message;
+
 
 //Vant
 // import Vant from 'vant'
