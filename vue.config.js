@@ -4,8 +4,8 @@ module.exports = {
   outputDir: process.env.outputDir,
   lintOnSave: true,
   runtimeCompiler: true,
-  chainWebpack: () => {},
-  configureWebpack: () => {},
+  // chainWebpack: () => {},
+  // configureWebpack: () => {},
   // css: {
   //   loaderOptions: {
   //     postcss: {

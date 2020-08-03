@@ -74,7 +74,7 @@
                     if (!value) return;
                     Api.loginPost(this.loginForm.user, this.loginForm.pass).then((res) => {
                         if (res.code === 200) {
-                            this.$message.success('登陆' + res.msg);
+                            this.$message.success('登陆成功');
                             this.$store.commit('token', res.data.access_token);
                             this.$store.commit('imgAge', res.data.user_image);
                             this.$router.push('/body');
@@ -84,7 +84,7 @@
                             });
                             return;
                         } else {
-                            this.$message.error(res.msg);
+                            this.$message.error('登陆失败');
                             return;
                         }
                     })
