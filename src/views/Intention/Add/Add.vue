@@ -88,10 +88,19 @@
 
 <script>
     import Axios from '../../../api/pub/pub'
+    import Api from '../../../api/Intention/Intention'
     export default {
         data() {
             return {
                 searchAreaOptions:[] , //区域
+                province_id:'',//省
+                city_id:'',//市
+                area_id:'',//区
+                customerList:[], //客户
+                employeesList:[] //维护人
+
+
+
             }
         },
         methods: {
@@ -139,6 +148,21 @@
                 this.province_id = pathvalue[0];
                 this.city_id = pathvalue[1];
                 this.area_id = pathvalue[2];
+                Api.intentionSelect(this.area_id).then((res)=>{
+                    res.data.forEach(item => {
+                        this.customerList.push({
+                            client_name:item.client_name,
+                            client_phone:item.client_phone,
+                            id:item.id
+                        })
+                        this.employeesList.push({
+                            user_id:item.user_id,
+                            user_name:item.user_name
+                        })
+                    })
+                    console.log(this.customerList)
+                    console.log(this.employeesList)
+                })
             },
         },
         computed: {

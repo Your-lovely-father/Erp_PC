@@ -123,7 +123,7 @@
         </div>
         <myAdd  @getSelectList="getSelectList"/>
         <mySee ref="mySee"/>
-        <myModify ref="myModify"/>
+        <myModify ref="myModify" @getSelectList="getSelectList"/>
     </div>
 </template>
 

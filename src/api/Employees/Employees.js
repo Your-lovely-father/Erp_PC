@@ -52,20 +52,39 @@ export default {
 
     //员工修改
     postUpd(
-        id=selectUpd.id,
-        user_name=selectUpd.user_name,
-        user_sex=selectUpd.user_sex,
-        user_phone=selectUpd.user_phone,
-        user_age=selectUpd.user_age,
-        user_id_card=selectUpd.user_id_card,
-        user_status=selectUpd.user_status,
+        id,
+        user_name,
+        user_sex,
+        user_phone,
+        user_image,
+        user_age,
+        user_id_card,
+        user_password,
+        user_status,
         user_role,
-        area_id=selectUpd.area_id,
-        storefront_id=selectUpd.storefront_id,
-        mobile_terminal_status=selectUpd.mobile_terminal_status
+        province_id,
+        city_id,
+        area_id,
+        storefront_id,
+        mobile_terminal_status
 
     ){
-        return Axios.post('/erp/user_edit',{id:id,user_name:user_name,user_sex:user_sex,user_phone:user_phone,user_age:user_age,user_id_card:user_id_card,
-            user_status:user_status,user_role:user_role,area_id:area_id,storefront_id:storefront_id, mobile_terminal_status: mobile_terminal_status})
+        return Axios.post('/erp/user_edit',{
+            id:id,
+            user_name:user_name,
+            user_sex:user_sex,
+            user_phone:user_phone,
+            user_image:user_image,
+            user_age:user_age,
+            user_id_card:user_id_card,
+            user_password:user_password,
+            user_status:user_status,
+            user_role:user_role,
+            province_id:province_id,
+            city_id:city_id,
+            area_id:area_id,
+            storefront_id:storefront_id,
+            mobile_terminal_status:mobile_terminal_status
+        })
     },
 }

@@ -378,7 +378,6 @@
                     roleData.map((item) => {
                         item.label = item.group_name;
                         item.value = item.id;
-                        console.log(item.children === undefined);
                         item.children = item.children;
                         if (item.children) {
                             item.children.map(el => {

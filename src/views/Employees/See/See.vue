@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="int_box ">
                                     <label>角色管理</label>
-                                    <el-cascader v-model="user_role" :options="roleOptions" clearable class="report_int"
+                                    <el-cascader v-model="user_role" :options="roleOptions" clearable   :disabled="true" class="report_int"
                                     ></el-cascader>
                                 </div>
                                 <div class="state">
@@ -227,7 +227,7 @@
                     const roleData = res.data;
                     roleData.map((item) => {
                         item.label = item.group_name;
-                        item.value = item.id;
+                        item.value = item.id+'';
                         item.children = item.children;
                         if (item.children) {
                             item.children.map(el => {

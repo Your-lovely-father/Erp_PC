@@ -99,41 +99,63 @@
                                     <el-cascader v-model="user_role" :options="roleOptions" clearable class="report_int"
                                     ></el-cascader>
                                 </div>
-                                <div class="state">
-                                    <div class="int_box">
-                                        <label>状态</label>
-                                        <el-switch
-                                                v-model="user_status"
-                                                active-color="#13ce66"
-                                                inactive-color="#ff4949"
-                                                @change="status"
-                                        >
-                                        </el-switch>
-                                    </div>
-                                    <div class="int_box">
-                                        <label>开通手机端</label>
-                                        <el-switch
-                                                v-model="mobile_terminal_status"
-                                                active-color="#13ce66"
-                                                inactive-color="#ff4949"
-                                                @change="mobile"
-                                        >
-                                        </el-switch>
-                                    </div>
+                                <div class="int_box">
+                                    <label>密码</label>
+                                    <el-input
+                                            placeholder="密码为空为原始密码"
+                                            v-model="user_password"
+                                            clearable
+                                            class="report_int"
+                                    >
+                                    </el-input>
+                                </div>
+                            </div>
+                            <div class="state">
+                                <div class="int_box">
+                                    <label>状态</label>
+                                    <el-switch
+                                            v-model="user_status"
+                                            active-color="#13ce66"
+                                            inactive-color="#ff4949"
+                                            active-value="1"
+                                            inactive-value="2"
+                                            @change="status"
+                                    >
+                                    </el-switch>
+                                </div>
+                                <div class="int_box">
+                                    <label>开通手机端</label>
+                                    <el-switch
+                                            v-model="mobile_terminal_status"
+                                            active-color="#13ce66"
+                                            inactive-color="#ff4949"
+                                            active-value="1"
+                                            inactive-value="2"
+                                            @change="mobile"
+                                    >
+                                    </el-switch>
                                 </div>
                             </div>
                             <div class="upload">
                                 <div class="int_box">
                                     <label>头像</label>
                                     <el-upload
-                                            action="https://jsonplaceholder.typicode.com/posts/"
+                                            class="avatar-uploader"
+                                            ref="upload_img"
+                                            action=""
+                                            accept="image/jpeg,image/jpg,image/png"
                                             list-type="picture-card"
+                                            :file-list="picture_list"
+                                            :on-exceed="fileBeyond"
+                                            :on-remove="handleRemove"
+                                            :limit="1"
+                                            :http-request="uploadSectionFile"
                                             :on-preview="headHandlePictureCardPreview"
-                                            :on-remove="headHandleRemove"
+                                            @click.native="logoutHandle"
                                     >
                                         <i class="el-icon-plus"></i>
                                     </el-upload>
-                                    <el-dialog :visible.sync="headDialogVisible">
+                                    <el-dialog :modal='false' :visible.sync="headDialogVisible">
                                         <img width="100%" :src="headDialogImageUrl" alt="">
                                     </el-dialog>
                                 </div>
@@ -154,6 +176,7 @@
 <script>
     import Axios from '../../../api/pub/pub'
     import Api from '../../../api/Employees/Employees'
+    import axios from 'axios'
 
     export default {
         data() {
@@ -169,8 +192,10 @@
                 valueArea: [], //区域回显
                 storeList: [], //门店列表
                 storefront: '', //门店回显
+                storefront_id:'',
                 roleOptions: [], //角色列表
-                user_role: [],
+                user_role: [], //权限
+                user_image: '',//员工头像
                 user_status: '', //状态
                 mobile_terminal_status: '', //开通手状态
                 genderOptions: [{ //性别
@@ -180,10 +205,13 @@
                     value: '20',
                     label: '女'
                 }],
-                province_id:'',
-                city_id:'',
-                area_id:'',
-
+                user_image:'', //传给后台的图片
+                userImage:'https://erp-report-shenyang.oss-cn-beijing.aliyuncs.com/',
+                imageUrl:'', //详情图片
+                picture_list: [],//回显图片
+                flag:true ,//控制点击后清除回显图片且在不执行该方法
+                id:'', //此数据唯一id
+                user_password:''//密码
             };
         },
         methods: {
@@ -195,17 +223,114 @@
                 this.onPage()
             },
             confirm() {
-                Api.postUpd().then((res) => {
-
+                let imgage ='';
+                if(!this.user_image){
+                    imgage=this.imageUrl
+                }else {
+                    imgage=this.user_image
+                }
+                Api.postUpd(
+                    this.id,
+                    this.user_name,
+                    this.user_sex,
+                    this.user_phone,
+                    imgage,
+                    this.user_age,
+                    this.user_id_card,
+                    this.user_password,
+                    this.user_status,
+                    this.user_role[0],
+                    this.valueArea[0],
+                    this.valueArea[1],
+                    this.valueArea[2],
+                    this.storefront_id,
+                    this.mobile_terminal_status
+                ).then((res) => {
+                    if(res.code === "200003"){
+                        this.$message.success('修改成功');
+                        this.$emit('getSelectList')
+                    }else {
+                        this.$message.error('修改失败')
+                    }
                 });
                 this.onPage()
             },
-            headHandleRemove(file, fileList) {
-                console.log(file, fileList);
+            logoutHandle(){//清除图片
+                if(this.flag){
+                    this.picture_list=[];
+                    this.flag = false
+                }
             },
-            headHandlePictureCardPreview(file) {
+            uploadSectionFile(params) {// 自定义上传方法
+                let that = this;
+                let file = params.file;  //获取上传的文件
+                let fileType = file.type;   //获取文件类型
+                let isImage = fileType.indexOf('image') != -1; // 判断是否是图片类型
+                let file_url = that.$refs.upload_img.uploadFiles[0].url;
+                let isLt2M = file.size / 1024 / 1024 < 2;
+                if (!isLt2M) {  // 判断大小
+                    that.$message.error('上传图片的大小不能超过 2MB!');
+                    that.$refs.upload_img.uploadFiles = [];  //不符合就清空已选择的图片
+                    return;
+                }
+                if (!isImage) {  // 文件格式
+                    that.$message.error('请选择图片文件！');
+                    that.$refs.upload_img.uploadFiles = [];   //不符合就清空已选择的图片
+                    return;
+                }
+                if (isImage) {
+                    var img = new Image();
+                    img.src = file_url;
+                    img.onload = function () {
+                        //  一切验证通过后调用上传方法
+                        that.uploadFile(file);
+                    }
+                }
+            },
+            uploadFile(file) {
+                var that = this;
+                var formData = new FormData();
+                formData.append('files', file);
+                formData.append('type', '3');
+                let Authorization = window.localStorage.getItem('access_token');
+                let token = JSON.parse(Authorization);
+                const instance = axios.create({
+                    withCredentials: true
+                });
+                //上传头像
+                instance({
+                    method: 'post',
+                    url: 'http://localhost:8080/api/erp/upload_file',
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'access-token': token
+                    },
+                    data: formData
+                }).then((res) => {
+                    if (res.data.code === "200005") {  //成功的话将数据插入data中
+                        that.user_image = res.data.data.url;
+                        that.$message.success('图片上传成功')
+                    } else {
+                        // 上传失败，清除已选择 内容 ，并提示失败原因
+                        that.$refs.upload_img.uploadFiles = [];
+                        that.$message.error('图片上传异常');
+                    }
+                })
+            },
+            //文件删除
+            handleRemove() {
+                this.user_image = '';
+            },
+            headHandlePictureCardPreview(file) { //处理图片预览效果
                 this.headDialogImageUrl = file.url;
                 this.headDialogVisible = true;
+            },
+            //文件超限
+            fileBeyond() {
+                this.$message({
+                    type: 'info',
+                    message: '最多上传1张图片'
+                });
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {
@@ -241,7 +366,7 @@
                     const roleData = res.data;
                     roleData.map((item) => {
                         item.label = item.group_name;
-                        item.value = item.id;
+                        item.value = item.id+'';
                         item.children = item.children;
                         if (item.children) {
                             item.children.map(el => {
@@ -255,7 +380,7 @@
             },
             userSex(){ //性别回显
                this.genderOptions.forEach((item,index)=>{
-                   if(item.value==this.user_sex){
+                   if(item.value===this.user_sex){
                        this.user_sex='男'
                    }else {
                        this.user_sex='女'
@@ -263,51 +388,63 @@
                })
             },
             genderValue(e){ //获取男女
-                console.log(e)
+                this.user_sex=e
             },
             handleChange() { //获取省市区id传给后台获取门店数据
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
-                this.province_id = pathvalue[0];
-                this.city_id = pathvalue[1];
-                this.area_id = pathvalue[2];
+                this.valueArea[0] = pathvalue[0];
+                this.valueArea[1] = pathvalue[1];
+                this.valueArea[2] = pathvalue[2];
                 Axios.postStores(this.area_id).then(res => {
                     let cityData = JSON.stringify(res.data.data);
                     this.storeList = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 });
                 this.storefront=''
             },
+            storesData() { //门店回显处理数据
+                Axios.postStores(this.valueArea[2]).then(res => {
+                    let cityData = JSON.stringify(res.data.data);
+                    let data = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                    data.map((item, index) => {
+                        if (item.value == this.storefront_id) {
+                            this.storefront = item.label;
+                        }
+                    })
+                });
+            },
             storeId(e){ //获取门店id
-                console.log(e)
+               this.storefront_id=e
             },
             status(e){ //获取状态 1 true 2 false
-                console.log(e)
+                this.user_status=e
             },
             mobile(e){ //获取手机端状态 1 true 2 false
-                console.log(e)
+                this.mobile_terminal_status=e
             },
             parentMsg() {
-                this.detailsObj
+                this.detailsObj;
+                this.storesData()
             },
             setData(data) {
                 this.user_name = data.user_name;
                 this.user_phone = data.user_phone;
                 this.user_age = data.user_age;
-                this.user_sex = data.user_sex;
+                this.user_sex = data.user_sex+'';
                 this.user_id_card = data.user_id_card;
-                this.storefront = data.storefront;
-                this.user_status = data.user_status === 1 ? true : false;
-                this.mobile_terminal_status = data.mobile_terminal_status === 1 ? true : false;
+                this.storefront_id = data.storefront_id;
+                this.user_status = data.user_status+'';
+                this.mobile_terminal_status = data.mobile_terminal_status+'';
                 this.valueArea = [data.province_id + '', data.city_id + '', data.area_id + ''];
                 this.user_role = [data.user_role];
-                this.headDialogImageUrl = data.user_image;
+                this.imageUrl = data.user_image;
+                this.id=data.id;
+                this.picture_list.push({
+                    url:this.userImage+this.imageUrl
+                });
+                if (this.picture_list.length === 2){
+                    this.picture_list.shift()
+                }
             },
-            // moveSwitch(status) { //开通手机端切换开关
-            //     if (status === 1) {
-            //         this.selectUpd.mobile_terminal_status = 2
-            //     } else {
-            //         this.selectUpd.mobile_terminal_status = 1
-            //     }
-            // },
         },
         computed: {
             updEmployees() {
@@ -322,7 +459,8 @@
             this.detailsObj
             this.getSelect();
             this.postRole();
-            this.userSex()
+            this.userSex();
+            this.storesData()
         }
     }
 </script>
@@ -430,7 +568,7 @@
         width: 480px;
         display: flex;
         justify-content: space-between;
-        padding-top: 15px;
+        margin-left: 35px;
     }
 
     .upload {

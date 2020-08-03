@@ -20,5 +20,9 @@ export default {
     //楼盘修该
     intentionUpd(id,building_id,area_id){
         return Axios.post('/erp/intention_edit',{id:id,building_id:building_id,area_id:area_id})
+    },
+    //添加意向楼盘客户信息
+    intentionSelect(area_id){
+        return Axios.post('/erp/intention_add_where',{area_id:area_id})
     }
 }
