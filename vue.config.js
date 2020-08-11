@@ -1,7 +1,7 @@
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? './': '/',
-  // outputDir: 'dist',
-  outputDir: process.env.outputDir,
+  outputDir: 'dist',
+  // outputDir: process.env.outputDir,
   lintOnSave: true,
   runtimeCompiler: true,
   // chainWebpack: () => {},
@@ -32,4 +32,4 @@ module.exports = {
     }
   }
 
-}
+};

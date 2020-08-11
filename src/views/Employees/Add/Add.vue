@@ -277,13 +277,12 @@
                 formData.append('type', '3');
                 let Authorization = window.localStorage.getItem('access_token');
                 let token = JSON.parse(Authorization);
-                const instance = axios.create({
-                    withCredentials: true
-                });
+                const instance = axios.create();
+                instance.defaults.baseURL = '/api';
                 //上传头像
                 instance({
                     method: 'post',
-                    url: 'http://localhost:8081/api/erp/upload_file',
+                    url: '/erp/upload_file',
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'access-token': token

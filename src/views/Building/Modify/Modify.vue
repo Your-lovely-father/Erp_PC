@@ -292,13 +292,12 @@
                 formData.append('type', '1');
                 let Authorization = window.localStorage.getItem('access_token');
                 let token = JSON.parse(Authorization);
-                const instance = axios.create({
-                    withCredentials: true
-                });
+                const instance = axios.create();
+                instance.defaults.baseURL = '/api';
                 //上传楼盘
                 instance({
                     method: 'post',
-                    url: 'http://localhost:8081/api/erp/upload_file',
+                    url: '/erp/upload_file',
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'access-token': token
@@ -368,12 +367,11 @@
                 formData.append('type', '2');
                 let Authorization = window.localStorage.getItem('access_token');
                 let token = JSON.parse(Authorization);
-                const instance = axios.create({
-                    withCredentials: true
-                });
+                const instance = axios.create();
+                instance.defaults.baseURL = '/api';
                 instance({
                     method: 'post',
-                    url: 'http://localhost:8081/api/erp/upload_file',
+                    url: '/erp/upload_file',
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'access-token': token
