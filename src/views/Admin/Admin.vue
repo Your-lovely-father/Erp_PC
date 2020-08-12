@@ -177,7 +177,7 @@
 
             reportAdd() {
                 this.$store.commit('adminStatus', false);
-                this.$store.commit('addAdmin', true)
+                this.$store.commit('addAdmin', true);
             },
             handleEdit(id) {
                 this.$store.commit('adminStatus', false);

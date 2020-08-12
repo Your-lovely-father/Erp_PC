@@ -230,17 +230,14 @@
             onPage() {
                 this.$store.commit('isUpdEmployees', true);
                 this.$store.commit('isUpdStatusEmployees', false);
+                this.managementList=[];
+                this.rule=[];
+                this.getSelectList()
             },
             cancel() {
                 this.onPage()
             },
             confirm() {
-                let imgage ='';
-                if(!this.user_image){
-                    imgage=this.imageUrl
-                }else {
-                    imgage=this.user_image
-                }
                 let user_role = '';
                 if(!this.user_role){
                     user_role=this.rule.join(',');
@@ -252,7 +249,7 @@
                     this.user_name,
                     this.user_sex,
                     this.user_phone,
-                    imgage,
+                    this.imageUrl,
                     this.user_age,
                     this.user_id_card,
                     this.user_password,
@@ -336,7 +333,7 @@
             },
             //文件删除
             handleRemove() {
-                this.user_image = '';
+                this.imageUrl = '';
             },
             headHandlePictureCardPreview(file) { //处理图片预览效果
                 this.headDialogImageUrl = file.url;

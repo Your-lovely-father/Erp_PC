@@ -102,6 +102,9 @@
             onPage() {
                 this.$store.commit('isUpdAdmin', true);
                 this.$store.commit('isUpdStatusAdmin', false);
+                this.permissionsList=[];
+                this.rule=[];
+                this.getAdminSelect()
             },
             cancel() {
                 this.onPage()

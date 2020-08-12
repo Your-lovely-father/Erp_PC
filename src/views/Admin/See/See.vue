@@ -102,6 +102,9 @@
             onPage() {
                 this.$store.commit('isAdmin', true);
                 this.$store.commit('isSeeAdmin', false);
+                this.permissionsList=[];
+                this.rule=[];
+                this.getAdminSelect()
             },
             cancel() {
                 this.onPage()

@@ -202,6 +202,9 @@
             onPage() {
                 this.$store.commit('isEmployees', true);
                 this.$store.commit('isSeeEmployees', false);
+                this.managementList=[];
+                this.rule=[];
+                this.getSelectList()
             },
             cancel() {
                 this.onPage()

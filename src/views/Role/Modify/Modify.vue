@@ -78,6 +78,9 @@
             onPage() {
                 this.$store.commit('isUpdRole', true);
                 this.$store.commit('isUpdStatusRole', false);
+                this.permissionsList = [];
+                this.rule=[];
+                this.getAdminSelect();
             },
             cancel() {
                 this.onPage()
@@ -96,18 +99,21 @@
                     }else {
                         this.$message.error('修改失败')
                     }
-                })
+                });
                 this.onPage();
+            },
+            getRple(){
+                this.detailObj;
             },
             setData(data){
                 this.group_name=data.group_name;
                 this.id=data.id;
                 this.pid=data.pid;
-                if(data.rule instanceof Array){
-                    let arrs = [];
+                if(data.rule instanceof Array ){
+                    let arrInfo = [];
                     function setrule(arr) { //递归
                         arr.forEach(item=>{
-                            arrs.push(item.id);
+                            arrInfo.push(item.id);
                             if(item.son){
                                 if(item.son !== ''){
                                     setrule(item.son)
@@ -116,12 +122,8 @@
                         })
                     }
                     setrule(data.rule);
-                    this.rule=arrs;
+                    this.rule=arrInfo;
                 }
-
-            },
-            getRple(){
-                this.detailObj
             },
             getAdminSelect(){
                 adminApi.adminList().then((res)=>{
@@ -166,8 +168,8 @@
         },
         mounted() {
             this.detailObj;
-            this.getAdminSelect()
-        }
+            this.getAdminSelect();
+        },
     }
 </script>
 

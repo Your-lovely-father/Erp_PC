@@ -168,7 +168,7 @@
                 let pagesum = 999;
                 repApi.reportList(page,pagesum).then((res)=>{
                     let cityData = JSON.stringify(res.data.data);
-                    this.clientOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/client_name/g, "label"));
+                    this.clientOptions = JSON.parse(cityData.replace(/client_id/g, "value").replace(/client_name/g, "label"));
                 })
             },
             customerEcho(){ //客户回显数据
@@ -176,7 +176,7 @@
                 let pagesum = 999;
                 repApi.reportList(page,pagesum).then((res)=>{
                     let cityData = JSON.stringify(res.data.data);
-                    let data = JSON.parse(cityData.replace(/id/g, "value").replace(/client_name/g, "label"));
+                    let data = JSON.parse(cityData.replace(/client_id/g, "value").replace(/client_name/g, "label"));
                     data.map((item, index) => {
                         if (item.value == this.client_id) {
                             this.client_name = item.label;

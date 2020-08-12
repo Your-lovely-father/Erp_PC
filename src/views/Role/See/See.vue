@@ -26,7 +26,6 @@
                                         show-checkbox
                                         node-key="id"
                                         :props="defaultProps"
-                                        @check-change="permissions"
                                         default-expand-all
                                         ref="tree"
                                         :default-checked-keys="rule"
@@ -77,12 +76,19 @@
             onPage() {
                 this.$store.commit('isRole', true);
                 this.$store.commit('isSeeRole', false);
+                this.permissionsList = [];
+                this.rule=[];
+                this.getAdminSelect()
             },
             cancel() {
                 this.onPage()
             },
             confirm() {
                 this.onPage()
+            },
+            getRple(){
+                this.detailObj
+
             },
             setData(data){
                 this.group_name=data.group_name;
@@ -102,9 +108,6 @@
                     this.rule=arrs;
                 }
 
-            },
-            getRple(){
-                this.detailObj
             },
             getAdminSelect(){
                 adminApi.adminList().then((res)=>{
@@ -133,11 +136,6 @@
                     });
                     this.permissionsList=data
                 })
-            },
-            permissions(){
-                let res = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
-                let value =res.join(',');
-                this.rule_ids=value
             },
         },
         computed: {

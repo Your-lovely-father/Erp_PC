@@ -146,7 +146,7 @@
                         this.customerList.push({
                             label:'名称 : '+item.client_name + ' ; 手机号 : '+item.client_phone + ' ; 维护人 : '+item.user_name,
                             client_phone:item.client_phone,
-                            value:item.id +','+item.user_id
+                            value:item.client_id +','+item.user_id
                         });
                     });
                 });
