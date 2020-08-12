@@ -232,6 +232,7 @@
                 this.$store.commit('isUpdStatusEmployees', false);
                 this.managementList=[];
                 this.rule=[];
+                this.picture_list=[];
                 this.getSelectList()
             },
             cancel() {
@@ -244,12 +245,18 @@
                 }else {
                     user_role=this.user_role
                 }
+                let imgage = '';
+                if(!this.user_image){
+                    imgage=this.imageUrl
+                }else {
+                    imgage=this.user_image
+                }
                 Api.postUpd(
                     this.id,
                     this.user_name,
                     this.user_sex,
                     this.user_phone,
-                    this.imageUrl,
+                    imgage,
                     this.user_age,
                     this.user_id_card,
                     this.user_password,
@@ -490,11 +497,13 @@
                 }
                 this.imageUrl = data.user_image;
                 this.id=data.id;
-                this.picture_list.push({
-                    url:this.userImage+this.imageUrl
-                });
-                if (this.picture_list.length === 2){
-                    this.picture_list.shift()
+                if(this.imageUrl){
+                    this.picture_list.push({
+                        url:this.userImage+this.imageUrl
+                    });
+                    if (this.picture_list.length === 2){
+                        this.picture_list.shift()
+                    }
                 }
             },
         },
