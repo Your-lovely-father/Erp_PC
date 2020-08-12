@@ -29,6 +29,7 @@
                                         @check-change="permissions"
                                         default-expand-all
                                         ref="tree"
+                                        :check-strictly="true"
                                         :default-checked-keys="rule"
                                 >
                                 </el-tree>

@@ -363,7 +363,7 @@
                 this.area_id = data.area_id;
                 this.user_id = data.user_id;
                 this.client_type = data.client_type;
-                this.id = data.id;
+                this.id = data.client_id;
                 this.valueArea = [data.province_id + '', data.city_id + '', data.area_id + '']
             },
             parentMsg() {

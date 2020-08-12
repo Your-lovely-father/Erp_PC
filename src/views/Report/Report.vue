@@ -236,14 +236,14 @@
                                     label="操作"
                                     width="200">
                                 <template slot-scope="scope">
-                                    <el-button @click="handleClick(scope.row.id)" type="text" size="small"
+                                    <el-button @click="handleClick(scope.row.client_id)" type="text" size="small"
                                                v-permission="{action:'detail',effect:'disabled'}"
                                     >查看</el-button>
-                                    <el-button type="text" size="small" @click="upd(scope.row.id)"
+                                    <el-button type="text" size="small" @click="upd(scope.row.client_id)"
                                                v-permission="{action:'edit',effect:'disabled'}"
                                     >编辑</el-button>
                                     <el-button type="text" size="small" slot="reference" class="el-popconfirm"
-                                               @click="del(scope.row.id)"
+                                               @click="del(scope.row.client_id)"
                                                v-permission="{action:'del',effect:'disabled'}"
                                     >删除
                                     </el-button>
@@ -337,6 +337,7 @@
                 this.$store.commit('updStatus', true);
                 //获取详情
                 Api.detailObject(id).then((res)=>{
+                    console.log(res)
                     this.$store.commit('detailList',res.data);
                     this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
                 })
