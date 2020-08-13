@@ -1,5 +1,5 @@
 <template>
-    <div  class="component">
+    <div class="component">
         <div class="report" v-show="reportStatus">
             <!--  herder      -->
             <div class="herder_box">
@@ -231,22 +231,22 @@
                                     <el-dropdown-menu :style="menuShows">
                                         <el-dropdown-item style="padding:0">
                                             <dl class="more">
-                                            <dd>
-                                                <p @click="handleClick(scope.row.client_id)"
-                                                   v-permission="{action:'detail',effect:'disabled'}"
-                                                >查看</p>
-                                                <p @click="upd(scope.row.client_id)"
-                                                   v-permission="{action:'edit',effect:'disabled'}"
-                                                >编辑</p>
-                                                <p slot="reference" class="el-popconfirm "
-                                                   @click="del(scope.row.client_id)"
-                                                   v-permission="{action:'del',effect:'disabled'}"
-                                                >删除
-                                                </p>
-                                                <p>跟进
-                                                </p>
-                                            </dd>
-                                        </dl>
+                                                <dd>
+                                                    <p @click="handleClick(scope.row.client_id)"
+                                                       v-permission="{action:'detail',effect:'disabled'}"
+                                                    >查看</p>
+                                                    <p @click="upd(scope.row.client_id)"
+                                                       v-permission="{action:'edit',effect:'disabled'}"
+                                                    >编辑</p>
+                                                    <p slot="reference" class="el-popconfirm "
+                                                       @click="del(scope.row.client_id)"
+                                                       v-permission="{action:'del',effect:'disabled'}"
+                                                    >删除
+                                                    </p>
+                                                    <p @click="dialogVisible = true">跟进
+                                                    </p>
+                                                </dd>
+                                            </dl>
                                         </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
@@ -268,6 +268,106 @@
                 </div>
             </div>
         </div>
+        <!--  弹框区域      -->
+        <el-dialog
+                title="跟进管理"
+                :visible.sync="dialogVisible"
+                width="30%"
+               >
+            <div class="tail_content">
+                <!--      表单添加区域      -->
+                <div class="form">
+                        <div class="tail_box">
+                            <span class="p1">区域</span>
+                            <el-cascader :options="trackingAreaOptions" clearable
+                                         class="tracking_int"
+                                         @change="trackingHandleChange"
+                                         ref="trackingCascaderAddr"
+                            >
+                            </el-cascader>
+                        </div>
+                        <div class="tail_box">
+                            <span class="p1">门店</span>
+                            <el-select v-model="trackingStorefront_id" placeholder="请选择" class="tracking_int"
+                                       @change="trackingStorefrontValue"
+                            >
+                                <el-option
+                                        v-for="item in trackingStoresOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="tail_box">
+                            <span class="p1">维护人</span>
+                            <el-select v-model="trackingUser_id" placeholder="请选择" class="tracking_int"
+                                       @change="trackingUserValue"
+                            >
+                                <el-option
+                                        v-for="item in trackingUserOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="tail_box">
+                            <span  class="p1">客户名称</span>
+                            <el-select v-model="trackingClient_id" placeholder="请选择" class="tracking_int"
+                                       clearable
+                                       @change="trackingClientId"
+                            >
+                                <el-option
+                                        v-for="item in trackingClientOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="tail_box">
+                             <span class="p1">时间</span>
+                            <el-date-picker
+                                    v-model="trackingLookDate"
+                                    type="date"
+                                    placeholder="选择日期"
+                                    class="tracking_data"
+                                    @change="trackingGetData"
+                                    value-format="yyyy-MM-dd"
+                            >
+                            </el-date-picker>
+                            -
+                            <el-time-picker
+                                    v-model="trackingLookTime"
+                                    placeholder="选择时间"
+                                    class="tracking_data"
+                                    @change="trackingGgetTime"
+                                    value-format="HH:mm:ss"
+                            >
+                            </el-time-picker>
+                        </div>
+                        <div class="tail_box_textarea">
+                            <span class="p1">跟进记录</span>
+                            <el-input
+                                    placeholder="请输入跟进记录"
+                                    clearable
+                                    type="textarea"
+                                    v-model="trackingGuide_look_content"
+                                    class="tracking_textarea"
+                            >
+                            </el-input>
+                        </div>
+                </div>
+            </div>
+            <div slot="footer" class="dialog-footer">
+            <el-button @click="off" size="small">取 消</el-button>
+            <el-button type="primary" @click="ascertain" size="small">确 定</el-button>
+            </div>
+        </el-dialog>
         <!--   组件区域     -->
         <myAdd @reportList="reportList"/>
         <mySee/>
@@ -283,6 +383,9 @@
     import Api from '../../api/Report/Report'
     import Axios from '../../api/pub/pub'
     import {initDynamicRoutes} from '../../router/index'
+    import  trackingApi from '../../api/Tracking/Tracking';
+    import LookApi from '../../api/Look/Look'
+
     export default {
         name: "Report",
         components: {
@@ -321,7 +424,24 @@
                 },
                 totalPage: 0,//总条数
                 isShowMore: false,
-                menuShows: {}
+                menuShows: {},
+                //------------跟进字段
+                dialogVisible: false,
+                trackingGuide_look_content:'', //带看记录
+                trackingClient_id:'',//客户id
+                trackingClientOptions:[],//客户列表
+                trackingUser_id:'',//维护人id
+                trackingUserOptions:[],//维护人列表
+                trackingAreaOptions:[],//区域列表
+                trackingStorefront_id:'',//门店id
+                trackingStoresOptions:[],//门店列表
+                trackingLookDate:'',//日期
+                trackingLookTime:'',//时间
+                trackingLook_time:'' ,//日期时间合并
+                trackingProvince_id:'',
+                trackingCity_id:'',
+                trackingArea_id:''
+
             }
         },
         methods: {
@@ -330,10 +450,10 @@
                 this.$store.commit('addStatus', true)
             },
             handleClick(id) {
-                this.menuShows = {display:'none',opacity:'0'};
-                setTimeout(()=>{
-                    this.menuShows = {display:'none',opacity:'1'}
-                },500);
+                this.menuShows = {display: 'none', opacity: '0'};
+                setTimeout(() => {
+                    this.menuShows = {display: 'none', opacity: '1'}
+                }, 500);
                 //获取详情
                 Api.detailObject(id).then((res) => {
                     this.$store.commit('detailList', res.data)
@@ -342,10 +462,10 @@
                 this.$store.commit('seeStatus', true);
             },
             upd(id) {
-                this.menuShows = {display:'none',opacity:'0'};
-                setTimeout(()=>{
-                    this.menuShows = {display:'none',opacity:'1'}
-                },500);
+                this.menuShows = {display: 'none', opacity: '0'};
+                setTimeout(() => {
+                    this.menuShows = {display: 'none', opacity: '1'}
+                }, 500);
                 //获取详情
                 Api.detailObject(id).then((res) => {
                     this.$store.commit('detailList', res.data);
@@ -546,6 +666,101 @@
             clearType() {
                 this.client_type = ''
             },
+            //以下为跟进操作区域
+            off(){ //取消
+                this.dialogVisible=false;
+            },
+            ascertain(){//确定
+                this.dialogVisible=false;
+                trackingApi.trackingAdd(
+                    this.trackingGuide_look_content,
+                    this.trackingClient_id,
+                    this.trackingUser_id,
+                    this.trackingArea_id,
+                    this.trackingStorefront_id,
+                    this.trackingLook_time
+                ).then((res)=>{
+                    if(res.code==="200001"){
+                        this.$message.success('添加成功');
+                    }
+                });
+            },
+            trackingGetSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.trackingAreaOptions = JSON.parse(linkage)
+                })
+            },
+            trackingHandleChange() { //获取省市区id传给后台获取门店数据
+                var pathvalue = this.$refs.trackingCascaderAddr.getCheckedNodes()[0].path;
+                this.trackingProvince_id = pathvalue[0];
+                this.trackingCity_id = pathvalue[1];
+                this.trackingArea_id = pathvalue[2];
+                Axios.postStores(this.trackingArea_id).then(res => {
+                    let cityData = JSON.stringify(res.data.data);
+                    this.trackingStoresOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
+                });
+            },
+            trackingGetSlectList(){ //获取员工列表拿到维护人id
+                let page =1;
+                let pagesum =999;
+                let province_id =this.trackingProvince_id;
+                let city_id = this.trackingCity_id;
+                let area_id = this.trackingArea_id;
+                let storefront_id = this.trackingStorefront_id+'';
+                Api.getSlectList(page,pagesum,province_id,city_id,area_id,storefront_id).then((res)=>{
+                    let cityData = JSON.stringify(res.data.user_data);
+                    this.trackingUserOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
+                })
+            },
+            trackingClientList(){ //获取所有客户名称
+                let page =1;
+                let pagesum =999;
+                LookApi.clientList(page,pagesum).then((res)=>{
+                    let cityData = JSON.stringify(res.data.data);
+                    this.trackingClientOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/client_name/g, "label"));
+                })
+            },
+            trackingStorefrontValue(e){ //获取门店id
+                this.trackingStorefront_id=e;
+                this.trackingGetSlectList()
+            },
+            trackingUserValue(e){ //维护人id
+                this.trackingUser_id=e
+            },
+            trackingClientId(e){ //客户id
+                this.trackingClient_id=e
+            },
+            trackingGetData(e){//日期
+                this.trackingLookDate=e
+            },
+            trackingGgetTime(e){ //时间
+                this.trackingLookTime=e;
+                this.trackingLook_time=this.trackingLookDate + ' '+this.trackingLookTime
+            }
         },
         computed: {
             reportStatus() {
@@ -559,22 +774,26 @@
             this.reportList();
             this.getSelect();
             this.category();
-            initDynamicRoutes()
+            initDynamicRoutes();
+            this.trackingGetSelect();
+            this.trackingClientList()
         },
     }
 </script>
 
 <style scoped>
-    .component{
+    .component {
         width: 100%;
         height: 100%;
     }
+
     .report {
         padding: 15px;
         width: 100%;
         height: 100%;
         box-sizing: border-box;
     }
+
     /*herder*/
     .herder_box {
         margin-bottom: 15px;
@@ -582,6 +801,7 @@
         background-color: #fff;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
     }
+
     .layui-card-header {
         height: 42px;
         line-height: 42px;
@@ -604,7 +824,8 @@
         display: block;
         padding: 10px 0;
     }
-    .search_int{
+
+    .search_int {
         padding-right: 15px;
     }
 
@@ -622,17 +843,21 @@
         .report_int {
             width: 100% !important;
         }
-        .search_int{
+
+        .search_int {
             width: 100% !important;
             padding-right: 0 !important;
         }
-        .date{
+
+        .date {
             width: 48.9% !important;
         }
+
         .search_btn {
             padding-top: 15px !important;
         }
     }
+
     .btn {
         width: 100px;
         background-image: -webkit-linear-gradient(left, #29adeb, #177ce3);
@@ -716,6 +941,70 @@
     .page {
         text-align: center;
         padding: 10px 15px;
+    }
+    /*  弹框样式   */
+    .component>>>.el-dialog__header{
+        padding: 0 80px 0 20px;
+        height: 42px;
+        line-height: 42px;
+        border-bottom: 1px solid #eee;
+        overflow: hidden;
+        background-color: #F8F8F8;
+        border-radius: 2px 2px 0 0;
+    }
+    .component>>>.el-dialog__headerbtn{
+       margin-top: -7px;
+    }
+    .component>>>.el-dialog__title{
+        font-size: 14px;
+        color: #333;
+    }
+    .dialog-footer{
+        width: 100%;
+        text-align: center;
+    }
+    .tail_content{
+        padding: 10px 15px 0 15px;
+    }
+    /* 弹框内容样式*/
+    .form{
+        width: 100%;
+    }
+    .p1{
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 80px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right;
+    }
+    .tracking_int{
+      display: block;
+      width: 100%;
+    }
+    .tracking_data{
+        width: 50%;
+        display: block;
+    }
+    .tail_box{
+        width: 100%;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 5px;
+    }
+    .tail_box_textarea{
+        width: 100%;
+        height: 110px;
+        display: flex;
+        align-items: center;
+        padding: 5px;
+    }
+    .tail_box_textarea>>>.el-textarea__inner{
+            width: 100%;
+            height: 110px;
+            resize: none;
     }
 
 </style>

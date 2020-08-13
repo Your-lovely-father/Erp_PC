@@ -374,7 +374,6 @@
         height: 100%;
         position: relative;
     }
-
     .add_box {
         width: 300px;
         height: 300px;
@@ -481,5 +480,16 @@
     .addContent{
         width: 100%;
         background: #FFF;
+    }
+    @media screen and (max-width: 1024px){
+        .int_box{
+            width: 100% !important;
+        }
+        .report_int{
+            width: 100% !important;
+        }
+        .date{
+            width: 49% !important;
+        }
     }
 </style>

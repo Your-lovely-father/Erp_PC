@@ -10,7 +10,7 @@
                                 带看管理
                             </p>
                         </div>
-                        <div class="content_btn" style="cursor:pointer">
+                        <div class="content_btn" style="cursor:pointer;display: none">
                             <p @click="reportAdd()" v-permission="{action:'add'}">
                                 <span class="el-icon-plus"></span>
                                 <span>带看添加</span>
@@ -208,13 +208,8 @@
         display: flex;
         justify-content: space-between;
         border-bottom: 1px #eee solid;
+        padding: 12px 15px;
     }
-
-    .content_title {
-        padding-left: 20px;
-        padding-bottom: 20px;
-    }
-
     .content_btn {
         padding-right: 20px;
         padding-bottom: 20px;
@@ -227,11 +222,12 @@
 
 
     .add_box >>> .el-card__body {
-        padding: 20px 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box;
     }
 
     .share {
-        margin-top: 20px;
+        width: 100%;
     }
 
     .top {

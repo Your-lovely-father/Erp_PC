@@ -9,7 +9,7 @@
                             意向楼盘
                         </p>
                     </div>
-                    <div class="content_btn" style="cursor:pointer">
+                    <div class="content_btn" style="cursor:pointer;display: none">
                         <p @click="reportAdd()" v-permission="{action:'add'}">
                             <span class="el-icon-plus"></span>
                             <span>意向楼盘添加</span>

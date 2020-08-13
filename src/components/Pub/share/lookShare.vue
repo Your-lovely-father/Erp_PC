@@ -308,7 +308,8 @@
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        padding: 0 20px;
+        padding: 0 15px;
+        box-sizing: border-box;
     }
 
     label {
@@ -323,11 +324,11 @@
     }
 
     .report_int {
-        width: 350px;
+        width: 250px;
         margin-right: 20px;
     }
     .report_data{
-        width: 350px;
+        width: 250px;
     }
     .btn_search{
         margin-top: 39px;
@@ -342,6 +343,26 @@
     .btn {
         width: 100px;
         background: linear-gradient(#28a9ea, #1981e4);
+    }
+    @media screen and  (max-width: 1024px){
+        .report_data{
+            width: 100% !important;
+        }
+        .start{
+            width: 100% !important;
+        }
+        .finish{
+            width: 100% !important;
+        }
+        .int_box{
+            width: 100% !important;
+        }
+        .report_int{
+            width: 100% !important;
+        }
+        .btn_search{
+            margin-top: 15px !important;
+        }
     }
 
 </style>

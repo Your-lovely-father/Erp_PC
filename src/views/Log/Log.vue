@@ -172,22 +172,19 @@
 <style scoped>
     .component{
         width: 100%;
-        height: 100%;
     }
     .report {
-        width: 98.3%;
-        height: 100%;
-        margin: 15px;
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
     }
     .add_content {
         width: 100%;
         display: flex;
         justify-content: space-between;
         border-bottom: 1px #eee solid;
-    }
-    .content_title {
-        padding-left: 20px;
-        padding-bottom: 20px;
+        padding: 12px 15px;
+        box-sizing: border-box;
     }
     .add_box {
         width: 100%;
@@ -199,7 +196,8 @@
 
 
     .add_box >>> .el-card__body {
-        padding: 20px 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box;
     }
 
     label {

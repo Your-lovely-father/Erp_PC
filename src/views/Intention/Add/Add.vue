@@ -1,3 +1,4 @@
+<!-- 页面已作废 -->
 <template>
     <div class="reportAdd" v-show="addisIntention">
         <div class="add_box">

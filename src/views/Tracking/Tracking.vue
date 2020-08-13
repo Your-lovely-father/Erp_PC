@@ -10,7 +10,7 @@
                                 跟进管理
                             </p>
                         </div>
-                        <div class="content_btn" style="cursor:pointer">
+                        <div class="content_btn" style="cursor:pointer;display: none">
                             <p @click="reportAdd()" v-permission="{action:'add'}">
                                 <span class="el-icon-plus"></span>
                                 <span>跟进添加</span>
@@ -212,8 +212,7 @@
     }
 
     .content_title {
-        padding-left: 20px;
-        padding-bottom: 20px;
+        padding: 12px 15px;
     }
 
     .content_btn {
@@ -228,10 +227,11 @@
 
 
     .add_box >>> .el-card__body {
-        padding: 20px 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box;
     }
     .share{
-        margin-top: 20px;
+       width: 100%;
     }
     .top {
         margin-top: 20px;

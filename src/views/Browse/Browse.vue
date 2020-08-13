@@ -116,7 +116,7 @@
                                         <span class="span1">系统号：</span> <span>20316199</span>
                                     </div>
                                     <div class="text_box">
-                                        <span class="span1">系统号：</span> <span>20316199</span>
+                                        <span class="span1">联系电话：</span> <span>20316199</span>
                                     </div>
                                 </div>
                             </div>

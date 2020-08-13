@@ -49,7 +49,7 @@
                                     v-model="start_data_start"
                                     type="date"
                                     placeholder="选择日期"
-                                    class="reportdata"
+                                    class="reportdata max"
                                     prefix-icon="el-icon-search"
                                     @change="getData"
                                     value-format="yyyy-MM-dd"
@@ -63,7 +63,7 @@
                             <el-time-picker
                                     v-model="start_time_start"
                                     placeholder="选择时间"
-                                    class="report_int"
+                                    class="report_int max"
                                     prefix-icon="el-icon-search"
                                     @change="getTime"
                                     value-format="HH:mm:ss"
@@ -81,7 +81,7 @@
                                     placeholder="选择日期"
                                     prefix-icon="el-icon-search"
                                     @change="finishDate"
-                                    class="report_int reportdata"
+                                    class="report_int reportdata max"
                                     value-format="yyyy-MM-dd"
                                     clearable
                                     @clear="clearFinishDate"
@@ -95,7 +95,7 @@
                                     placeholder="选择时间"
                                     prefix-icon="el-icon-search"
                                     @change="finishTime"
-                                    class="report_int"
+                                    class="report_int max"
                                     value-format="HH:mm:ss"
                                     clearable
                                     @clear="clearFinishTime"
@@ -279,17 +279,21 @@
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        padding: 0 20px;
+        padding: 15px 15px;
+        box-sizing: border-box;
     }
 
     label {
         display: block;
         padding: 10px 0;
     }
-
+    .box_form{
+        width: 100%;
+    }
     .form {
         width: 100%;
         display: flex;
+        flex-wrap: wrap;
     }
 
     .report_int {
@@ -300,8 +304,7 @@
        margin-top: 39px;
     }
     .search_box {
-        margin-right: 20px;
-        padding: 10px 0;
+        width: 100%;
     }
     .reportdata{
         width: 200px;
@@ -310,6 +313,20 @@
     .btn {
         width: 100px;
         background: linear-gradient(#28a9ea, #1981e4);
+    }
+    @media screen and (max-width: 1024px){
+        .int_box{
+            width: 100%;
+        }
+        .report_int,.finish,.start{
+            width: 100% !important;
+        }
+        .max{
+            width: 100% !important;
+        }
+        .btn_search{
+            margin-top: 15px !important;
+        }
     }
 
 </style>

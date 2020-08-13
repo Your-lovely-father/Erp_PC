@@ -32,10 +32,6 @@
                                     label='门店名称'
                                     prop="storefront_name">
                             </el-table-column>
-                            <!--<el-table-column-->
-                            <!--label='负责区域'-->
-                            <!--prop="address">-->
-                            <!--</el-table-column>-->
                             <el-table-column
                                     label="时间"
                                     prop="update_time">
@@ -188,19 +184,16 @@
 
     .add_content {
         width: 100%;
+        height: 43px;
+        align-items: center;
         display: flex;
         justify-content: space-between;
         border-bottom: 1px #eee solid;
-    }
-
-    .content_title {
-        padding-left: 20px;
-        padding-bottom: 20px;
+        padding: 0 15px;
+        box-sizing: border-box;
     }
 
     .content_btn {
-        padding-right: 20px;
-        padding-bottom: 20px;
         color: #1981e4;
     }
 
@@ -233,5 +226,9 @@
 
     .left_btn {
         margin-left: 10px;
+    }
+    .add_box>>>.el-card__body{
+        padding: 0 !important;
+        height: auto;
     }
 </style>
