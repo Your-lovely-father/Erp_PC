@@ -236,17 +236,30 @@
                                     label="操作"
                                     width="200">
                                 <template slot-scope="scope">
-                                    <el-button @click="handleClick(scope.row.client_id)" type="text" size="small"
+                                    <el-dropdown trigger="click">
+                                        <dl class="more">
+                                        <dt><p></p><p>更多</p><p class="el-icon-caret-bottom"></p></dt>
+                                        </dl>
+                                        <el-dropdown-menu >
+                                            <dl class="more">
+                                            <dd >
+                                            <p @click="handleClick(scope.row.client_id)"
                                                v-permission="{action:'detail',effect:'disabled'}"
-                                    >查看</el-button>
-                                    <el-button type="text" size="small" @click="upd(scope.row.client_id)"
+                                            >查看</p>
+                                            <p @click="upd(scope.row.client_id)"
                                                v-permission="{action:'edit',effect:'disabled'}"
-                                    >编辑</el-button>
-                                    <el-button type="text" size="small" slot="reference" class="el-popconfirm"
+                                            >编辑</p>
+                                            <p slot="reference" class="el-popconfirm "
                                                @click="del(scope.row.client_id)"
                                                v-permission="{action:'del',effect:'disabled'}"
-                                    >删除
-                                    </el-button>
+                                            >删除
+                                            </p>
+                                            <p >跟进
+                                            </p>
+                                            </dd>
+                                            </dl>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -316,6 +329,7 @@
                     pagesize: 5 //当前显示几条
                 },
                 totalPage: 0,//总条数
+                isShowMore:false,
             }
         },
         methods: {
@@ -337,7 +351,6 @@
                 this.$store.commit('updStatus', true);
                 //获取详情
                 Api.detailObject(id).then((res)=>{
-                    console.log(res)
                     this.$store.commit('detailList',res.data);
                     this.$refs.myModify.parentMsg() //给子组件传方法，点击时触发
                 })
@@ -637,15 +650,19 @@
         margin-top: 20px;
         padding: 20px;
     }
+    .tab{
+        width: 100%;
+    }
 
     .tab >>> .el-table .cell, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell {
         text-align: center;
     }
+    .tab>>>.el-table_1_column_9>.cell{
+        display: flex;
+        justify-content: center;
+        /*overflow: visible !important;*/
 
-    .el-popconfirm {
-        margin-left: 10px;
     }
-
     .page {
         width: 100%;
         text-align: center;
@@ -662,5 +679,54 @@
     .finish{
         margin-left: 30px;
     }
+    .more{
+        margin: 0 2px;
+        width: 75px;
+        /*position: relative;*/
+    }
+    .more>dt{
+        border-radius: 5px;
+        background: #ffffff;
+        width: 100%;
+        height: 24px;
+        font-weight: bold;
+        color: gray;
+        border: 1px solid #d2ccc4;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5px;
+    }
+    .more>dt:hover{
+        border: 1px solid #177ce3;
+        cursor: pointer;
+    }
+    .more>dd{
+        width: 100%;
+        padding: 0 5px;
+        text-align: center;
+        box-sizing: border-box;
+        z-index: 999;
+        background: #ffffff;
+    }
+    .more>dd>p{
+        line-height: 28px;
+        padding: 5px 8px;
+        border-bottom: 1px #ccc solid;
+        color: #177ce3;
+    }
+    .more>dd>p:nth-child(4){
+        border-bottom: none;
+    }
+    .more>dd>p:hover{
+        cursor: pointer;
+    }
 
+</style>
+<style>
+   .el-dropdown-menu {
+    border: 1px solid #d2ccc4;
+       padding: 0 3px;
+       transform: translateX(10px);
+   }
 </style>
