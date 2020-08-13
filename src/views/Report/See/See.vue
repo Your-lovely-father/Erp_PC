@@ -604,7 +604,7 @@
         </div>
         <!--   写带看     -->
         <el-dialog
-                title="跟进管理"
+                title="带看管理"
                 :visible.sync="lookDialogVisible"
                 width="30%"
         >
@@ -612,44 +612,7 @@
                 <!--      表单添加区域      -->
                 <div class="form">
                         <div class="tail_box">
-                            <span class="p1">区域</span>
-                            <el-cascader :options="lookAreaOptions" clearable
-                                         class="tracking_int"
-                                         @change="lookHandleChange"
-                                         ref="lookCascaderAddr"
-                            >
-                            </el-cascader>
-                        </div>
-                        <div class="tail_box">
-                            <span class="p1">门店</span>
-                            <el-select v-model="lookStorefront_id" placeholder="请选择" class="tracking_int"
-                                       @change="lookStorefrontValue"
-                            >
-                                <el-option
-                                        v-for="item in lookStoresOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="tail_box">
-                            <span class="p1">维护人</span>
-                            <el-select v-model="lookUser_id" placeholder="请选择" class="tracking_int"
-                                       @change="lookUserValue"
-                            >
-                                <el-option
-                                        v-for="item in lookUserOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="tail_box">
-                            <span class="p1">意向楼盘</span>
+                            <span class="p1">带看楼盘</span>
                             <el-select v-model="lookBuilding_id" placeholder="请选择" class="tracking_int"
                                        @change="lookBuildingId"
                             >
@@ -662,20 +625,16 @@
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="tail_box">
-                            <span  class="p1">客户名称</span>
-                            <el-select v-model="lookClient_id" placeholder="请选择" class="tracking_int"
-                                       clearable
-                                       @change="lookClientId"
-                            >
-                                <el-option
-                                        v-for="item in lookClientOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                >
-                                </el-option>
-                            </el-select>
+                        <div class="tail_box_textarea">
+                            <span class="p1">带看记录</span>
+                            <el-input
+                                    clearable
+                                    type="textarea"
+                                    placeholder="请输入带看记录"
+                                    clearable
+                                    v-model="lookGuide_look_content"
+                                    class="tracking_textarea">
+                            </el-input>
                         </div>
                         <div class="tail_box">
                             <span class="p1">时间</span>
@@ -698,17 +657,6 @@
                             >
                             </el-time-picker>
                         </div>
-                        <div class="tail_box_textarea">
-                            <span class="p1">带看记录</span>
-                            <el-input
-                                    clearable
-                                    type="textarea"
-                                    placeholder="请输入带看记录"
-                                    clearable
-                                    v-model="lookGuide_look_content"
-                                    class="tracking_textarea">
-                            </el-input>
-                        </div>
                 </div>
             </div>
             <div slot="footer" class="dialog-footer">
@@ -725,57 +673,16 @@
             <div class="tail_content">
                 <!--      表单添加区域      -->
                 <div class="form">
-                    <div class="tail_box">
-                        <span class="p1">区域</span>
-                        <el-cascader :options="trackingAreaOptions" clearable
-                                     class="tracking_int"
-                                     @change="trackingHandleChange"
-                                     ref="trackingCascaderAddr"
+                    <div class="tail_box_textarea">
+                        <span class="p1">跟进记录</span>
+                        <el-input
+                                placeholder="请输入跟进记录"
+                                clearable
+                                type="textarea"
+                                v-model="trackingGuide_look_content"
+                                class="tracking_textarea"
                         >
-                        </el-cascader>
-                    </div>
-                    <div class="tail_box">
-                        <span class="p1">门店</span>
-                        <el-select v-model="trackingStorefront_id" placeholder="请选择" class="tracking_int"
-                                   @change="trackingStorefrontValue"
-                        >
-                            <el-option
-                                    v-for="item in trackingStoresOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="tail_box">
-                        <span class="p1">维护人</span>
-                        <el-select v-model="trackingUser_id" placeholder="请选择" class="tracking_int"
-                                   @change="trackingUserValue"
-                        >
-                            <el-option
-                                    v-for="item in trackingUserOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="tail_box">
-                        <span  class="p1">客户名称</span>
-                        <el-select v-model="trackingClient_id" placeholder="请选择" class="tracking_int"
-                                   clearable
-                                   @change="trackingClientId"
-                        >
-                            <el-option
-                                    v-for="item in trackingClientOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                            >
-                            </el-option>
-                        </el-select>
+                        </el-input>
                     </div>
                     <div class="tail_box">
                         <span class="p1">时间</span>
@@ -798,17 +705,6 @@
                         >
                         </el-time-picker>
                     </div>
-                    <div class="tail_box_textarea">
-                        <span class="p1">跟进记录</span>
-                        <el-input
-                                placeholder="请输入跟进记录"
-                                clearable
-                                type="textarea"
-                                v-model="trackingGuide_look_content"
-                                class="tracking_textarea"
-                        >
-                        </el-input>
-                    </div>
                 </div>
             </div>
             <div slot="footer" class="dialog-footer">
@@ -818,7 +714,7 @@
         </el-dialog>
         <!--   写意向楼盘     -->
         <el-dialog
-                title="跟进管理"
+                title="意向楼盘管理"
                 :visible.sync="fondDialogVisible"
                 width="30%"
         >
@@ -953,13 +849,6 @@
                 // 带看字段------------------
                 lookDialogVisible:false,
                 lookGuide_look_content:'', //带看记录
-                lookClient_id:'',//客户id
-                lookClientOptions:[],//客户列表
-                lookUser_id:'',//维护人id
-                lookUserOptions:[],//维护人列表
-                lookAreaOptions:[],//区域列表
-                lookStorefront_id:'',//门店id
-                lookStoresOptions:[],//门店列表
                 lookBuilding_id:'',//楼盘id
                 lookBuilding_idOoptions:[],//楼盘列表
                 lookLookDate:'',//日期
@@ -971,19 +860,9 @@
                 // 跟进字段------------------
                 followDialogVisible:false,
                 trackingGuide_look_content:'', //带看记录
-                trackingClient_id:'',//客户id
-                trackingClientOptions:[],//客户列表
-                trackingUser_id:'',//维护人id
-                trackingUserOptions:[],//维护人列表
-                trackingAreaOptions:[],//区域列表
-                trackingStorefront_id:'',//门店id
-                trackingStoresOptions:[],//门店列表
                 trackingLookDate:'',//日期
                 trackingLookTime:'',//时间
                 trackingLook_time:'' ,//日期时间合并
-                trackingProvince_id:'',
-                trackingCity_id:'',
-                trackingArea_id:'',
                 // 意向楼盘字段------------------
                 fondDialogVisible:false,
                 fondSearchAreaOptions:[] , //区域
@@ -1003,6 +882,15 @@
             onPage() {
                 this.$store.commit('isReport', true);
                 this.$store.commit('isSee', false);
+            },
+            //vuex数据
+            getSee(){
+                this.detailList;
+                this.followList(); //跟进
+                this.getSlectList(); //维护人
+                this.looklist(); //带看
+                this.lookBuildingList(); //楼盘
+                this.intentionList(); //意向楼盘
             },
             confirm() {
                 this.onPage();
@@ -1031,18 +919,15 @@
                 this.likeInfo.page = newPage;
                 this.intentionList()
             },
-            followSizeChange(){
+            followSizeChange(newSize){
                 this.followInfo.offset = newSize;
                 this.followList()
             },
-            followCurrentChange(){
+            followCurrentChange(newPage){
                 this.followInfo.page = newPage;
                 this.followList()
             },
-            //vuex数据
-            getSee(){
-                this.detailList;
-            },
+
             //所有列表方法
             followList(){//跟进列表
                 Api.followSelectList(
@@ -1051,7 +936,7 @@
                     this.seeUser_id,
                     this.seeArea_id,
                     this.seeStorefront_id,
-                    this.id
+                    this.seeId
                 ).then((res)=>{
                     this.followPage=res.data.count;
                     this.followData=res.data.data;
@@ -1229,14 +1114,15 @@
                 this.lookDialogVisible=false;
                 LookApi.lookAdd(
                     this.lookGuide_look_content,
-                    this.lookClient_id,
-                    this.lookUser_id,
-                    this.lookArea_id,
-                    this.lookStorefront_id,
+                    this.seeId,
+                    this.seeUser_id,
+                    this.seeArea_id,
+                    this.seeStorefront_id,
                     this.lookBuilding_id,
                     this.lookLook_time).then((res)=>{
                     if(res.code==="200001"){
                         this.$message.success('添加成功');
+                        this.looklist();
                     }
                 });
             },
@@ -1269,60 +1155,19 @@
                     this.lookAreaOptions = JSON.parse(linkage)
                 })
             },
-            lookHandleChange() { //获取省市区id传给后台获取门店数据
-                var pathvalue = this.$refs.lookCascaderAddr.getCheckedNodes()[0].path;
-                this.lookProvince_id = pathvalue[0];
-                this.lookCity_id = pathvalue[1];
-                this.lookArea_id = pathvalue[2];
-                Axios.postStores(this.lookArea_id).then(res => {
-                    let cityData = JSON.stringify(res.data.data);
-                    this.lookStoresOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
-                });
-                this.lookBuildingList()
-            },
-            lookGetSlectList(){ //获取员工列表拿到维护人id
-                let page =1;
-                let pagesum =999;
-                let province_id =this.lookProvince_id;
-                let city_id = this.lookCity_id;
-                let area_id = this.lookArea_id;
-                let storefront_id = this.lookStorefront_id+'';
-                Api.getSlectList(page,pagesum,province_id,city_id,area_id,storefront_id).then((res)=>{
-                    let cityData = JSON.stringify(res.data.user_data);
-                    this.lookUserOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
-                })
-            },
             lookBuildingList(){ //楼盘字典列表获取意向楼盘
                 let page =1 ;
                 let pagesum = 999;
-                let province_id =this.lookProvince_id;
-                let city_id = this.lookCity_id;
-                let area_id = this.lookArea_id;
+                let province_id =this.seeProvince_id;
+                let city_id = this.seeCity_id;
+                let area_id = this.seeArea_id;
                 Api.buildingList(page,pagesum,province_id,city_id,area_id).then((res)=>{
                     let cityData = JSON.stringify(res.data.data);
                     this.lookBuilding_idOoptions = JSON.parse(cityData.replace(/id/g, "value").replace(/building_name/g, "label"))
                 });
             },
-            lookClientList(){ //获取所有客户名称
-                let page =1;
-                let pagesum =999;
-                LookApi.clientList(page,pagesum).then((res)=>{
-                    let cityData = JSON.stringify(res.data.data);
-                    this.lookClientOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/client_name/g, "label"));
-                })
-            },
-            lookStorefrontValue(e){ //获取门店id
-                this.lookStorefront_id=e;
-                this.lookGetSlectList()
-            },
-            lookUserValue(e){ //维护人id
-                this.lookUser_id=e
-            },
             lookBuildingId(e){ //意向楼盘
                 this.lookBuilding_id=e;
-            },
-            lookClientId(e){ //客户id
-                this.lookClient_id=e
             },
             LookGetData(e){//日期
                 this.lookLookDate=e
@@ -1339,85 +1184,17 @@
                 this.followDialogVisible=false;
                 trackingApi.trackingAdd(
                     this.trackingGuide_look_content,
-                    this.trackingClient_id,
-                    this.trackingUser_id,
-                    this.trackingArea_id,
-                    this.trackingStorefront_id,
+                    this.seeId,
+                    this.seeUser_id,
+                    this.seeArea_id,
+                    this.seeStorefront_id,
                     this.trackingLook_time
                 ).then((res)=>{
                     if(res.code==="200001"){
                         this.$message.success('添加成功');
+                        this.followList()
                     }
                 });
-            },
-            trackingGetSelect() { //三级联动数据
-                Axios.getSelect().then((res) => {
-                    const data = res.data[0].son;
-                    data.map((item) => {
-                        item.label = item.AREA_NAME;
-                        item.value = item.AREA_ID;
-                        item.children = item.son;
-                        if (item.son) {
-                            item.son.map(el => {
-                                el.label = el.AREA_NAME;
-                                el.value = el.AREA_ID;
-                                el.children = el.son;
-                                if (el.son) {
-                                    el.son.map(key => {
-                                        key.label = key.AREA_NAME;
-                                        key.value = key.AREA_ID;
-                                        key.children = key.son;
-
-                                    })
-                                }
-                            })
-                        }
-                    });
-                    //把数据存在本地长期储存中
-                    window.localStorage.setItem('linkage', JSON.stringify(data));
-                    var linkage = window.localStorage.getItem('linkage');
-                    this.trackingAreaOptions = JSON.parse(linkage)
-                })
-            },
-            trackingHandleChange() { //获取省市区id传给后台获取门店数据
-                var pathvalue = this.$refs.trackingCascaderAddr.getCheckedNodes()[0].path;
-                this.trackingProvince_id = pathvalue[0];
-                this.trackingCity_id = pathvalue[1];
-                this.trackingArea_id = pathvalue[2];
-                Axios.postStores(this.trackingArea_id).then(res => {
-                    let cityData = JSON.stringify(res.data.data);
-                    this.trackingStoresOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
-                });
-            },
-            trackingGetSlectList(){ //获取员工列表拿到维护人id
-                let page =1;
-                let pagesum =999;
-                let province_id =this.trackingProvince_id;
-                let city_id = this.trackingCity_id;
-                let area_id = this.trackingArea_id;
-                let storefront_id = this.trackingStorefront_id+'';
-                Api.getSlectList(page,pagesum,province_id,city_id,area_id,storefront_id).then((res)=>{
-                    let cityData = JSON.stringify(res.data.user_data);
-                    this.trackingUserOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/user_name/g, "label"));
-                })
-            },
-            trackingClientList(){ //获取所有客户名称
-                let page =1;
-                let pagesum =999;
-                LookApi.clientList(page,pagesum).then((res)=>{
-                    let cityData = JSON.stringify(res.data.data);
-                    this.trackingClientOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/client_name/g, "label"));
-                })
-            },
-            trackingStorefrontValue(e){ //获取门店id
-                this.trackingStorefront_id=e;
-                this.trackingGetSlectList()
-            },
-            trackingUserValue(e){ //维护人id
-                this.trackingUser_id=e
-            },
-            trackingClientId(e){ //客户id
-                this.trackingClient_id=e
             },
             trackingGetData(e){//日期
                 this.trackingLookDate=e
@@ -1442,8 +1219,7 @@
                ).then((res)=>{
                    if(res.code === "200001"){
                        this.$message.success('添加成功');
-                   }else {
-                       this.$message.error('添加失败')
+                       this.intentionList()
                    }
                })
            },
@@ -1537,15 +1313,12 @@
         },
         mounted() {
             this.detailList;
-            this.followList();
-            this.getSlectList();
-            this.looklist();
-            this.intentionList();
-
-            this.trackingGetSelect();
-            this.trackingClientList();
+            this.followList(); //跟进
+            this.getSlectList(); //维护人
+            this.looklist(); //带看
+            this.lookBuildingList(); //楼盘
+            this.intentionList(); //意向楼盘
             this.lookGetSelect();
-            this.lookClientList();
             this.fondGetSelect();
         },
     }
