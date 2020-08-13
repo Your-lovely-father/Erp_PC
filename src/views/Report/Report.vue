@@ -377,7 +377,7 @@
         </el-dialog>
         <!--   组件区域     -->
         <myAdd @reportList="reportList"/>
-        <mySee/>
+        <mySee ref="mySee"/>
         <myModify ref="myModify" @reportList="reportList"/>
     </div>
 
@@ -463,7 +463,8 @@
                 }, 500);
                 //获取详情
                 Api.detailObject(id).then((res) => {
-                    this.$store.commit('detailList', res.data)
+                    this.$store.commit('detailList', res.data);
+                    this.$refs.mySee.getSee()
                 });
                 this.$store.commit('reportStatus', false);
                 this.$store.commit('seeStatus', true);

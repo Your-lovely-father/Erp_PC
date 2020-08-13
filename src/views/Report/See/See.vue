@@ -26,7 +26,7 @@
                                         <el-input
                                                 :disabled="true"
                                                 class="report_int"
-                                                v-model="detailList.client_name"
+                                                v-model="seeClient_name"
                                         >
                                         </el-input>
                                     </div>
@@ -35,14 +35,14 @@
                                         <el-input
                                                 :disabled="true"
                                                 class="report_int"
-                                                v-model="detailList.client_phone"
+                                                v-model="seeClient_phone"
                                         >
                                         </el-input>
                                     </div>
                                     <div class="See_int">
                                         <label>时间</label>
                                         <el-date-picker
-                                                v-model="detailList.reported_time"
+                                                v-model="seeReported_time"
                                                 type="date"
                                                 placeholder="选择日期"
                                                 class="date"
@@ -51,7 +51,7 @@
                                         </el-date-picker>
                                         -
                                         <el-time-picker
-                                                v-model="detailList.reported_time"
+                                                v-model="seeReported_time"
                                                 placeholder="选择时间"
                                                 class="date"
                                                 :disabled="true"
@@ -63,15 +63,141 @@
                                         <el-input
                                                 :disabled="true"
                                                 class="report_int"
-                                                v-model="detailList.remarks"
+                                                v-model="seeRemarks"
                                         >
                                         </el-input>
                                     </div>
                                 </div>
                             </div>
+                            <div class="follow">
+                                <div class="layui-card-header">
+                                    跟进信息
+                                </div>
+                                <div class="people_content">
+                                    <div class="tab">
+                                        <el-table
+                                                :data="followData"
+                                                style="width: 100%"
+                                                border
+                                                :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+                                        >
+                                            <el-table-column
+                                                    label='客户名称'
+                                                    prop="client_name">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    label='维护人'
+                                                    prop="user_name">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    label='跟进记录'
+                                                    prop="record_content">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    label='时间'
+                                                    prop="follow_time">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    align="right" label="操作">
+                                                <template slot-scope="scope">
+                                                    <el-button
+                                                            size="mini"
+                                                            @click="followEdit(scope.row)"
+                                                            v-permission="{action:'detail',effect:'disabled'}"
+                                                    >查看
+                                                    </el-button>
+                                                    <el-button
+                                                            slot="reference"
+                                                            size="mini"
+                                                            type="danger"
+                                                            class="left_btn"
+                                                            @click="followDelete(scope.row.id)"
+                                                            v-permission="{action:'del',effect:'disabled'}"
+                                                    >删除
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                        <!--     分页区域       -->
+                                        <div class="page">
+                                            <el-pagination
+                                                    @size-change="followSizeChange"
+                                                    @current-change="followCurrentChange"
+                                                    :current-page="followInfo.page"
+                                                    :page-sizes="[5, 10, 20, 30]"
+                                                    :page-size="followInfo.offset"
+                                                    layout="total, sizes, prev, pager, next, jumper"
+                                                    :total="followPage">
+                                            </el-pagination>
+                                        </div>
+                                    </div>
+                                    <el-dialog
+                                            title="跟进信息"
+                                            :visible.sync="isShowFollow"
+                                            width="30%"
+                                            :append-to-body="true"
+                                    >
+                                        <div class="tail_content">
+                                            <div class="form">
+                                                <div class="tail_box">
+                                                    <span class="p1">客户名称</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="followClient_name"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">维护人</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="followUser_name"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box_textarea">
+                                                    <span class="p1">跟进记录</span>
+                                                    <el-input
+                                                            clearable
+                                                            type="textarea"
+                                                            placeholder="请输入跟进记录"
+                                                            clearable
+                                                            v-model="followRecord_content"
+                                                            class="tracking_textarea">
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">时间</span>
+                                                    <el-date-picker
+                                                            v-model="followFollow_time"
+                                                            type="date"
+                                                            placeholder="选择日期"
+                                                            class="tracking_data"
+                                                            value-format="yyyy-MM-dd"
+                                                    >
+                                                    </el-date-picker>
+                                                    -
+                                                    <el-time-picker
+                                                            v-model="followFollow_time"
+                                                            placeholder="选择时间"
+                                                            class="tracking_data"
+                                                            value-format="HH:mm:ss"
+                                                    >
+                                                    </el-time-picker>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div slot="footer" class="dialog-footer">
+                                            <el-button type="primary" @click="isShowFollow=false" size="small">关闭</el-button>
+                                        </div>
+                                    </el-dialog>
+                                </div>
+                            </div>
                             <div class="people">
                                 <div class="layui-card-header">
-                                    维护人
+                                    维护人信息
                                 </div>
                                 <div class="people_content">
                                     <div class="tab">
@@ -97,6 +223,26 @@
                                                     label='时间'
                                                     prop="update_time">
                                             </el-table-column>
+                                            <el-table-column
+                                                    align="right" label="操作">
+                                                <template slot-scope="scope">
+                                                    <el-button
+                                                            size="mini"
+                                                            @click="peopleEdit(scope.row)"
+                                                            v-permission="{action:'detail',effect:'disabled'}"
+                                                    >查看
+                                                    </el-button>
+                                                    <el-button
+                                                            slot="reference"
+                                                            size="mini"
+                                                            type="danger"
+                                                            class="left_btn"
+                                                            @click="peopleDelete(scope.row.id)"
+                                                            v-permission="{action:'del',effect:'disabled'}"
+                                                    >删除
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
                                         </el-table>
                                         <!--     分页区域       -->
                                         <div class="page">
@@ -111,11 +257,71 @@
                                             </el-pagination>
                                         </div>
                                     </div>
+                                    <el-dialog
+                                            title="维护人信息"
+                                            :visible.sync="isShowPeople"
+                                            width="30%"
+                                            :append-to-body="true"
+                                    >
+                                        <div class="tail_content">
+                                            <div class="form">
+                                                <div class="tail_box">
+                                                    <span class="p1">维护人</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="peopleUser_name"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">手机号</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="peopleUser_phone"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">门店名称</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="peopleStorefront_name"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">时间</span>
+                                                    <el-date-picker
+                                                            v-model="peopleUpdate_time"
+                                                            type="date"
+                                                            placeholder="选择日期"
+                                                            class="tracking_data"
+                                                            value-format="yyyy-MM-dd"
+                                                    >
+                                                    </el-date-picker>
+                                                    -
+                                                    <el-time-picker
+                                                            v-model="peopleUpdate_time"
+                                                            placeholder="选择时间"
+                                                            class="tracking_data"
+                                                            value-format="HH:mm:ss"
+                                                    >
+                                                    </el-time-picker>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div slot="footer" class="dialog-footer">
+                                            <el-button type="primary" @click="isShowPeople=false" size="small">关闭</el-button>
+                                        </div>
+                                    </el-dialog>
                                 </div>
                             </div>
                             <div class="building">
                                 <div class="layui-card-header">
-                                    带看楼盘
+                                    带看信息
                                 </div>
                                 <div class="building_content">
                                     <div class="tab">
@@ -125,6 +331,10 @@
                                                 border
                                                 :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                                         >
+                                            <el-table-column
+                                                    label='客户名称'
+                                                    prop="client_name">
+                                            </el-table-column>
                                             <el-table-column
                                                     label='员工名称'
                                                     prop="user_name">
@@ -141,6 +351,26 @@
                                                     label='时间'
                                                     prop="look_time">
                                             </el-table-column>
+                                            <el-table-column
+                                                    align="right" label="操作">
+                                                <template slot-scope="scope">
+                                                    <el-button
+                                                            size="mini"
+                                                            @click="lookEdit(scope.row)"
+                                                            v-permission="{action:'detail',effect:'disabled'}"
+                                                    >查看
+                                                    </el-button>
+                                                    <el-button
+                                                            slot="reference"
+                                                            size="mini"
+                                                            type="danger"
+                                                            class="left_btn"
+                                                            @click="lookDelete(scope.row.id)"
+                                                            v-permission="{action:'del',effect:'disabled'}"
+                                                    >删除
+                                                    </el-button>
+                                                </template>
+                                            </el-table-column>
                                         </el-table>
                                         <!--     分页区域       -->
                                         <div class="page">
@@ -155,11 +385,82 @@
                                             </el-pagination>
                                         </div>
                                     </div>
+                                    <el-dialog
+                                            title="带看信息"
+                                            :visible.sync="isShowBuilding"
+                                            width="30%"
+                                            :append-to-body="true"
+                                    >
+                                        <div class="tail_content">
+                                            <div class="form">
+                                                <div class="tail_box">
+                                                    <span class="p1">客户名称</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="client_nameLook"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">员工名称</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="user_nameLook"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">楼盘名称</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="building_nameLook"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box_textarea">
+                                                    <span class="p1">带看内容</span>
+                                                    <el-input
+                                                            clearable
+                                                            type="textarea"
+                                                            placeholder="请输入跟进记录"
+                                                            clearable
+                                                            v-model="guide_look_contentLook"
+                                                            class="tracking_textarea">
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">时间</span>
+                                                    <el-date-picker
+                                                            v-model="look_timeLook"
+                                                            type="date"
+                                                            placeholder="选择日期"
+                                                            class="tracking_data"
+                                                            value-format="yyyy-MM-dd"
+                                                    >
+                                                    </el-date-picker>
+                                                    -
+                                                    <el-time-picker
+                                                            v-model="look_timeLook"
+                                                            placeholder="选择时间"
+                                                            class="tracking_data"
+                                                            value-format="HH:mm:ss"
+                                                    >
+                                                    </el-time-picker>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div slot="footer" class="dialog-footer">
+                                            <el-button type="primary" @click="isShowBuilding=false" size="small">关闭</el-button>
+                                        </div>
+                                    </el-dialog>
                                 </div>
                             </div>
                             <div class="intention">
                                 <div class="layui-card-header">
-                                    意向楼盘
+                                    意向楼盘信息
                                 </div>
                                 <div class="intention_content">
                                     <div class="tab">
@@ -170,12 +471,12 @@
                                                 :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                                         >
                                             <el-table-column
-                                                    label='维护人'
-                                                    prop="user_name">
-                                            </el-table-column>
-                                            <el-table-column
                                                     label='客户'
                                                     prop="client_name">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    label='维护人'
+                                                    prop="user_name">
                                             </el-table-column>
                                             <el-table-column
                                                     label='意向楼盘'
@@ -184,6 +485,26 @@
                                             <el-table-column
                                                     label='时间'
                                                     prop="update_time">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    align="right" label="操作">
+                                                <template slot-scope="scope">
+                                                    <el-button
+                                                            size="mini"
+                                                            @click="intentionEdit(scope.row)"
+                                                            v-permission="{action:'detail',effect:'disabled'}"
+                                                    >查看
+                                                    </el-button>
+                                                    <el-button
+                                                            slot="reference"
+                                                            size="mini"
+                                                            type="danger"
+                                                            class="left_btn"
+                                                            @click="intentionDelete(scope.row.id)"
+                                                            v-permission="{action:'del',effect:'disabled'}"
+                                                    >删除
+                                                    </el-button>
+                                                </template>
                                             </el-table-column>
                                         </el-table>
                                         <!--     分页区域       -->
@@ -199,6 +520,66 @@
                                             </el-pagination>
                                         </div>
                                     </div>
+                                    <el-dialog
+                                            title="维护人信息"
+                                            :visible.sync="isShowIntention"
+                                            width="30%"
+                                            :append-to-body="true"
+                                    >
+                                        <div class="tail_content">
+                                            <div class="form">
+                                                <div class="tail_box">
+                                                    <span class="p1">客户名称</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="client_nameIntention"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">维护人</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="user_nameIntention"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">意向楼盘</span>
+                                                    <el-input
+                                                            clearable
+                                                            v-model="building_nameIntention"
+                                                            class="tracking_int"
+                                                    >
+                                                    </el-input>
+                                                </div>
+                                                <div class="tail_box">
+                                                    <span class="p1">时间</span>
+                                                    <el-date-picker
+                                                            v-model="update_timeIntention"
+                                                            type="date"
+                                                            placeholder="选择日期"
+                                                            class="tracking_data"
+                                                            value-format="yyyy-MM-dd"
+                                                    >
+                                                    </el-date-picker>
+                                                    -
+                                                    <el-time-picker
+                                                            v-model="update_timeIntention"
+                                                            placeholder="选择时间"
+                                                            class="tracking_data"
+                                                            value-format="HH:mm:ss"
+                                                    >
+                                                    </el-time-picker>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div slot="footer" class="dialog-footer">
+                                            <el-button type="primary" @click="isShowIntention=false" size="small">关闭</el-button>
+                                        </div>
+                                    </el-dialog>
                                 </div>
                             </div>
                         </div>
@@ -490,11 +871,14 @@
 </template>
 
 <script>
-    import Api from '../../../api/Report/Report'
-    import trackingApi from '../../../api/Tracking/Tracking'
-    import Axios from '../../../api/pub/pub'
-    import LookApi from '../../../api/Look/Look'
-    import fondApi from '../../../api/Intention/Intention'
+    import  Api from '../../../api/Report/Report'
+    import  Axios from '../../../api/pub/pub'
+    import  LookApi from '../../../api/Look/Look'
+    import  fondApi from '../../../api/Intention/Intention'
+    import  employeesApi from '../../../api/Employees/Employees'
+    import  intentionApi from '../../../api/Intention/Intention'
+    import  lookApi from '../../../api/Look/Look'
+    import  trackingApi from '../../../api/Tracking/Tracking'
     export default {
         data() {
             return {
@@ -505,6 +889,7 @@
                 },
                 tablePage: 0,//总条数
                 tableData: [],
+
                 lookInfo: {
                     query: '',
                     page: 1, //当前第几页
@@ -512,6 +897,7 @@
                 },
                 lookPage: 0,//总条数
                 lookData: [],
+
                 likeInfo: {
                     query: '',
                     page: 1, //当前第几页
@@ -519,6 +905,51 @@
                 },
                 likePage: 0,//总条数
                 likeData: [],
+
+                followInfo: {
+                    query: '',
+                    page: 1, //当前第几页
+                    offset: 5, //每页显示多少条
+                },
+                followPage: 0,//总条数
+                followData:[],
+                //回显字段---------------
+                seeClient_name:'',
+                seeClient_phone:'',
+                seeReported_time:'',
+                seeRemarks:'',
+                seeId:'',
+                seeProvince_id:'',
+                seeCity_id:'',
+                seeArea_id:'',
+                seeStorefront_id:'',
+                seeUser_id:'',
+                seeClient_id:'',
+                //回显from字段-----跟进--------
+                isShowFollow:false,
+                followClient_name:'',
+                followUser_name:'',
+                followRecord_content:'',
+                followFollow_time:'',
+                //回显from字段-----员工--------
+                isShowPeople:false,
+                peopleUser_name:'',
+                peopleUser_phone:'',
+                peopleStorefront_name:'',
+                peopleUpdate_time:'',
+                //回显from字段-----带看--------
+                isShowBuilding:false,
+                client_nameLook:'',
+                user_nameLook:'',
+                building_nameLook:'',
+                guide_look_contentLook:'',
+                look_timeLook:'',
+                //回显from字段-----意向楼盘--------
+                isShowIntention:false,
+                client_nameIntention:'',
+                user_nameIntention:'',
+                building_nameIntention:'',
+                update_timeIntention:'',
                 // 带看字段------------------
                 lookDialogVisible:false,
                 lookGuide_look_content:'', //带看记录
@@ -600,34 +1031,158 @@
                 this.likeInfo.page = newPage;
                 this.intentionList()
             },
+            followSizeChange(){
+                this.followInfo.offset = newSize;
+                this.followList()
+            },
+            followCurrentChange(){
+                this.followInfo.page = newPage;
+                this.followList()
+            },
+            //vuex数据
+            getSee(){
+                this.detailList;
+            },
+            //所有列表方法
+            followList(){//跟进列表
+                Api.followSelectList(
+                    this.followInfo.page,
+                    this.followInfo.offset,
+                    this.seeUser_id,
+                    this.seeArea_id,
+                    this.seeStorefront_id,
+                    this.id
+                ).then((res)=>{
+                    this.followPage=res.data.count;
+                    this.followData=res.data.data;
+
+                })
+            },
+            followEdit(val){ //跟进查看
+                this.isShowFollow=true;
+                this.followClient_name=val.client_name;
+                this.followUser_name=val.user_name;
+                this.followRecord_content=val.record_content;
+                this.followFollow_time=val.follow_time;
+            },
+            followDelete(id){//跟进删除
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    trackingApi.trackingDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.followList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+
             getSlectList() { //维护人列表
-                let page = 1;
-                let offset = 999;
-                let province_id = this.detailList.province_id;
-                let city_id = this.detailList.city_id;
-                let area_id = this.detailList.area_id;
-                let storefront_id = this.detailList.storefront_id;
-                Api.getSlectList(page, offset, province_id, city_id, area_id, storefront_id).then((res) => {
+                Api.getSlectList(
+                    this.queryInfo.page,
+                    this.queryInfo.offset,
+                    this.seeProvince_id,
+                    this.seeCity_id,
+                    this.seeArea_id,
+                    this.seeStorefront_id
+
+                ).then((res) => {
                     this.tablePage = res.data.count;
                     this.tableData = res.data.user_data;
                 })
             },
+            peopleEdit(val){ //员工查看
+                this.isShowPeople=true;
+                this.peopleUser_name = val.user_name;
+                this.peopleUser_phone = val.user_phone;
+                this.peopleStorefront_name = val.storefront_name;
+                this.peopleUpdate_time = val.update_time;
+            },
+            peopleDelete(id){//员工删除
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    employeesApi.postDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.getSlectList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+
             looklist() { //带看管理列表
-                let page = 1;
-                let offset = 999;
-                let area_id = this.detailList.area_id;
-                let storefront_id = this.detailList.storefront_id;
-                let id = this.detailList.id;
-                Api.lookList(page, offset, storefront_id, area_id, id).then((res) => {
+                Api.lookList(
+                    this.lookInfo.page,
+                    this.lookInfo.offset,
+                    this.seeStorefront_id,
+                    this.seeArea_id,
+                    this.seeUser_id,
+                    this.seeId
+                ).then((res) => {
                     this.lookPage = res.data.count;
                     this.lookData = res.data.data;
                 })
             },
+            lookEdit(val){ //带看查看
+                this.isShowBuilding=true;
+                this.client_nameLook=val.client_name;
+                this.user_nameLook=val.user_name;
+                this.building_nameLook=val.building_name;
+                this.guide_look_contentLook=val.guide_look_content;
+                this.look_timeLook=val.look_time;
+
+            },
+            lookDelete(id){//带看删除
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    lookApi.lookDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.looklist()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+
             intentionList() { //意向楼盘列表
-                let page = 1;
-                let offset = 999;
-                let id = this.detailList.id;
-                Api.intentionList(page, offset, id).then((res) => {
+                Api.intentionList(
+                    this.likeInfo.page,
+                    this.likeInfo.offset,
+                    this.seeProvince_id,
+                    this.seeCity_id,
+                    this.seeArea_id,
+                    this.seeClient_id
+                ).then((res) => {
                     this.likePage = res.data.count;
                     let data = res.data.data;
                     data.map((val) => {
@@ -635,9 +1190,36 @@
                             val.client_name = this.detailList.client_name
                         }
                     });
-                    this.likeData = data
-
+                    this.likeData = data;
                 })
+            },
+            intentionEdit(val){ //意向楼盘查看
+                this.isShowIntention=true;
+                this.client_nameIntention=val.client_name;
+                this.user_nameIntention=val.user_name;
+                this.building_nameIntention=val.building_name;
+                this.update_timeIntention=val.update_time;
+            },
+            intentionDelete(id){//意向楼盘删除
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    intentionApi.intentionDel(id).then(res => {
+                        if (res.code === "100006") {
+                            this.$message.success(res.msg);
+                            this.intentionList()
+                        } else {
+                            this.$message.error(res.msg);
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             //  带看操作
             lookOff(){
@@ -929,34 +1511,43 @@
            fondBbuildingId(e){ //获取楼盘id
                 this.fondBuilding_id=e
            },
+           setList(data){
+               this.seeClient_name=data.client_name;
+               this.seeClient_phone=data.client_phone;
+               this.seeReported_time=data.reported_time;
+               this.seeRemarks=data.remarks;
+               this.seeId=data.id;
+               this.seeProvince_id=data.province_id;
+               this.seeCity_id=data.city_id;
+               this.seeArea_id=data.area_id;
+               this.seeStorefront_id=data.storefront_id;
+               this.seeUser_id=data.user_id;
+               this.seeClient_id=data.client_id
+
+           }
         },
         computed: {
             seeStatus() {
                 return this.$store.state.report.seeStatus
             },
             detailList() {
+                this.setList(this.$store.state.report.detailList);
                 return this.$store.state.report.detailList
             }
         },
-        created() {
+        mounted() {
+            this.detailList;
+            this.followList();
             this.getSlectList();
             this.looklist();
             this.intentionList();
+
             this.trackingGetSelect();
             this.trackingClientList();
             this.lookGetSelect();
             this.lookClientList();
             this.fondGetSelect();
         },
-        watch: {
-            detailList(val) {
-                if (val) {
-                    this.getSlectList();
-                    this.looklist();
-                    this.intentionList()
-                }
-            }
-        }
     }
 </script>
 
@@ -1045,7 +1636,7 @@
         padding: 15px 15px;
         box-sizing: border-box;
     }
-    .people, .building, .intention {
+    .people, .building, .intention,.follow {
         width: 100%;
         background: #fff;
         box-sizing: border-box;
@@ -1179,5 +1770,4 @@
         height: 110px;
         resize: none;
     }
-   /*意向楼盘操作*/
 </style>

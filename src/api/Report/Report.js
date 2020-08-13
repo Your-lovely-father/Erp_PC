@@ -40,6 +40,17 @@ export default {
     categoryList(page, offset,) {
         return Axios.post('/erp/get_client_type_list', {page: page, offset: offset})
     },
+    //跟进列表
+    followSelectList(page,offset,user_id,area_id,storefront_id,clint_id){
+        return Axios.post('/erp/get_follow_up_list', {
+            page: page,
+            offset: offset,
+            user_id:user_id,
+            area_id:area_id,
+            storefront_id:storefront_id,
+            clint_id:clint_id
+        })
+    },
     //员工列表
     getSlectList(page, offset, province_id, city_id, area_id, storefront_id) {
         return Axios.post('erp/get_user_list', {
@@ -66,21 +77,25 @@ export default {
         return Axios.post('/erp/client_report_detail', {client_id: client_id})
     },
     //带看管理列表
-    lookList(page, offset, storefront_id, area_id, client_id) {
+    lookList(page, offset, storefront_id, area_id, user_id,client_id) {
         return Axios.post('/erp/get_guide_look_list', {
             page: page,
             offset: offset,
             storefront_id: storefront_id,
             area_id: area_id,
+            user_id:user_id,
             client_id: client_id
         })
     },
     //意向楼盘列表
 
-    intentionList(page, offset, client_id) {
+    intentionList(page, offset,province_id,city_id,area_id, client_id) {
         return Axios.post('/erp/get_intention_list', {
             page: page,
             offset: offset,
+            province_id:province_id,
+            city_id:city_id,
+            area_id:area_id,
             client_id: client_id
         })
     },
