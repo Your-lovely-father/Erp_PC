@@ -288,11 +288,12 @@
     }
 
     .poor {
-        width: 98.2%;
+        width: 100%;
         height: 40px;
         display: flex;
         align-items: center;
         padding: 0 15px;
+        box-sizing: border-box;
         border-bottom: 1px #eee solid;
         background: #eee;
         justify-content: space-between;
@@ -324,8 +325,9 @@
     }
 
     .content_box {
-        width: 98.3%;
+        width: 100%;
         padding: 15px;
+        box-sizing: border-box;
     }
 
     .footer {
@@ -337,7 +339,7 @@
     .form{
         width: 100%;
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         flex-wrap: wrap;
     }
     label{

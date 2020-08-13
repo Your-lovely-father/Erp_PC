@@ -50,8 +50,6 @@
                                        </el-option>
                                    </el-select>
                                </div>
-                           </div>
-                           <div class="dataTime">
                                <div class="int">
                                    <label>操作内容</label>
                                    <el-input
@@ -268,8 +266,9 @@
     }
 
     .content_box {
-        width: 98.3%;
+        width: 100%;
         padding: 15px;
+        box-sizing: border-box;
     }
 
     .footer {
@@ -291,7 +290,7 @@
         margin-right: 15px;
     }
     .report_int {
-        width: 450px;
+        width: 398px;
     }
 
     .com {
@@ -302,15 +301,13 @@
     }
 
     .int_box {
+        width: 100%;
         display: flex;
-        justify-content: center;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
-
-    .left {
-        margin-left: 106px;
-    }
-    .dataTime {
-        display: flex;
-        justify-content: center;
-    }
+    /*.dataTime {*/
+    /*    display: flex;*/
+    /*    justify-content: center;*/
+    /*}*/
 </style>

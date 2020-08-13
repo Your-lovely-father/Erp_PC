@@ -200,42 +200,54 @@
             },
             getData(e){ //起止日期处理 yyy-mm-dd
                 this.start_data_start=e;
-                if(!e){
+                if(!this.start_data_start){
                     this.start_data_start=''
                 }
-            },
-            getTime(e){ //起止时间处理
-                this.start_time_start=e;
                 this.start_time=this.start_data_start + ' ' +this.start_time_start;
                 if(!this.start_data_start && !this.start_time_start){
                     this.start_time=''
                 }
-                if(!e){
+            },
+            getTime(e){ //起止时间处理
+                this.start_time_start=e;
+                if(!this.start_time_start){
                     this.start_time_start=''
+                }
+                if(!this.start_data_start){
+                    this.start_data_start=''
+                }
+                this.start_time=this.start_data_start + ' ' +this.start_time_start;
+                if(!this.start_data_start && !this.start_time_start){
+                    this.start_time=''
                 }
             },
             finishDate(e){ //结束日期处理
                 this.end_data_finish=e;
-                if(!e){
+                if(!this.end_data_finish){
                     this.end_data_finish=''
                 }
-            },
-            finishTime(e){ //结束时间处理
-                this.end_time_finish=e;
                 this.end_time=this.end_data_finish + ' ' +this.end_time_finish;
                 if(!this.end_data_finish && !this.end_time_finish){
                     this.end_time=''
                 }
-                if(!e){
+            },
+            finishTime(e){ //结束时间处理
+                this.end_time_finish=e;
+                if(!this.end_time_finish){
                     this.end_time_finish=''
+                }
+                if(!this.end_data_finish){
+                    this.end_data_finish=''
+                }
+                this.end_time=this.end_data_finish + ' ' +this.end_time_finish;
+                if(!this.end_data_finish && !this.end_time_finish){
+                    this.end_time=''
                 }
             },
             userId (e) {//获取维护人id
                 this.user_Id=e;
             },
             searchBtn(){//搜索
-                console.log(this.start_time)
-                console.log(this.end_time)
                 this.$store.commit('area_id',this.area_id);
                 this.$store.commit('storefront_id',this.storefront_id);
                 this.$store.commit('user_id',this.user_id);

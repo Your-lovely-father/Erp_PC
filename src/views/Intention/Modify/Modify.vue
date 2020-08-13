@@ -344,8 +344,9 @@
     }
 
     .content_box {
-        width: 98.3%;
+        width: 100%;
         padding: 15px;
+        box-sizing: border-box;
     }
 
     .footer {
@@ -363,7 +364,7 @@
     .form{
         width: 100%;
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         flex-wrap: wrap;
     }
     label{

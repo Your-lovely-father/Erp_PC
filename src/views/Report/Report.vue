@@ -600,36 +600,50 @@
             userId(e) { //维护人id
                 this.user_id = e
             },
-            getData(e) { //起止日期处理 yyy-mm-dd
-                this.start_data_start = e;
-                if (!e) {
-                    this.start_data_start = '';
+            getData(e){ //起止日期处理 yyy-mm-dd
+                this.start_data_start=e;
+                if(!this.start_data_start){
+                    this.start_data_start=''
+                }
+                this.start_time=this.start_data_start + ' ' +this.start_time_start;
+                if(!this.start_data_start && !this.start_time_start){
+                    this.start_time=''
                 }
             },
-            getTime(e) { //起止时间处理
-                this.start_time_start = e;
-                this.start_time = this.start_data_start + ' ' + this.start_time_start;
-                if (!this.start_data_start && !this.start_time_start) {
-                    this.start_time = ''
+            getTime(e){ //起止时间处理
+                this.start_time_start=e;
+                if(!this.start_time_start){
+                    this.start_time_start=''
                 }
-                if (!e) {
-                    this.start_time_start = ''
+                if(!this.start_data_start){
+                    this.start_data_start=''
                 }
-            },
-            finishDate(e) { //结束日期处理
-                this.end_data_finish = e;
-                if (!e) {
-                    this.end_data_finish = ''
+                this.start_time=this.start_data_start + ' ' +this.start_time_start;
+                if(!this.start_data_start && !this.start_time_start){
+                    this.start_time=''
                 }
             },
-            finishTime(e) { //结束时间处理
-                this.end_time_finish = e;
-                this.end_time = this.end_data_finish + ' ' + this.end_time_finish;
-                if (!this.end_data_finish && !this.end_time_finish) {
-                    this.end_time = ''
+            finishDate(e){ //结束日期处理
+                this.end_data_finish=e;
+                if(!this.end_data_finish){
+                    this.end_data_finish=''
                 }
-                if (!e) {
-                    this.end_time_finish = ''
+                this.end_time=this.end_data_finish + ' ' +this.end_time_finish;
+                if(!this.end_data_finish && !this.end_time_finish){
+                    this.end_time=''
+                }
+            },
+            finishTime(e){ //结束时间处理
+                this.end_time_finish=e;
+                if(!this.end_time_finish){
+                    this.end_time_finish=''
+                }
+                if(!this.end_data_finish){
+                    this.end_data_finish=''
+                }
+                this.end_time=this.end_data_finish + ' ' +this.end_time_finish;
+                if(!this.end_data_finish && !this.end_time_finish){
+                    this.end_time=''
                 }
             },
             buildingId(e) { // 楼盘id

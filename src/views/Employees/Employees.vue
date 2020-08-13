@@ -252,7 +252,6 @@
                     this.employeesArea_id,
                     this.employeesStorefront_id
                 ).then((res) => {
-                    console.log(res);
                     let data =res.data.user_data;
                     data.map(item => {
                         return {
