@@ -4,16 +4,55 @@
             <div class="add_box">
                 <!--    搜索区域        -->
                 <div class="add_content">
-                    <div class="content_title">
-                        <p>
-                            意向楼盘
-                        </p>
-                    </div>
-                    <div class="content_btn" style="cursor:pointer;display: none">
-                        <p @click="reportAdd()" v-permission="{action:'add'}">
-                            <span class="el-icon-plus"></span>
-                            <span>意向楼盘添加</span>
-                        </p>
+                    <div class="herder_box">
+                        <div class="report_top">
+                            <div class="layui-card-header">
+                                <p>意向楼盘</p>
+                                <p style="color: #177ce3;cursor: pointer;display: none" @click="reportAdd()" v-permission="{action:'add'}">+ 意向楼盘添加</p>
+                            </div>
+                        </div>
+                        <div class="report-bottom">
+                            <div class="search_int">
+                                <label>区域</label>
+                                <el-cascader :options="employeesAreaOptions"
+                                             class="report_int"
+                                             @change="employeesHandleChange"
+                                             ref="employeesCascaderAddr"
+                                             clearable
+                                >
+                                </el-cascader>
+                            </div>
+                            <div class="search_int">
+                                <label>客户-手机号-维护人</label>
+                                <el-select v-model="client_name" placeholder="请选择" class="report_int"
+                                           @change="obtainId"
+                                           clearable
+                                           @clear="clearClient"
+                                >
+                                    <el-option
+                                            v-for="item in customerList"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div class="search_int">
+                                <label>客户姓名</label>
+                                <el-input
+                                        placeholder="请输入客户姓名"
+                                        v-model="housesName"
+                                        class="report_int"
+                                        clearable
+                                        @clear="clearHousesName"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="search_btn">
+                                <el-button type="primary" class="btn" @click="searchBtn">立即查询</el-button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--    表格区域        -->
@@ -100,6 +139,7 @@
     import myAdd from './Add/Add'
     import mySee from './See/See'
     import  Api from '../../api/Intention/Intention'
+    import Axios from '../../api/pub/pub'
     import  { initDynamicRoutes } from '../../router/index'
     export default {
         components: {
@@ -116,6 +156,17 @@
                     pagesize: 5 //当前显示几条
                 },
                 totalPage: 0,//总条数
+                //搜素字段-------
+                employeesAreaOptions:[],
+                housesName:'',
+                employeesProvince_id:'',//省
+                employeesCity_id:'',//市
+                employeesArea_id:'',//区
+                client_name:'',//客户id
+                customerList:[], //客户-手机号-维护人
+                client_id:'',
+                user_id:'',
+
             }
         },
         methods: {
@@ -169,10 +220,83 @@
                 this.intentionList()
             },
             intentionList(){ //楼盘列表
-                Api.intentionList(this.queryInfo.pagenum,this.queryInfo.pagesize).then((res)=>{
+                Api.intentionList(
+                    this.queryInfo.pagenum,
+                    this.queryInfo.pagesize,
+                    this.client_id,
+                    this.employeesProvince_id,
+                    this.employeesCity_id,
+                    this.employeesArea_id,
+                    this.housesName
+            ).then((res)=>{
                     this.tableData=res.data.data;
                     this.totalPage=res.data.count;
                 })
+            },
+            //搜索操作
+            employeesGetSelect() { //三级联动数据
+                Axios.getSelect().then((res) => {
+                    const data = res.data[0].son;
+                    data.map((item) => {
+                        item.label = item.AREA_NAME;
+                        item.value = item.AREA_ID;
+                        item.children = item.son;
+                        if (item.son) {
+                            item.son.map(el => {
+                                el.label = el.AREA_NAME;
+                                el.value = el.AREA_ID;
+                                el.children = el.son;
+                                if (el.son) {
+                                    el.son.map(key => {
+                                        key.label = key.AREA_NAME;
+                                        key.value = key.AREA_ID;
+                                        key.children = key.son;
+
+                                    })
+                                }
+                            })
+                        }
+                    });
+                    //把数据存在本地长期储存中
+                    window.localStorage.setItem('linkage', JSON.stringify(data));
+                    var linkage = window.localStorage.getItem('linkage');
+                    this.employeesAreaOptions = JSON.parse(linkage)
+                })
+            },
+            employeesHandleChange() { //获取省市区id传给后台获取门店数据
+                if(!this.$refs.employeesCascaderAddr.getCheckedNodes()[0]){
+                    this.employeesProvince_id = '';
+                    this.employeesCity_id = '';
+                    this.employeesArea_id = '';
+                    return false;
+                }
+                var pathvalue = this.$refs.employeesCascaderAddr.getCheckedNodes()[0].path;
+                this.employeesProvince_id = pathvalue[0];
+                this.employeesCity_id = pathvalue[1];
+                this.employeesArea_id = pathvalue[2];
+                Api.intentionSelect(this.employeesArea_id).then((res)=>{
+                    res.data.forEach(item => {
+                        this.customerList.push({
+                            label:'名称 : '+item.client_name + ' ; 手机号 : '+item.client_phone + ' ; 维护人 : '+item.user_name,
+                            client_phone:item.client_phone,
+                            value:item.client_id +','+item.user_id
+                        });
+                    });
+                });
+            },
+            searchBtn(){
+                this.intentionList()
+            },
+            obtainId(e){ //获取客户 / 维护人id
+                let data =e.split(',');
+                this.client_id=data[0];
+                this.user_id=data[1];
+            },
+            clearHousesName(){
+                this.housesName=''
+            },
+            clearClient(){
+                this.client_id=''
             }
         },
         computed: {
@@ -182,7 +306,8 @@
         },
         mounted() {
             this.intentionList();
-            initDynamicRoutes()
+            initDynamicRoutes();
+            this.employeesGetSelect()
         }
     }
 </script>
@@ -193,9 +318,10 @@
         height: 100%;
     }
     .report {
-        width: 98.3%;
+        width: 100%;
         height: 100%;
-        margin: 15px;
+        padding: 15px;
+        box-sizing: border-box;
     }
 
     .add_box {
@@ -204,20 +330,6 @@
 
     .add_content {
         width: 100%;
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px #eee solid;
-    }
-
-    .content_title {
-        padding-left: 20px;
-        padding-bottom: 20px;
-    }
-
-    .content_btn {
-        padding-right: 20px;
-        padding-bottom: 20px;
-        color: #1981e4;
     }
 
     .content_btn > p:nth-child(1) {
@@ -252,27 +364,72 @@
     }
     .add_content {
         width: 100%;
-        height: 60px;
-        line-height: 60px;
-        display: flex;
-        justify-content: space-between;
-        background: #ffffff;
-        border-bottom: 1px #eee solid;
-        border-radius: 5px;
     }
-
-    .content_title {
-        padding-left: 20px;
-        padding-bottom: 20px;
-    }
-
-    .content_btn {
-        padding-right: 20px;
-        padding-bottom: 20px;
-        color: #1981e4;
-    }
-
     .content_btn > p:nth-child(1) {
         font-weight: bold;
+    }
+    /*herder*/
+    .herder_box {
+        margin-bottom: 15px;
+        border-radius: 2px;
+        background-color: #fff;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+    }
+
+    .layui-card-header {
+        height: 42px;
+        line-height: 42px;
+        padding: 0 15px;
+        border-bottom: 1px solid #f6f6f6;
+        color: #333;
+        border-radius: 2px 2px 0 0;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /*  search  */
+    .report-bottom {
+        padding: 10px 15px;
+        line-height: 24px;
+    }
+
+    label {
+        display: block;
+        padding: 10px 0;
+    }
+    .search_int {
+        padding-right: 15px;
+    }
+    .report-bottom {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .report_int {
+        width: 420px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        .report_int {
+            width: 100% !important;
+        }
+
+        .search_int {
+            width: 100% !important;
+            padding-right: 0 !important;
+        }
+        .search_btn {
+            padding-top: 15px !important;
+        }
+    }
+
+    .btn {
+        width: 100px;
+        background-image: -webkit-linear-gradient(left, #29adeb, #177ce3);
+    }
+
+    .search_btn {
+        padding-top: 43px;
     }
 </style>

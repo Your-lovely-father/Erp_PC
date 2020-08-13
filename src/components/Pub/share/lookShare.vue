@@ -119,7 +119,7 @@
                             </el-time-picker>
                         </div>
                         <div class="int_box btn_search">
-                            <el-button type="primary" class="btn" @click="searchBtn">搜索</el-button>
+                            <el-button type="primary" class="btn" @click="searchBtn">立即查询</el-button>
                         </div>
                     </div>
                 </div>
@@ -263,6 +263,8 @@
                 this.client_id=e
             },
             searchBtn(){//搜索
+                console.log(this.start_time)
+                console.log(this.end_time)
                 this.$store.commit('area_id',this.area_id);
                 this.$store.commit('storefront_id',this.storefront_id);
                 this.$store.commit('user_id',this.user_id);

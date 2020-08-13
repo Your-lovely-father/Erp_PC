@@ -2,8 +2,8 @@ import Axios from '../../utils/request'
 
 export default {
     //意向楼盘列表
-    intentionList(page,offset) {
-        return Axios.post('/erp/get_intention_list',{page:page,offset:offset})
+    intentionList(page,offset,client_id,province_id,city_id,area_id,client_name) {
+        return Axios.post('/erp/get_intention_list',{page:page,offset:offset,client_id:client_id,province_id:province_id,city_id:city_id,area_id:area_id,client_name:client_name})
     },
     //楼盘删除
     intentionDel(id){

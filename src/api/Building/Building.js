@@ -2,8 +2,23 @@ import Axios from '../../utils/request'
 
 export default {
     // 楼盘列表
-    buildingList( page, offset){
-        return Axios.post('/erp/get_building_list',{ page:page, offset:offset})
+    buildingList(
+        page,
+        offset,
+        province_id,
+        city_id,
+        area_id,
+        building_name
+
+    ){
+        return Axios.post('/erp/get_building_list',{
+            page:page,
+            offset:offset,
+            province_id:province_id,
+            city_id:city_id,
+            area_id:area_id,
+            building_name:building_name,
+        })
     },
     //楼盘删除
     reportDel(id){

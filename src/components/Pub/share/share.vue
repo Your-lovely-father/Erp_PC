@@ -103,7 +103,7 @@
                             </el-time-picker>
                         </div>
                         <div class="int_box btn_search">
-                            <el-button type="primary" class="btn" @click="searchBtn">搜索</el-button>
+                            <el-button type="primary" class="btn" @click="searchBtn">立即查询</el-button>
                         </div>
                     </div>
                 </div>
@@ -133,7 +133,6 @@
                 end_data_finish:'',
                 end_time_finish:'',
                 end_time:'',//结束时间
-                path:''
             }
         },
         methods:{
@@ -182,7 +181,6 @@
                     this.searchStoresOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 });
                 // this.buildingList()
-
             },
             storefrontValue(e){ //获取门店id
                 this.storefront_id=e;
@@ -236,6 +234,8 @@
                 this.user_Id=e;
             },
             searchBtn(){//搜索
+                console.log(this.start_time)
+                console.log(this.end_time)
                 this.$store.commit('area_id',this.area_id);
                 this.$store.commit('storefront_id',this.storefront_id);
                 this.$store.commit('user_id',this.user_id);

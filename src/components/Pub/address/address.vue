@@ -42,7 +42,7 @@
                     </el-option>
                 </el-select>
                 <div class="search_btn">
-                    <el-button type="primary" size="medium" class="btn" @click="search">搜索</el-button>
+                    <el-button type="primary" size="medium" class="btn" @click="search">立即查询</el-button>
                 </div>
             </div>
         </div>
@@ -74,8 +74,6 @@
                     let cityData = JSON.stringify(res.data[0].son);
                     this.options = JSON.parse(cityData.replace(/AREA_ID/g, "value").replace(/AREA_NAME/g, "label"));
                 })
-
-
             },
             update(value) {
                 this.province_id = value;
@@ -101,6 +99,10 @@
                 this.area_id = value
             },
             search() { //搜索
+                if(this.city=== '' || this.city===''){
+                    this.city_id='';
+                    this.area_id=''
+                }
                 this.$store.commit('province_id', this.province_id);
                 this.$store.commit('city_id', this.city_id);
                 this.$store.commit('area_id', this.area_id);

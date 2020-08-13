@@ -38,8 +38,23 @@ export default {
         return Axios.post('/erp/get_role_tree')
     },
     //员工列表
-    getSlectList(pageInfo) {
-        return Axios.post('erp/get_user_list',{page:pageInfo.pagenum,offset:pageInfo.pagesize})
+    getSlectList(
+        page,
+        offset,
+        province_id,
+        city_id,
+        area_id,
+        storefront_id
+    ) {
+        return Axios.post('erp/get_user_list',{
+           page:page,
+           offset:offset,
+           province_id:province_id,
+           city_id:city_id,
+           area_id:area_id,
+           storefront_id:storefront_id
+
+        })
     },
     //员工删除
     postDel(id){

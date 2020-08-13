@@ -6,7 +6,7 @@
                 <div class="report_top">
                     <div class="layui-card-header">
                         <p>客户报备</p>
-                        <p style="color: #177ce3" @click="reportAdd()">+ 报备添加</p>
+                        <p style="color: #177ce3;cursor: pointer" @click="reportAdd()" v-permission="{action:'add'}">+ 报备添加</p>
                     </div>
                 </div>
                 <div class="report-bottom">
@@ -47,6 +47,7 @@
                         <label>门店</label>
                         <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
                                    @change="storefrontValue"
+                                   clearable
                                    @clear="clearStorefront"
                         >
                             <el-option
@@ -62,6 +63,7 @@
                         <label>维护人</label>
                         <el-select v-model="user_id" placeholder="请选择" class="report_int"
                                    @change="userId"
+                                   clearable
                                    @clear="clearUser"
                         >
                             <el-option
@@ -77,6 +79,7 @@
                         <label>意向楼盘</label>
                         <el-select v-model="building_id" placeholder="请选择" class="report_int"
                                    @change="buildingId"
+                                   clearable
                                    @clear="clearBuilding_id"
                         >
                             <el-option
@@ -114,6 +117,7 @@
                                 prefix-icon="el-icon-search"
                                 @change="getData"
                                 value-format="yyyy-MM-dd"
+                                clearable
                                 @clear="clearStartDate"
                         >
                         </el-date-picker>
@@ -127,6 +131,7 @@
                                 prefix-icon="el-icon-search"
                                 @change="getTime"
                                 value-format="HH:mm:ss"
+                                clearable
                                 @clear="clearStartTime"
                         >
                         </el-time-picker>
@@ -141,6 +146,7 @@
                                 prefix-icon="el-icon-search"
                                 @change="finishDate"
                                 value-format="yyyy-MM-dd"
+                                clearable
                                 @clear="clearFinishDate"
                         >
                         </el-date-picker>
@@ -154,6 +160,7 @@
                                 prefix-icon="el-icon-search"
                                 @change="finishTime"
                                 value-format="HH:mm:ss"
+                                clearable
                                 @clear="clearFinishTime"
                         >
                         </el-time-picker>
@@ -862,11 +869,9 @@
         width: 100px;
         background-image: -webkit-linear-gradient(left, #29adeb, #177ce3);
     }
-
     .search_btn {
-        padding-top: 41px;
+        padding-top: 43px;
     }
-
     /* table */
     .table_box {
         border-radius: 2px;
