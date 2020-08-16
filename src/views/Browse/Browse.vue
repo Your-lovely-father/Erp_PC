@@ -349,11 +349,23 @@
     .browse_box {
         width: 100%;
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
     }
-
+    @media screen and (max-width:1024px){
+        .browse_box_left{
+            width: 100%!important;
+        }
+        .browse_box_right{
+            width: 100% !important;
+            margin-top: 15px ;
+        }
+    }
     .browse_box_left {
-        width: 1099px;
+        width: 64%;
+    }
+    .browse_box_right {
+        width: 35%;
     }
 
     .left_one_box {
@@ -444,7 +456,6 @@
     }
 
     .information_content {
-        width: 570px;
         background: white;
     }
 
@@ -496,9 +507,7 @@
         color: #9399a5;
     }
 
-    .browse_box_right {
-        width: 570px;
-    }
+
 
     .top {
         margin-top: 15px;
@@ -522,12 +531,12 @@
     }
 
     .border {
-        border: 1px solid #EBEEF9;
+        border-left: 1px solid #EBEEF9;
+        border-right: 1px solid #EBEEF9;
     }
 
     .border >>> .is-leaf {
         text-align: center;
-        border-right: 1px solid #EBEEF9;
         padding: 8px 0;
     }
 
@@ -555,12 +564,6 @@
         border-right: 1px solid #EBEEF9;
         padding: 8px 0;
     }
-
-    .border >>> .el-table_1_column_6 {
-        border-right: 1px solid #EBEEF9;
-        padding: 8px 0;
-    }
-
     .border >>> .el-table_2_column_7 {
         border-right: 1px solid #EBEEF9;
         padding: 8px 0;
@@ -586,11 +589,6 @@
         padding: 8px 0;
     }
 
-    .border >>> .el-table_2_column_12 {
-        border-right: 1px solid #EBEEF5;
-        padding: 8px 0;
-    }
-
     .border >>> .el-table_3_column_13 {
         border-right: 1px solid #EBEEF9;
         padding: 8px 0;
@@ -600,10 +598,4 @@
         border-right: 1px solid #EBEEF9;
         padding: 8px 0;
     }
-
-    .border >>> .el-table_3_column_15 {
-        border-right: 1px solid #EBEEF5;
-        padding: 8px 0;
-    }
-
 </style>

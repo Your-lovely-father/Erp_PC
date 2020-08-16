@@ -2,135 +2,138 @@
     <div class="reportAdd" v-show="addStatus">
         <div class="add_box">
             <div class="com">
-                <div class="poor">
-                    <div class="poor_text">
-                        添加报备
+                <div class="box_content">
+                    <div class="herder">
+                        <div class="poor_text">
+                            查看报备
+                        </div>
+                        <div class="del">
+                            <el-tooltip class="item" effect="dark" content="点击此处返回上一页"
+                                        placement="bottom-end">
+                                <span class="el-icon-close" @click="onPage"></span>
+                            </el-tooltip>
+                        </div>
                     </div>
-                    <div class="del">
-                        <el-tooltip class="item" effect="dark" content="点击此处返回上一页" placement="bottom-end">
-                            <span class="el-icon-close" @click="onPage"></span>
-                        </el-tooltip>
-                    </div>
-                </div>
-                <div class="addContent">
-                    <div class="The_title">
-                        <p>报备信息</p>
-                    </div>
-                    <div class="content_box">
-                        <!--      表单添加区域      -->
-                        <div class="box_form">
-                            <div class="form">
-                                <div class="int_box">
-                                    <label>姓名</label>
-                                    <el-input
-                                            placeholder="请输入姓名"
-                                            v-model="client_name"
-                                            clearable
-                                            class="report_int"
-                                    >
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
-                                    <label>电话</label>
-                                    <el-input
-                                            placeholder="请输入电话"
-                                            v-model="client_phone"
-                                            clearable
-                                            class="report_int">
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
-                                    <label>报备时间</label>
-                                    <el-date-picker
-                                            v-model="reportedData"
-                                            type="date"
-                                            placeholder="选择日期"
-                                            class="date"
-                                            @change="reportData"
-                                            value-format="yyyy-MM-dd"
-                                    >
-                                    </el-date-picker>
-                                    -
-                                    <el-time-picker
-                                            v-model="reportedTime"
-                                            placeholder="选择时间"
-                                            class="date"
-                                            @change="reportTime"
-                                            value-format="HH:mm:ss"
-                                    >
-                                    </el-time-picker>
-                                </div>
-                                <div class="int_box">
-                                    <label>区域</label>
-                                    <el-cascader :options="areaOptions" clearable class="report_int"
-                                                 @change="handleChange"
-                                                 ref="cascaderAddr"></el-cascader>
-                                </div>
-                                <div class="int_box">
-                                    <label>门店</label>
-                                    <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
-                                               @change="storefrontValue"
-                                    >
-                                        <el-option
-                                                v-for="item in storesOptions"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value"
-                                        >
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                                <div class="int_box">
-                                    <label>维护人</label>
-                                    <el-select v-model="user_id" placeholder="请选择" class="report_int"
-                                               @change="userValue"
-                                    >
-                                        <el-option
-                                                v-for="item in user_idOoptions"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value"
-                                        >
-                                        </el-option>
-                                    </el-select>
-                                </div>
-                                <div class="int_box">
-                                    <label>备注</label>
-                                    <el-input
-                                            placeholder="请输入备注"
-                                            v-model="remarks"
-                                            clearable
-                                            class="report_int">
-                                    </el-input>
-                                </div>
-                                <div class="int_box">
-                                    <label>客户类别</label>
-                                    <el-select v-model="client_type" placeholder="请选择" class="report_int"
-                                               @change="clientValue"
-                                    >
-                                        <el-option
-                                                v-for="item in customerOoptions"
-                                                :key="item.value"
-                                                :label="item.label"
-                                                :value="item.value"
-                                        >
-                                        </el-option>
-                                    </el-select>
+                    <div class="add_content">
+                        <div class="addContent">
+                            <div class="layui-card-header">
+                                报备信息
+                            </div>
+                            <div class="content_box">
+                                <!--      表单添加区域      -->
+                                <div class="box_form">
+                                    <div class="form">
+                                        <div class="int_box">
+                                            <label>姓名</label>
+                                            <el-input
+                                                    placeholder="请输入姓名"
+                                                    v-model="client_name"
+                                                    clearable
+                                                    class="report_int"
+                                            >
+                                            </el-input>
+                                        </div>
+                                        <div class="int_box">
+                                            <label>电话</label>
+                                            <el-input
+                                                    placeholder="请输入电话"
+                                                    v-model="client_phone"
+                                                    clearable
+                                                    class="report_int">
+                                            </el-input>
+                                        </div>
+                                        <div class="int_box">
+                                            <label>报备时间</label>
+                                            <el-date-picker
+                                                    v-model="reportedData"
+                                                    type="date"
+                                                    placeholder="选择日期"
+                                                    class="date"
+                                                    @change="reportData"
+                                                    value-format="yyyy-MM-dd"
+                                            >
+                                            </el-date-picker>
+                                            -
+                                            <el-time-picker
+                                                    v-model="reportedTime"
+                                                    placeholder="选择时间"
+                                                    class="date"
+                                                    @change="reportTime"
+                                                    value-format="HH:mm:ss"
+                                            >
+                                            </el-time-picker>
+                                        </div>
+                                        <div class="int_box">
+                                            <label>区域</label>
+                                            <el-cascader :options="areaOptions" clearable class="report_int"
+                                                         @change="handleChange"
+                                                         ref="cascaderAddr"></el-cascader>
+                                        </div>
+                                        <div class="int_box">
+                                            <label>门店</label>
+                                            <el-select v-model="storefront_id" placeholder="请选择" class="report_int"
+                                                       @change="storefrontValue"
+                                            >
+                                                <el-option
+                                                        v-for="item in storesOptions"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value"
+                                                >
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="int_box">
+                                            <label>维护人</label>
+                                            <el-select v-model="user_id" placeholder="请选择" class="report_int"
+                                                       @change="userValue"
+                                            >
+                                                <el-option
+                                                        v-for="item in user_idOoptions"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value"
+                                                >
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="int_box">
+                                            <label>备注</label>
+                                            <el-input
+                                                    placeholder="请输入备注"
+                                                    v-model="remarks"
+                                                    clearable
+                                                    class="report_int">
+                                            </el-input>
+                                        </div>
+                                        <div class="int_box">
+                                            <label>客户类别</label>
+                                            <el-select v-model="client_type" placeholder="请选择" class="report_int"
+                                                       @change="clientValue"
+                                            >
+                                                <el-option
+                                                        v-for="item in customerOoptions"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value"
+                                                >
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="footer">
-                        <el-button size="medium" @click="cancel()">取消</el-button>
-                        <el-button type="primary" size="medium" @click="confirm()">确认</el-button>
+                        <el-button @click="cancel" size="medium">取消</el-button>
+                        <el-button type="primary" @click="confirm" size="medium">确认</el-button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
-
 <script>
     import Api from '../../../api/Report/Report'
     import Axios from '../../../api/pub/pub'
@@ -171,12 +174,12 @@
             confirm() { //添加
                 this.onPage();
                 Api.reportAdd(this.client_name, this.client_phone, this.reported_time, this.user_id, this.province_id, this.city_id, this.area_id, this.storefront_id, this.remarks, this.client_type).then((res) => {
-                   if(res.code === '200001'){
-                       this.$message.success('添加成功');
-                       this.$emit('reportList')
-                   }else {
-                       this.$message.error('添加失败')
-                   }
+                    if(res.code === '200001'){
+                        this.$message.success('添加成功');
+                        this.$emit('reportList')
+                    }else {
+                        this.$message.error('添加失败')
+                    }
                 });
             },
             getSelect() { //三级联动数据
@@ -301,11 +304,21 @@
 
     }
 
-    .poor {
-        width: 98.2%;
+    .com {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    .herder {
+        width: 100%;
         height: 40px;
         display: flex;
         align-items: center;
+        box-sizing: border-box;
         padding: 0 15px;
         border-bottom: 1px #eee solid;
         background: #eee;
@@ -315,50 +328,56 @@
         z-index: 99;
     }
 
-    .el-icon-close {
-        color: #333;
-        font-weight: bold;
-        font-size: 18px;
-    }
-
-    .addContent {
-        width: 98.3%;
-        margin: 15px;
-        background: #ffffff;
-        border-radius: 5px;
-        margin-top: 55px;
-
-    }
-
-    .The_title {
-        width: 100%;
-        height: 40px;
-        line-height: 40px;
-        border-bottom: 1px #eee solid;
-        padding-left: 15px;
-    }
-
-    .content_box {
-        width: 98.3%;
-        padding: 15px;
-    }
-
     .footer {
         width: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 20px 0;
+        position: fixed;
+        bottom: 0;
+        z-index: 99;
+        background: #ffffff;
+        padding: 15px 0;
+        text-align: center;
     }
 
+    .box_content {
+        width: 100%;
+    }
+
+    .add_content {
+        width: 100%;
+        padding: 0 15px 15px 15px;
+        box-sizing: border-box;
+        margin-top: 55px;
+        margin-bottom: 80px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .layui-card-header {
+        height: 42px;
+        line-height: 42px;
+        padding: 0 15px;
+        border-bottom: 1px solid #f6f6f6;
+        color: #333;
+        border-radius: 2px 2px 0 0;
+        font-size: 14px;
+    }
+    .addContent {
+        width: 100%;
+        background: #ffffff;
+        border-radius: 2px;
+    }
+    .content_box {
+        width: 100%;
+        padding: 0 15px 15px 15px;
+        box-sizing: border-box;
+    }
     .box_form {
         width: 100%;
     }
-
     .form {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
+        justify-content: space-between;
     }
 
     .report_int {
@@ -374,10 +393,4 @@
         width: 295px;
     }
 
-    .com {
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: scroll;
-    }
 </style>
