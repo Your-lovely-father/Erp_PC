@@ -136,7 +136,8 @@
                 this.customer();
                 this.customerEcho();
                 this.employees();
-                this.employeesEcho()
+                this.employeesEcho();
+                this.user_name=''
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {

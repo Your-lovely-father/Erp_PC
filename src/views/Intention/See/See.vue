@@ -123,7 +123,8 @@
                 this.customer();
                 this.customerEcho();
                 this.employees();
-                this.employeesEcho()
+                this.employeesEcho();
+                this.user_name=''
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {
@@ -181,7 +182,7 @@
                         if (item.value == this.client_id) {
                             this.client_name = item.label;
                         }
-                    })
+                    });
                 })
             },
             employees(){ //员工列表
