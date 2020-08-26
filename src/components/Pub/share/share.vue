@@ -172,6 +172,9 @@
                     this.area_id = '';
                     return false;
                 }
+                this.storefront_id='';
+                this.user_id='';
+                this.user_idOoptions=[];
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
                 this.province_id = pathvalue[0];
                 this.city_id = pathvalue[1];
@@ -180,10 +183,10 @@
                     let cityData = JSON.stringify(res.data.data);
                     this.searchStoresOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 });
-                // this.buildingList()
             },
             storefrontValue(e){ //获取门店id
                 this.storefront_id=e;
+                this.user_id='';
                 this.getSlectList();
             },
             getSlectList(){ //获取员工列表拿到维护人id

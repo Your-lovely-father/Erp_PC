@@ -497,6 +497,9 @@
                     this.area_id = '';
                     return false;
                 }
+                this.storefront_id='';
+                this.user_id='';
+                this.user_idOoptions=[];
                 var pathvalue = this.$refs.cascaderAddr.getCheckedNodes()[0].path;
                 this.province_id = pathvalue[0];
                 this.city_id = pathvalue[1];
@@ -543,6 +546,7 @@
             },
             storefrontValue(e) { //获取门店id
                 this.storefront_id = e;
+                this.user_id='';
                 this.getSlectList()
             },
             clientValue(e) { //获取客户类别id

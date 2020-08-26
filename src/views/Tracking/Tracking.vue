@@ -2,7 +2,6 @@
     <div class="component" >
         <div class="report" v-show="trackingStatus">
             <div class="add_box">
-                <!--    搜索区域        -->
                 <el-card>
                     <div class="add_content">
                         <div class="content_title">
@@ -17,6 +16,7 @@
                             </p>
                         </div>
                     </div>
+                    <!--    搜索区域        -->
                     <div class="share">
                         <myShare @trackingList="trackingList"/>
                     </div>

@@ -270,6 +270,8 @@
                     this.employeesArea_id = '';
                     return false;
                 }
+                this.client_name='';
+                this.customerList=[];
                 var pathvalue = this.$refs.employeesCascaderAddr.getCheckedNodes()[0].path;
                 this.employeesProvince_id = pathvalue[0];
                 this.employeesCity_id = pathvalue[1];

@@ -322,11 +322,12 @@
                     this.employeesArea_id = '';
                     return false;
                 }
+                this.employeesStorefront_id='';
                 var pathvalue = this.$refs.employeesCascaderAddr.getCheckedNodes()[0].path;
                 this.employeesProvince_id = pathvalue[0];
                 this.employeesCity_id = pathvalue[1];
                 this.employeesArea_id = pathvalue[2];
-                Axios.postStores(this.area_id).then(res => {
+                Axios.postStores(this.employeesArea_id).then(res => {
                     let cityData = JSON.stringify(res.data.data);
                     this.employeesSearchStoresOptions = JSON.parse(cityData.replace(/id/g, "value").replace(/storefront_name/g, "label"));
                 });
