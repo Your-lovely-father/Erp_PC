@@ -521,7 +521,7 @@
                                         </div>
                                     </div>
                                     <el-dialog
-                                            title="维护人信息"
+                                            title="意向楼盘信息"
                                             :visible.sync="isShowIntention"
                                             width="30%"
                                             :append-to-body="true"
