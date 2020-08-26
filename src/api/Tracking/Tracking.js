@@ -2,13 +2,13 @@ import Axios from '../../utils/request'
 
 export default {
     //跟进列表
-    trackingList(page, offset, area_id, storefront_id, user_name, start_time, end_time) {
+    trackingList(page, offset, area_id, storefront_id, user_id, start_time, end_time) {
         return Axios.post('/erp/get_follow_up_list', {
             page: page,
             offset: offset,
             area_id: area_id,
             storefront_id: storefront_id,
-            user_name: user_name,
+            user_id: user_id,
             start_time: start_time,
             end_time: end_time
         })
