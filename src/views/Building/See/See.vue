@@ -53,7 +53,8 @@
                                 </div>
                                 <div class="int_box">
                                     <label>区域管理</label>
-                                    <el-cascader :disabled="true" v-model="areaValue" :options="areaOptions" clearable class="report_int"
+                                    <el-cascader :disabled="true" v-model="areaValue" :options="areaOptions" clearable
+                                                 class="report_int"
                                     ></el-cascader>
                                 </div>
                                 <div class="price_box">
@@ -143,7 +144,9 @@
                                             list-type="picture"
                                             :on-preview="headHandlePictureCardPreviewHouses"
                                     >
-                                        <el-button size="small" type="primary" class="btn_upload" :disabled="true">点击上传楼盘图片</el-button>
+                                        <el-button size="small" type="primary" class="btn_upload" :disabled="true">
+                                            点击上传楼盘图片
+                                        </el-button>
                                     </el-upload>
                                     <el-dialog :append-to-body="true" :visible.sync="headDialogVisibleHouses">
                                         <img width="100%" :src="headDialogImageUrlHouses" alt="">
@@ -157,7 +160,9 @@
                                             list-type="picture"
                                             :on-preview="headHandlePictureCardPreviewModel"
                                     >
-                                        <el-button size="small" type="primary" class="btn_upload" :disabled="true">点击上传户型图片</el-button>
+                                        <el-button size="small" type="primary" class="btn_upload" :disabled="true">
+                                            点击上传户型图片
+                                        </el-button>
                                     </el-upload>
                                     <el-dialog :append-to-body="true" :visible.sync="headDialogVisibleModel">
                                         <img width="100%" :src="headDialogImageUrlModel" alt="">
@@ -178,37 +183,40 @@
 
 <script>
     import Axios from '../../../api/pub/pub'
+
     export default {
         name: "See",
         data() {
             return {
-                building_name:'',//楼盘名称
-                building_nickname:'',//楼盘别称
-                building_abbreviation:'',//楼盘缩写
-                building_address:'',//楼盘地址
-                average_unit_price_begin:'',//平均单价起
-                average_unit_price_end:'',//平均单价结束
-                opening_time:'',//开盘时间
-                overall_floorage:'',//总建筑面积
-                green_area:'',//绿化面积
-                openingData:'',//时间
-                openingTime:'',//时间
-                building_image:'',//楼盘图
-                building_floor:'',//户型图
-                areaOptions:[],//区域管理列表
+                building_name: '',//楼盘名称
+                building_nickname: '',//楼盘别称
+                building_abbreviation: '',//楼盘缩写
+                building_address: '',//楼盘地址
+                average_unit_price_begin: '',//平均单价起
+                average_unit_price_end: '',//平均单价结束
+                opening_time: '',//开盘时间
+                overall_floorage: '',//总建筑面积
+                green_area: '',//绿化面积
+                openingData: '',//时间
+                openingTime: '',//时间
+                building_image: '',//楼盘图
+                building_floor: '',//户型图
+                areaOptions: [],//区域管理列表
                 fileHousesList: [], //楼盘图片列表
-                doorModelList:[], //户型图片列表
-                areaValue:[],//省市区回显数据
-                headDialogVisibleHouses:false,
-                headDialogImageUrlHouses:'',
-                headDialogVisibleModel:false,
-                headDialogImageUrlModel:'',
+                doorModelList: [], //户型图片列表
+                areaValue: [],//省市区回显数据
+                headDialogVisibleHouses: false,
+                headDialogImageUrlHouses: '',
+                headDialogVisibleModel: false,
+                headDialogImageUrlModel: '',
             }
         },
         methods: {
             onPage() {
                 this.$store.commit('isBuilding', true);
                 this.$store.commit('isSeeBuilding', false);
+                this.fileHousesList=[];
+                this.doorModelList=[];
             },
             cancel() {
                 this.onPage()
@@ -216,45 +224,43 @@
             confirm() {
                 this.onPage()
             },
-            parentMsg(){
+            parentMsg() {
                 this.detailObj;
             },
-            setData(data){
-            if(data.data) {
-                this.building_name = data.data.building_name,
-                    this.building_nickname = data.data.building_nickname,
-                    this.building_abbreviation = data.data.building_abbreviation,
-                    this.building_address = data.data.building_address,
-                    this.average_unit_price_begin = data.data.average_unit_price_begin,
-                    this.average_unit_price_end = data.data.average_unit_price_end,
-                    this.opening_time = data.data.opening_time,
-                    this.overall_floorage = data.data.overall_floorage,
-                    this.green_area = data.data.green_area,
-                    this.openingData = data.data.opening_time,
-                    this.openingTime = data.data.opening_time,
-                    this.areaValue = [data.data.province_id + '', data.data.city_id + '', data.data.area_id + '']
+            setData(data) {
+                if (data.data) {
+                    this.building_name = data.data.building_name,
+                        this.building_nickname = data.data.building_nickname,
+                        this.building_abbreviation = data.data.building_abbreviation,
+                        this.building_address = data.data.building_address,
+                        this.average_unit_price_begin = data.data.average_unit_price_begin,
+                        this.average_unit_price_end = data.data.average_unit_price_end,
+                        this.opening_time = data.data.opening_time,
+                        this.overall_floorage = data.data.overall_floorage,
+                        this.green_area = data.data.green_area,
+                        this.openingData = data.data.opening_time,
+                        this.openingTime = data.data.opening_time,
+                        this.areaValue = [data.data.province_id + '', data.data.city_id + '', data.data.area_id + '']
 
-            }
-                if(data.building_img instanceof Array){
-                this.fileHousesList = data.building_img.map((item) => {
-                    return {
-                        ...item,
-                        name: item.table_name,
-                        url: this.$Tool.formatImg(item.url),
-                    };
-                });
-            }
-                if(data.building_img instanceof Array){
+                }
+                if (data.building_img instanceof Array) {
+                    this.fileHousesList = data.building_img.map((item) => {
+                            return {
+                                ...item,
+                                name: item.url,
+                                url: this.$Tool.formatImg(item.url),
+                            };
+                    });
+                }
+                if (data.building_img instanceof Array) {
                     this.doorModelList = data.floor_img.map((item) => {
                         return {
                             ...item,
-                            name: item.table_name,
+                            name: item.url,
                             url: this.$Tool.formatImg(item.url),
                         };
                     });
                 }
-
-
             },
             getSelect() { //三级联动数据
                 Axios.getSelect().then((res) => {
@@ -289,7 +295,7 @@
                 this.headDialogImageUrlHouses = file.url;
                 this.headDialogVisibleHouses = true;
             },
-            headHandlePictureCardPreviewModel(file){//处理图片预览效果
+            headHandlePictureCardPreviewModel(file) {//处理图片预览效果
                 this.headDialogImageUrlModel = file.url;
                 this.headDialogVisibleModel = true;
             },
@@ -298,7 +304,7 @@
             seeBuiding() {
                 return this.$store.state.building.seeBuiding
             },
-            detailObj(){
+            detailObj() {
                 this.setData(this.$store.state.building.detailObj);
                 return this.$store.state.building.detailObj
             }
@@ -384,54 +390,68 @@
         justify-content: center;
         padding: 20px 0;
     }
-    .box_form{
+
+    .box_form {
         width: 100%;
     }
+
     .form {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
     }
+
     .report_int {
         width: 500px;
     }
-    .date{
+
+    .date {
         width: 242px;
     }
+
     label {
         display: block;
         padding: 20px 0;
     }
-    .btn_upload{
+
+    .btn_upload {
         margin: 20px 0 10px 0;
     }
-    .upload{
+
+    .upload {
         width: 100%;
         display: flex;
         margin-left: 31px;
     }
-    .int_box_upload{
+
+    .int_box_upload {
         margin-left: 63px;
     }
-    .upload-demo{
+
+    .upload-demo {
         width: 500px;
     }
-    .price_box{
+
+    .price_box {
         width: 500px;
         display: flex;
         justify-content: space-between;
     }
-    .reportInt{
+
+    .reportInt {
         width: 242px;
     }
-    .span1{
+
+    .span1 {
         margin-top: 68px;
     }
-   .int_box >>> .el-icon-close{
+
+    .int_box >>> .el-icon-close {
         display: none;
     }
-    .int_box_upload>>> .el-icon-close{
+
+    .int_box_upload >>> .el-icon-close {
         display: none;
     }
 </style>

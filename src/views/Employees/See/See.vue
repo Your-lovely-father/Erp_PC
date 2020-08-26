@@ -204,7 +204,8 @@
                 this.$store.commit('isSeeEmployees', false);
                 this.managementList=[];
                 this.rule=[];
-                this.getSelectList()
+                this.getSelectList();
+                this.picture_list=[]
             },
             cancel() {
                 this.onPage()
@@ -323,12 +324,14 @@
                 if(role !== undefined){
                     this.rule=data.user_role.split(',');
                 }
-                this.imageUrl = data.user_image;
-                this.picture_list.push({
-                    url:this.userImage+this.imageUrl
-                });
-                if (this.picture_list.length === 2){
-                    this.picture_list.shift()
+                if(data.user_image){
+                    this.imageUrl = data.user_image;
+                    this.picture_list.push({
+                        url:this.userImage+this.imageUrl
+                    });
+                    if (this.picture_list.length === 2){
+                        this.picture_list.shift()
+                    }
                 }
             }
         },

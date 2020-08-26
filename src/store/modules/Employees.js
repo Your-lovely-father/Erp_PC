@@ -31,6 +31,7 @@ export default {
         }),
         isSeeEmployees:((state,data)=>{
             storage.set('seeEmployees',state.seeEmployees=data);
+            storage.remove('seeEmployees');
             storage.remove('detailsObj')
         }),
 
@@ -42,6 +43,7 @@ export default {
         }),
         isUpdStatusEmployees:((state,data)=>{
             storage.set('updEmployees',state.updEmployees=data);
+            storage.remove('updEmployees');
             storage.remove('detailsObj')
         }),
         //员工详情

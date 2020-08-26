@@ -196,9 +196,9 @@
         },
 
         methods: {
-            formatImg(url){
-
-            },
+            // formatImg(url){
+            //
+            // },
             reportAdd() {
                 this.$store.commit('employeesStatus', false);
                 this.$store.commit('addEmployees', true);

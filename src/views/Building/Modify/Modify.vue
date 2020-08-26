@@ -217,6 +217,8 @@
             onPage() {
                 this.$store.commit('isBuildingUpd', true);
                 this.$store.commit('isBuildingUpdStatus', false);
+                this.fileHousesList=[];
+                this.doorModelList=[];
             },
             cancel() {
                 this.onPage()
